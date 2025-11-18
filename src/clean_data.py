@@ -1,4 +1,5 @@
 import pandas as pd
+import pyarrow
 import os
 
 def load_data(file_path):
@@ -55,10 +56,4 @@ def run_cleaning_pipeline(input_path,columns_to_remove,columns_clean,flag_cols):
         
     except Exception as e:
         print(f"An error occurred: {e}")
-    
-if __name__ == "__main__":
-    INPUT_PATH = "../data/row/fhvhv_tripdata_2021-10.parquet"
-    columns_to_remove =['originating_base_num', 'on_scene_datetime','access_a_ride_flag']
-    columns_clean = ['hvfhs_license_num','dispatching_base_num']
-    flag_cols = ['shared_request_flag','shared_match_flag', 'wav_request_flag',	'wav_match_flag']
-    run_cleaning_pipeline(INPUT_PATH, columns_to_remove, columns_clean, flag_cols)
+        raise e
