@@ -2,8 +2,8 @@ from clean_data import run_cleaning_pipeline
 from convert_parquet_to_json import convert_parquet_to_json
 from mongo_import import import_json_to_mongodb
 
-INPUT_PATH = "../data/row/fhvhv_tripdata_2021-10.parquet"
-JSON_PATH = "../data/processed/trips.json"
+INPUT_PATH = "data/row/fhvhv_tripdata_2021-10.parquet"
+JSON_PATH = "data/processed/trips.json"
 
 columns_to_remove =[
     'originating_base_num', 
