@@ -3,8 +3,8 @@ from convert_parquet_to_json import convert_parquet_to_json
 from mongo_import import import_json_to_mongodb
 from logger import logger
 import os
-INPUT_PATH = "../data/raw/fhvhv_tripdata_2021-10.parquet"
-JSON_PATH = "../data/processed/trips.json"
+INPUT_PATH = "data/raw/fhvhv_tripdata_2021-10.parquet"
+JSON_PATH = "data/processed/trips.json"
 
 columns_to_remove =[
     'originating_base_num', 
@@ -28,10 +28,12 @@ DB_NAME = "trips_db"
 COLLECTION_NAME = "fhvhv_trips_2021-10"
 
 def run_full_pipeline():
+    #print(os.getcwd())
+    #print(os.path.exists(INPUT_PATH))
+
     # Step 1: Clean the data and get a DataFrame
-    print(os.path.exists(INPUT_PATH))
-    #df = run_cleaning_pipeline(INPUT_PATH, columns_to_remove, columns_clean, flag_cols)
-    #print(df)
+    df = run_cleaning_pipeline(INPUT_PATH, columns_to_remove, columns_clean, flag_cols)
+    print(df.shape)
     # Step 2: Convert the cleaned DataFrame to JSON Lines format
     #convert_parquet_to_json(df, JSON_PATH)
     

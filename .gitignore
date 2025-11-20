@@ -211,5 +211,5 @@ __marimo__/
 
 # Parquet files
 *.parquet
-
+/logs
 /test
