@@ -215,4 +215,6 @@ __marimo__/
 /logs
 /test
 
-**/*.ipynb
+/notebooks/*.ipynb
+
+/data
