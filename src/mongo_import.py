@@ -5,7 +5,7 @@ from logger import logger
 def connect_to_mongo(db_name):
     """Connect to MongoDB and return the database object."""
     try:
-        client = MongoClient(uri= "")
+        client = MongoClient()
         db = client[db_name]
         logger.info(f"connect_to_mongo() : Connected to MongoDB database: {db_name}")
     except Exception as e:

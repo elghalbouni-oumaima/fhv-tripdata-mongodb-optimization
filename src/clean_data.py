@@ -34,6 +34,7 @@ def clean_string_columns(df, column_to_clean=None):
     return df
 
 def encode_flags(df, flag_cols):
+    pd.set_option('future.no_silent_downcasting', True)
     df[flag_cols]= df[flag_cols].replace({'N':0,'Y':1})
     return df
 
