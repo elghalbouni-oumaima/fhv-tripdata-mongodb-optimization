@@ -8,9 +8,10 @@ def connect_to_mongo(db_name):
         client = MongoClient()
         db = client[db_name]
         logger.info(f"connect_to_mongo() : Connected to MongoDB database: {db_name}")
+        return db
     except Exception as e:
         logger.error(f"connect_to_mongo() : An error occurred while connecting to MongoDB: {e}")
-    return db
+    
 
 
 def load_dictionary(file_path):

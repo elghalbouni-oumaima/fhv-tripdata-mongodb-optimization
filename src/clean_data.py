@@ -1,11 +1,21 @@
 import pandas as pd
 import os
 from logger import logger
+import pyarrow.parquet as pq
+
 def load_data(file_path):
-    if  not os.path.exists(file_path):
-        logger.warning(f"clean_data.py : The file {file_path} is not exist.")
-    
-    return pd.read_parquet(file_path)
+    if not os.path.exists(file_path):
+        logger.warning(f"clean_data.py : The file {file_path} does not exist.")
+        return None
+    parquet_file = pq.ParquetFile(file_path)
+    df_list = []
+    batch_size = 500_000
+    for batch in parquet_file.iter_batches(batch_size=batch_size):
+        df_list.append(batch.to_pandas())
+    df = pd.concat(df_list, ignore_index=True)
+
+    return df
+
 
 def cast_column_float(df):
     for x in df:
