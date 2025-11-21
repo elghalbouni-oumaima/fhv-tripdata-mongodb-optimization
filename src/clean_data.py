@@ -48,10 +48,6 @@ def encode_flags(df, flag_cols):
     df[flag_cols]= df[flag_cols].replace({'N':0,'Y':1})
     return df
 
-def add_identifiers(df):
-    df["row_id"] = df.index 
-    return df
-
 def run_cleaning_pipeline(input_path,columns_to_remove,columns_clean,flag_cols):
     try:
         df = load_data(input_path)
@@ -62,7 +58,6 @@ def run_cleaning_pipeline(input_path,columns_to_remove,columns_clean,flag_cols):
         for col in columns_clean:
             df = clean_string_columns(df, col)
         df = encode_flags(df,flag_cols)
-        df = add_identifiers(df)
         return df
         
     except Exception as e:
