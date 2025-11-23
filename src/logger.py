@@ -10,6 +10,7 @@ def setup_logger(name='ProjectLogger'):
     """Return a logger with console + file handlers configured globally."""
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG) # capture everything: DEBUG, INFO, WARNING, ERROR
+    logging.basicConfig(filename=LOG_FILE , encoding='utf-8', level=logging.DEBUG)
 
     # Avoid duplicate handlers
     if logger.handlers:
@@ -28,7 +29,7 @@ def setup_logger(name='ProjectLogger'):
         "%(asctime)s | %(levelname)s | %(name)s | %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
     )
-
+    print('l')
     file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
 
