@@ -1,10 +1,13 @@
-from mongo_import import connect_to_mongo
+from src.mongo_import import connect_to_mongo
 import json
 from datetime import datetime
 import os
-from logger import logger
+from src.logger import logger
 
-RESULTS_DIR = "benchmarks/json_files"
+#RESULTS_DIR = "fhv-tripdata-mongodb-optimization/src/benchmarks/json_files"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RESULTS_DIR = os.path.join(BASE_DIR, "json_files")
 
 DB_NAME = "trips_db"
 COLLECTION_NAME = "fhvhv_trips_2021-10"
@@ -149,22 +152,22 @@ if __name__ == "__main__":
     logger.info("===== Starting manual benchmark tests =====")
 
 
-    # SIMPLE INDEX TEST
-    logger.info("Running SIMPLE INDEX benchmark...")
-    run_benchmark(
-        query={},
-        index_param={},
-        index_name="simple_index"
-    )
+    # # SIMPLE INDEX TEST
+    # logger.info("Running SIMPLE INDEX benchmark...")
+    # run_benchmark(
+    #     query={},
+    #     index_param={},
+    #     index_name="simple_index"
+    # )
 
 
-    # COMPOUND INDEX TEST
-    logger.info("Running COMPOUND INDEX benchmark...")
-    run_benchmark(
-        query={},
-        index_param={},
-        index_name="compound_index"
-    )
+    # # COMPOUND INDEX TEST
+    # logger.info("Running COMPOUND INDEX benchmark...")
+    # run_benchmark(
+    #     query={},
+    #     index_param={},
+    #     index_name="compound_index"
+    # )
 
 
     # HASHED INDEX TEST
