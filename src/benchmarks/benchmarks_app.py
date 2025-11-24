@@ -12,7 +12,7 @@ db = connect_to_mongo(DB_NAME)
 collection = db[COLLECTION_NAME]
 
 
-def  run_explain(query, coll=collection ,sort=None, typeOfQuery = "find"):
+def  run_explain(query, coll=collection,sort=None, typeOfQuery = "find"):
     #Build the query
     
     if typeOfQuery == "find":
