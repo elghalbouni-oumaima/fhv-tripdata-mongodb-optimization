@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from logger import logger
+from src.logger import logger
 import pyarrow.parquet as pq
 
 def load_data(file_path):
