@@ -1,10 +1,13 @@
-from mongo_import import connect_to_mongo
+from src.mongo_import import connect_to_mongo
 import json
 from datetime import datetime
 import os
-from logger import logger
+from src.logger import logger
 
-RESULTS_DIR = "benchmarks/json_files"
+#RESULTS_DIR = "fhv-tripdata-mongodb-optimization/src/benchmarks/json_files"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RESULTS_DIR = os.path.join(BASE_DIR, "json_files")
 
 DB_NAME = "trips_db"
 COLLECTION_NAME = "fhvhv_trips_2021-10"
@@ -62,7 +65,7 @@ def  run_explain(query, coll=collection ,sort=None, typeOfQuery = "find"):
                 extract_index_info(s)
 
     extract_index_info(execution_stages)  
-# Final report with all the important metrics
+    # Final report with all the important metrics
     return {
         "namespace": planner.get("namespace"),
         "parsedQuery": planner.get("parsedQuery"),
@@ -135,7 +138,7 @@ def save_metrics(metrics, index_param, index_name, filename=None):
 def create_index(index_param):
     collection.create_index(index_param)
 
-def run_benchmark(query, index_param,json_file, index_name):
+def run_benchmark(query, index_param, index_name):
     #Before Index
     metrics_before = run_explain(query)
     filename = save_metrics( metrics_before, index_param, index_name, filename=None)
@@ -145,5 +148,34 @@ def run_benchmark(query, index_param,json_file, index_name):
     metrics_after = run_explain(query)
     save_metrics( metrics_after, index_param, index_name , filename=filename)
 
+if __name__ == "__main__":
+    logger.info("===== Starting manual benchmark tests =====")
 
-    
+
+    # # SIMPLE INDEX TEST
+    # logger.info("Running SIMPLE INDEX benchmark...")
+    # run_benchmark(
+    #     query={},
+    #     index_param={},
+    #     index_name="simple_index"
+    # )
+
+
+    # # COMPOUND INDEX TEST
+    # logger.info("Running COMPOUND INDEX benchmark...")
+    # run_benchmark(
+    #     query={},
+    #     index_param={},
+    #     index_name="compound_index"
+    # )
+
+
+    # HASHED INDEX TEST
+    logger.info("Running HASHED INDEX benchmark...")
+    run_benchmark(
+        query={"PULocationID": 100},
+        index_param={"PULocationID": "hashed"},
+        index_name="hashed_index"
+    )
+
+    logger.info("===== All benchmarks completed successfully =====")
