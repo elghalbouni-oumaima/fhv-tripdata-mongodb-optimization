@@ -1,8 +1,8 @@
-from mongo_import import connect_to_mongo
+from src.mongo_import import connect_to_mongo
 import json
 from datetime import datetime
 import os
-from logger import logger
+from src.logger import logger
 
 RESULTS_DIR = "benchmarks/json_files"
 
@@ -149,30 +149,35 @@ if __name__ == "__main__":
     logger.info("===== Starting manual benchmark tests =====")
 
 
-    # SIMPLE INDEX TEST
-    logger.info("Running SIMPLE INDEX benchmark...")
-    run_benchmark(
-        query={},
-        index_param={},
-        index_name="simple_index"
-    )
+    # # SIMPLE INDEX TEST
+    # logger.info("Running SIMPLE INDEX benchmark...")
+    # run_benchmark(
+    #     query={},
+    #     index_param={},
+    #     index_name="simple_index"
+    # )
 
 
     # COMPOUND INDEX TEST
     logger.info("Running COMPOUND INDEX benchmark...")
     run_benchmark(
-        query={},
-        index_param={},
+        query={
+            "pickup_datetime": {
+        "$gte": "2021-10-15T00:00:00.000",
+        "$lt": "2021-10-16T00:00:00.000"
+    }
+        },
+        index_param={"pickup_datetime": 1, "PULocationID": 1},
         index_name="compound_index"
     )
 
 
-    # HASHED INDEX TEST
-    logger.info("Running HASHED INDEX benchmark...")
-    run_benchmark(
-        query={"PULocationID": 100},
-        index_param={"PULocationID": "hashed"},
-        index_name="hashed_index"
-    )
+    # # HASHED INDEX TEST
+    # logger.info("Running HASHED INDEX benchmark...")
+    # run_benchmark(
+    #     query={"PULocationID": 100},
+    #     index_param={"PULocationID": "hashed"},
+    #     index_name="hashed_index"
+    # )
 
     logger.info("===== All benchmarks completed successfully =====")
