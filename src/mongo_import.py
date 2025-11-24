@@ -1,6 +1,6 @@
 import json
 from pymongo import MongoClient
-from logger import logger
+from src.logger import logger
 
 def connect_to_mongo(db_name):
     """Connect to MongoDB and return the database object."""
