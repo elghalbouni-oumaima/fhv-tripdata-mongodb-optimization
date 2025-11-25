@@ -56,11 +56,9 @@ def insert_data_to_collection(collection, data, batch_size=50000):
 
 def import_json_to_mongodb(json_file_path, database_name, collection_name):
 
-    #Connect to MongoDB
-    client = connect_to_mongo(database_name)
-
+    # Connect to MongoDB
     # Select the database and collection
-    db = client[database_name]
+    db = connect_to_mongo(database_name)
     collection = db[collection_name]
 
     # Load JSON data

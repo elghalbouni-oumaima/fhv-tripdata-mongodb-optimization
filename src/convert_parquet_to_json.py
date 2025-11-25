@@ -1,5 +1,4 @@
 import os
-import pandas as pd
 
 # def convert_parquet_to_json(df, output_folder):
     # df.to_json(output_path, orient='records', lines=True)
@@ -21,3 +20,9 @@ def convert_parquet_to_json(df, output_folder):
 #     ddf = dd.from_pandas(df, npartitions=8)  
 #     ddf.to_json(json_path, orient='records', lines=True)
 
+# JSON_PATH = "data/processed"
+
+# if os.path.isdir(JSON_PATH):
+#     print("Directory exists")
+# else:
+#     print("Directory does NOT exist")
