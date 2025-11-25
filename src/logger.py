@@ -29,7 +29,6 @@ def setup_logger(name='ProjectLogger'):
         "%(asctime)s | %(levelname)s | %(name)s | %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
     )
-    print('l')
     file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
 

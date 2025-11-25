@@ -17,20 +17,25 @@ collection = db[COLLECTION_NAME]
 
 def  run_explain(query, coll=collection ,sort=None, typeOfQuery = "find"):
     #Build the query
+    print(query)
     
     if typeOfQuery == "find":
         cursor = coll.find(query)
-    elif typeOfQuery == "aggregate":
-        cursor = coll.aggregate(query)
+        #Add sorting if provided
+        if sort is not None:
+            cursor = cursor.sort(sort)
+        #lauch explain with execution statistics
+        print(cursor)
+        explain_data = cursor.explain()
     else:
         raise ValueError(f"Unsupported query type: {typeOfQuery}")
 
     #Add sorting if provided
-    if sort is not None:
-        cursor = cursor.sort(sort)
+    # if sort is not None:
+    #     cursor = cursor.sort(sort)
 
-    #lauch explain with execution statistics
-    explain_data = cursor.explain()
+    # #lauch explain with execution statistics
+    # explain_data = cursor.explain()
 
     planner = explain_data.get("queryPlanner", {})
     winning_plan = planner.get("winningPlan", {})
@@ -138,9 +143,11 @@ def save_metrics(metrics, index_param, index_name, filename=None):
 def create_index(index_param):
     collection.create_index(index_param)
 
-def run_benchmark(query, index_param, index_name):
+def run_benchmark(query, index_param, index_name,typeOfQuery='find'):
     #Before Index
-    metrics_before = run_explain(query)
+    print(query)
+    metrics_before = run_explain(query,typeOfQuery=typeOfQuery)
+    print(metrics_before)
     filename = save_metrics( metrics_before, index_param, index_name, filename=None)
 
     #After Index
@@ -152,14 +159,32 @@ if __name__ == "__main__":
     logger.info("===== Starting manual benchmark tests =====")
 
 
-    # # SIMPLE INDEX TEST
-    # logger.info("Running SIMPLE INDEX benchmark...")
+    # SIMPLE INDEX TEST
+
+    # pipeline = [
+    # { "$group": { "_id": "$hvfhs_license_num", "total": { "$sum": 1 }, "avg_trip_time": { "$avg": "$trip_time" } } },
+    # { "$match": { "avg_trip_time": { "$gte": 300 } } }
+    # ]
+    # result = db.command("explain", {
+    # "aggregate": collection.name,
+    # "pipeline": pipeline,
+    # "cursor": {}
+    # })
+
+    #result =run_explain(pipeline,typeOfQuery='aggregate')
+    # result = collection.aggregate(pipeline).explain()
+
+    logger.info("Running SIMPLE INDEX benchmark...")
+    q = {'trip_time':{'$gte': 300}}
+    print(q)
+    metrics_before = run_explain(q)
+    print(metrics_before)
     # run_benchmark(
-    #     query={},
-    #     index_param={},
+    #     query=q,
+    #     index_param={ "trip_time": 1 },
     #     index_name="simple_index"
     # )
-
+    
 
     # # COMPOUND INDEX TEST
     # logger.info("Running COMPOUND INDEX benchmark...")
@@ -171,11 +196,11 @@ if __name__ == "__main__":
 
 
     # HASHED INDEX TEST
-    logger.info("Running HASHED INDEX benchmark...")
-    run_benchmark(
-        query={"PULocationID": 100},
-        index_param={"PULocationID": "hashed"},
-        index_name="hashed_index"
-    )
+    # logger.info("Running HASHED INDEX benchmark...")
+    # run_benchmark(
+    #     query={"PULocationID": 100},
+    #     index_param={"PULocationID": "hashed"},
+    #     index_name="hashed_index"
+    # )
 
     logger.info("===== All benchmarks completed successfully =====")
