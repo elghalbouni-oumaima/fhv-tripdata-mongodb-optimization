@@ -1,11 +1,21 @@
-**Dash Oil and Gas Demo App**
+# FIFA Generation - Dashboard - Data Visualization Project 2020/2021
 
-This is a demo of the Dash interactive Python framework developed by [Plotly](https://plot.ly/).
+The dashboard created aims to inspect some questions that all the football-lovers mind. How will be the next generation of football players? What will happen after the decade of Messi and Ronaldo? 
 
-Dash abstracts away all of the technologies and protocols required to build an interactive web-based application and is a simple and effective way to bind a user interface around your Python code.
+We analyzed the data of the famous videogame FIFA 21, focusing on the main differences that pop up between the “old” and “new” generation. The dashboard has the objective of showing which are the differences that nowadays characterize the different generation of players, with a particular focus on the main talents of the future.
 
-To learn more check out our [documentation](https://plot.ly/dash).
+The dashboard was created with Plotly, an interactive graphing library for Python. The programs used for the creation of the code were PyCharm and Visual Studio Code. With these tools we developed the main interactions that are necessary to tell the story we are interested to transmit. 
 
-The following are screenshots for the app in this repo:
+The second objective of this project was to create a more pleasant experience for the user, and to improve the layout we used HTML, CSS and a framework from CSS called Bootstrap. In this way we achieved a better organization of our Dash App and the users can navigate through the sections like a normal web page
 
-![Alt desc](https://cdn.rawgit.com/plotly/dash-oil-and-gas-demo/master/screenshots/Screenshot1.png?token=AK-nZHRzEppiigN44Y5izDQcSc35cqIiks5ZUq4zwA%3D%3D)
+The data set provided include the players data for the Career Mode from FIFA 15 to FIFA 21. The dataset contains every player available in FIFA 21, 100+ attributes, positions and player attributes with statistics as Attacking, Skills, Defense, Mentality, GK Skills, etc. The data has been scraped from the available website: https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset.
+ 
+The report of the dashboard: https://bit.ly/2Qx0D80
+
+Explore our online dashboard at https://fifagen.herokuapp.com/
+
+Contributors:
+- Catarina Pinheiro
+- Henrique Renda
+- Nguyen Huy Phuc
+- Lorenzo Pigozzi
