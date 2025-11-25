@@ -4,8 +4,6 @@ from datetime import datetime
 import os
 from src.logger import logger
 
-#RESULTS_DIR = "fhv-tripdata-mongodb-optimization/src/benchmarks/json_files"
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESULTS_DIR = os.path.join(BASE_DIR, "json_files")
 
