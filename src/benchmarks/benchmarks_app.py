@@ -4,7 +4,10 @@ from datetime import datetime
 import os
 from src.logger import logger
 
-RESULTS_DIR = "benchmarks/json_files"
+#RESULTS_DIR = "fhv-tripdata-mongodb-optimization/src/benchmarks/json_files"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RESULTS_DIR = os.path.join(BASE_DIR, "json_files")
 
 DB_NAME = "trips_db"
 COLLECTION_NAME = "fhvhv_trips_2021-10"
@@ -135,14 +138,14 @@ def save_metrics(metrics, index_param, index_name, filename=None):
 def create_index(index_param):
     collection.create_index(index_param)
 
-def run_benchmark(query, index_param, index_name):
+def run_benchmark(query, index_param, index_name,sort=None, typeOfQuery = "find"):
     #Before Index
-    metrics_before = run_explain(query)
+    metrics_before = run_explain(query, sort=sort, typeOfQuery=typeOfQuery)
     filename = save_metrics( metrics_before, index_param, index_name, filename=None)
 
     #After Index
     create_index(index_param)
-    metrics_after = run_explain(query)
+    metrics_after = run_explain(query, sort=sort, typeOfQuery=typeOfQuery)
     save_metrics( metrics_after, index_param, index_name , filename=filename)
 
 if __name__ == "__main__":
@@ -162,13 +165,16 @@ if __name__ == "__main__":
     logger.info("Running COMPOUND INDEX benchmark...")
     run_benchmark(
         query={
+            "hvfhs_license_num": "HV0003",
             "pickup_datetime": {
-        "$gte": "2021-10-15T00:00:00.000",
-        "$lt": "2021-10-16T00:00:00.000"
-    }
+                "$gte": "2021-10-01T00:00:00.000",
+                "$lt":  "2021-10-02T00:00:00.000"
+            },
+            "PULocationID": 97
         },
-        index_param={"pickup_datetime": 1, "PULocationID": 1},
-        index_name="compound_index"
+        index_param={"hvfhs_license_num": 1, "pickup_datetime": 1, "PULocationID": 1, "trip_miles": -1},
+        index_name="compound_index",
+        sort={ "trip_miles": -1 }
     )
 
 
