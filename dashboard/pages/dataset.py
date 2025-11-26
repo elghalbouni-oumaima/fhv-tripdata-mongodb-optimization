@@ -1,4 +1,3 @@
-
 import dash
 from dash import html, dcc, callback, Input, Output
 import pandas as pd
@@ -10,22 +9,17 @@ dash.register_page(__name__, path='/', name='Dataset')
 # Chargement données
 df = load_dataset('data/sample_dataset.csv')
 
-# -- CORRECTION: Vérification si le chargement a échoué --
 if df.empty:
-    layout = html.Div([
-        html.H2("Erreur de chargement", style={'color': 'red'}),
-        html.P("Le fichier de données est introuvable ou vide."),
-        html.P("Vérifiez que 'dashboard/data/sample_dataset.csv' existe.")
-    ], className="page-container")
+    layout = html.Div([html.H2("Erreur de chargement")])
 else:
-    # Calcul TOP 10 Zones seulement si les données existent
+    # Calcul TOP 10
     try:
         top_zones = df['PULocationID'].value_counts().head(10).reset_index()
         top_zones.columns = ['ZoneID', 'Courses']
+        # On utilise bar pour le top 10 pour changer
         top_fig = make_histogram(top_zones, 'ZoneID', 'TOP 10 Pickup Zones') 
-    except Exception as e:
+    except:
         top_fig = {}
-        print(f"Erreur traitement données: {e}")
 
     layout = html.Div([
         html.H2("Exploration du Dataset Uber"),
@@ -45,7 +39,7 @@ else:
             )
         ], className="card", style={'maxWidth': '400px'}),
         
-        # Grille Graphiques
+        # Grille 2x2 (Équilibrée)
         html.Div([
             # Col 1
             html.Div([
@@ -55,10 +49,14 @@ else:
             # Col 2
             html.Div([
                 dcc.Graph(figure=make_boxplot(df, 'base_passenger_fare', "Distribution des tarifs"), className="card"),
-                dcc.Graph(figure=make_timeline(df, "Courses par heure"), className="card"),
-                dcc.Graph(figure=top_fig, className="card")
+                dcc.Graph(figure=make_timeline(df, "Courses par heure"), className="card")
             ])
-        ], className="grid-2")
+        ], className="grid-2"),
+        
+        # Ligne du bas : Top 10 (Full width)
+        html.Div([
+            dcc.Graph(figure=top_fig, className="card")
+        ], className="full-width")
     ])
 
     @callback(
