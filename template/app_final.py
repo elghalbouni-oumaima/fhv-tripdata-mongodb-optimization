@@ -15,7 +15,7 @@ import dash_bootstrap_components as dbc
 # Dataset Processing
 
 #importing data
-data = pd.read_csv('archive/players_21.csv')
+data = pd.read_csv('template/archive/players_21.csv')
 
 #data cleaning
 nonusefulcolumns = ['sofifa_id','player_url','long_name','league_rank']
@@ -552,66 +552,74 @@ app.layout = dbc.Container([
      Input(component_id="age_slider", component_property="value")]
 )
 ###########Bar plot#######################################
+###########Bar plot#######################################
 def bar_plot(input_value1,input_value2,input_value3, age):
 
+    # Filtrer les données par âge
     filtered_by_age_data = data[(data['age'] >= age[0]) & (data['age'] <= age[1])]
 
+    # --- CORRECTION GRAPHIQUE 1 ---
+    # On calcule d'abord la série triée (Top 5)
+    s1 = filtered_by_age_data.groupby('league_name')[input_value1].mean().sort_values(ascending=False).head(5)
+    
     data_bar1 = dict(
         type='bar',
-        y=filtered_by_age_data.groupby('league_name').median()[input_value1].sort_values(ascending=False).head(5),
-        x=filtered_by_age_data['league_name'].unique()
+        y=s1,          # Les valeurs (chiffres)
+        x=s1.index     # CORRECTION: On prend les noms des ligues QUI CORRESPONDENT au Top 5
     )
 
+    # --- CORRECTION GRAPHIQUE 2 ---
+    # On utilise numeric_only=True ou on sélectionne la colonne avant (comme vu précédemment)
+    s2 = filtered_by_age_data.groupby('league_name')[input_value2].median().sort_values(ascending=False).head(5)
 
     data_bar2 = dict(
         type='bar',
-        y=filtered_by_age_data.groupby('league_name').median()[input_value2].sort_values(ascending=False).head(5),
-        x=filtered_by_age_data['league_name'].unique()
+        y=s2,
+        x=s2.index     # CORRECTION: On aligne X avec Y
     )
+
+    # --- CORRECTION GRAPHIQUE 3 ---
+    s3 = filtered_by_age_data.groupby('league_name')[input_value3].median().sort_values(ascending=False).head(5)
 
     data_bar3 = dict(
         type='bar',
-        y=filtered_by_age_data.groupby('league_name').median()[input_value3].sort_values(ascending=False).head(5),
-        x=filtered_by_age_data['league_name'].unique()
-    ),
+        y=s3,
+        x=s3.index
+    ) # <--- J'ai supprimé la virgule qui traînait ici dans ton code original
 
-    layout_bar1 = dict(                    
-                      xaxis=dict(title='League', tickangle=45),
-                      )
-    
-    layout_bar2 = dict(
-                      xaxis=dict(title='League',tickangle=45),
-                      )
-    
-    layout_bar3 = dict(
-                      xaxis=dict(title='League',tickangle=45),
-                      )
+    layout_bar1 = dict(xaxis=dict(title='League', tickangle=45))
+    layout_bar2 = dict(xaxis=dict(title='League', tickangle=45))
+    layout_bar3 = dict(xaxis=dict(title='League', tickangle=45))
+
+    # Création des Figures
     fig1 = go.Figure(data=data_bar1, layout=layout_bar1)
     fig1.update_traces(marker_color='rgb(133,61,246)', marker_line_color='rgb(133,61,246)', marker_line_width=0.8, opacity=0.9)
-    fig1.update_layout(title_text=input_value1.capitalize(),title_x=0.5,
+    fig1.update_layout(title_text=input_value1.capitalize(), title_x=0.5,
                        margin=dict(l=70, r=40, t=60, b=40),
-                       plot_bgcolor = 'rgba(0, 0, 0, 0)',
-                       paper_bgcolor = 'rgba(0, 0, 0, 0)',
-                       xaxis = dict(gridcolor= "#e5e6dc",gridwidth= 0.5),
-                       yaxis = dict(tickcolor= "#e5e6dc",tickwidth= 5,gridcolor= "#e5e6dc",gridwidth= 0.5))
+                       plot_bgcolor='rgba(0, 0, 0, 0)',
+                       paper_bgcolor='rgba(0, 0, 0, 0)',
+                       xaxis=dict(gridcolor="#e5e6dc", gridwidth=0.5),
+                       yaxis=dict(tickcolor="#e5e6dc", tickwidth=5, gridcolor="#e5e6dc", gridwidth=0.5))
     
     fig2 = go.Figure(data=data_bar2, layout=layout_bar2)
     fig2.update_traces(marker_color='rgb(158,50,249)', marker_line_color='rgb(133,61,246)', marker_line_width=0.8, opacity=0.9)
-    fig2.update_layout(title_text=input_value2.capitalize(),title_x=0.5,
+    fig2.update_layout(title_text=input_value2.capitalize(), title_x=0.5,
                        margin=dict(l=70, r=40, t=60, b=40),
-                       plot_bgcolor = 'rgba(0, 0, 0, 0)',
-                       paper_bgcolor = 'rgba(0, 0, 0, 0)',
-                       xaxis = dict(gridcolor= "#e5e6dc",gridwidth= 0.5),
-                       yaxis = dict(tickcolor= "#e5e6dc",tickwidth= 5,gridcolor= "#e5e6dc",gridwidth= 0.5))
+                       plot_bgcolor='rgba(0, 0, 0, 0)',
+                       paper_bgcolor='rgba(0, 0, 0, 0)',
+                       xaxis=dict(gridcolor="#e5e6dc", gridwidth=0.5),
+                       yaxis=dict(tickcolor="#e5e6dc", tickwidth=5, gridcolor="#e5e6dc", gridwidth=0.5))
+
     fig3 = go.Figure(data=data_bar3, layout=layout_bar3)
     fig3.update_traces(marker_color='rgb(189,34,250)', marker_line_color='rgb(133,61,246)', marker_line_width=0.8, opacity=0.9)
-    fig3.update_layout(title_text=input_value3.capitalize(),title_x=0.5,
+    fig3.update_layout(title_text=input_value3.capitalize(), title_x=0.5,
                        margin=dict(l=70, r=40, t=60, b=40),
-                       plot_bgcolor = 'rgba(0, 0, 0, 0)',
-                       paper_bgcolor = 'rgba(0, 0, 0, 0)',
-                       xaxis = dict(gridcolor= "#e5e6dc",gridwidth= 0.5),
-                       yaxis = dict(tickcolor= "#e5e6dc",tickwidth= 5,gridcolor= "#e5e6dc",gridwidth= 0.5))
-    return fig1,fig2,fig3
+                       plot_bgcolor='rgba(0, 0, 0, 0)',
+                       paper_bgcolor='rgba(0, 0, 0, 0)',
+                       xaxis=dict(gridcolor="#e5e6dc", gridwidth=0.5),
+                       yaxis=dict(tickcolor="#e5e6dc", tickwidth=5, gridcolor="#e5e6dc", gridwidth=0.5))
+                       
+    return fig1, fig2, fig3
            
 
 #----------------Callbacks for 2nd tab, clubs analysis----------------#
@@ -776,7 +784,7 @@ def tab_1_function(player1, player2):
     df1_for_plot['name'] = player2
     gauge1 = go.Figure(go.Indicator(
         domain={'x': [0, 1], 'y': [0, 1]},
-        value=df1_for_plot.potential.iloc[0],
+        value=df1_for_plot['potential'].iloc[0],
         mode="gauge+number",
         gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#5000bf"}}))
     gauge1.update_layout(
@@ -815,7 +823,7 @@ def tab_1_function(player1, player2):
     df2_for_plot['name'] = player2
     gauge2 = go.Figure(go.Indicator(
         domain={'x': [0, 1], 'y': [0, 1]},
-        value=df2_for_plot.potential.iloc[0],
+        value=df2_for_plot['potential'].iloc[0],
         mode="gauge+number",
         gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "rgb(255,171,0)"}}))
     gauge2.update_layout(
@@ -862,5 +870,5 @@ def tab_1_function(player1, player2):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run(debug=True)
 
