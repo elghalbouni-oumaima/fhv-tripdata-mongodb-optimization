@@ -15,7 +15,7 @@ import dash_bootstrap_components as dbc
 # Dataset Processing
 
 #importing data
-data = pd.read_csv('archive/players_21.csv')
+data = pd.read_csv('template/archive/players_21.csv')
 
 #data cleaning
 nonusefulcolumns = ['sofifa_id','player_url','long_name','league_rank']
@@ -862,5 +862,5 @@ def tab_1_function(player1, player2):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run(debug=True)
 
