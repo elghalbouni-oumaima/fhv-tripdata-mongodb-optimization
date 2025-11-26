@@ -1,0 +1,115 @@
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #18bc9c;
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-color: #333;
+}
+
+body {
+    background-color: var(--bg-color);
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+}
+
+.navbar {
+    background-color: var(--primary-color);
+    padding: 1rem 2rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+}
+
+.nav-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-right: 3rem;
+    text-decoration: none;
+}
+
+.nav-link {
+    color: #ecf0f1;
+    text-decoration: none;
+    margin-right: 1.5rem;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--secondary-color);
+}
+
+.page-container {
+    padding: 80px 2rem 2rem 2rem; /* Top padding for fixed navbar */
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+}
+
+.kpi-card {
+    text-align: center;
+    border-left: 5px solid var(--secondary-color);
+}
+
+.kpi-title {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.kpi-value-main {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.kpi-diff {
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+.diff-good { color: #27ae60; }
+.diff-bad { color: #c0392b; }
+
+.tree-node {
+    border: 2px solid #bdc3c7;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 6px;
+    background: #ecf0f1;
+    width: fit-content;
+    text-align: center;
+    font-weight: bold;
+}
+.tree-arrow {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #7f8c8d;
+}
+.badge-info {
+    background-color: #3498db;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
