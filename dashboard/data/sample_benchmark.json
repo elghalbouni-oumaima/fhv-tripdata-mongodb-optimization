@@ -1,0 +1,33 @@
+{
+  "index_name": "hashed_index",
+  "index_param": {
+    "PULocationID": "hashed"
+  },
+  "results": {
+    "before": {
+      "executionTimeMillis": 1534,
+      "totalDocsExamined": 15000000,
+      "totalKeysExamined": 0,
+      "nReturned": 54,
+      "indexName": null,
+      "executionStages": {
+        "stage": "COLLSCAN",
+        "direction": "forward"
+      }
+    },
+    "after": {
+      "executionTimeMillis": 4,
+      "totalDocsExamined": 54,
+      "totalKeysExamined": 54,
+      "nReturned": 54,
+      "indexName": "PULocationID_hashed",
+      "executionStages": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "indexName": "PULocationID_hashed"
+        }
+      }
+    }
+  }
+}
