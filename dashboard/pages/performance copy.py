@@ -3,7 +3,7 @@ import dash
 from dash import html, dcc, dash_table
 import pandas as pd
 from utils.loader import load_benchmark
-from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
+from utils.charts import  make_kpi_card,build_double_donut_chart,build_bar_chart
 
 dash.register_page(__name__, path='/performance', name='Performance')
 
