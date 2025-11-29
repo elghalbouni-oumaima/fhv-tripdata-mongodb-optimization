@@ -126,3 +126,66 @@ body {
     font-size: 0.8rem;
     margin-right: 5px;
 }
+
+.inline-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;          /* espace entre label et dropdown */
+    margin-bottom: 10px;
+}
+
+.form-dropdown {
+    min-width: 220px;   /* élargir la zone de sélection */
+    width: 260px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-label {
+    width: 120px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.form-input {
+    min-width: 250px;
+}
+
+.btn-search {
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: 200px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.form-inline-container {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.form-row-inline {
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
+}
+
+.form-row-inline .form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
