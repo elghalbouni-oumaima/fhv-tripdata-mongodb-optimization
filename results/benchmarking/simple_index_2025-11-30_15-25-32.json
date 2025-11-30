@@ -1,0 +1,152 @@
+{
+    "index_name": "simple_index",
+    "index_param": {
+        "trip_time": 1
+    },
+    "results": {
+        "before": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "trip_time": {
+                    "$gte": 300
+                }
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 15892632,
+            "executionTimeMillis": 42080,
+            "totalDocsExamined": 15892632,
+            "totalKeysExamined": 15892632,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 15892632,
+                "executionTimeMillisEstimate": 39926,
+                "works": 15892633,
+                "advanced": 15892632,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 2419,
+                "restoreState": 2419,
+                "isEOF": 1,
+                "docsExamined": 15892632,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 15892632,
+                    "executionTimeMillisEstimate": 10752,
+                    "works": 15892633,
+                    "advanced": 15892632,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 2419,
+                    "restoreState": 2419,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "trip_time": 1
+                    },
+                    "indexName": "trip_time_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "trip_time": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "trip_time": [
+                            "[300, inf]"
+                        ]
+                    },
+                    "keysExamined": 15892632,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "trip_time_1",
+            "indexBounds": {
+                "trip_time": [
+                    "[300, inf]"
+                ]
+            },
+            "memoryUsageBytesEstimate": null,
+            "sortPattern": null
+        },
+        "after": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "trip_time": {
+                    "$gte": 300
+                }
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 15892632,
+            "executionTimeMillis": 40525,
+            "totalDocsExamined": 15892632,
+            "totalKeysExamined": 15892632,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 15892632,
+                "executionTimeMillisEstimate": 38411,
+                "works": 15892633,
+                "advanced": 15892632,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 2301,
+                "restoreState": 2301,
+                "isEOF": 1,
+                "docsExamined": 15892632,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 15892632,
+                    "executionTimeMillisEstimate": 11495,
+                    "works": 15892633,
+                    "advanced": 15892632,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 2301,
+                    "restoreState": 2301,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "trip_time": 1
+                    },
+                    "indexName": "trip_time_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "trip_time": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "trip_time": [
+                            "[300, inf]"
+                        ]
+                    },
+                    "keysExamined": 15892632,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "trip_time_1",
+            "indexBounds": {
+                "trip_time": [
+                    "[300, inf]"
+                ]
+            },
+            "memoryUsageBytesEstimate": null,
+            "sortPattern": null
+        }
+    }
+}

@@ -1,0 +1,249 @@
+{
+    "index_name": "compound_index",
+    "index_param": {
+        "hvfhs_license_num": 1,
+        "pickup_datetime": 1,
+        "PULocationID": 1,
+        "trip_miles": -1
+    },
+    "results": {
+        "before": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "$and": [
+                    {
+                        "PULocationID": {
+                            "$eq": 97
+                        }
+                    },
+                    {
+                        "hvfhs_license_num": {
+                            "$eq": "HV0003"
+                        }
+                    },
+                    {
+                        "pickup_datetime": {
+                            "$lt": "2021-10-02T00:00:00.000"
+                        }
+                    },
+                    {
+                        "pickup_datetime": {
+                            "$gte": "2021-10-01T00:00:00.000"
+                        }
+                    }
+                ]
+            },
+            "optimizationTimeMillis": 2,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 0,
+            "executionTimeMillis": 11218,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "executionStages": {
+                "isCached": false,
+                "stage": "SORT",
+                "nReturned": 0,
+                "executionTimeMillisEstimate": 10000,
+                "works": 16545358,
+                "advanced": 0,
+                "needTime": 16545357,
+                "needYield": 0,
+                "saveState": 657,
+                "restoreState": 657,
+                "isEOF": 1,
+                "sortPattern": {
+                    "trip_miles": -1
+                },
+                "memLimit": 104857600,
+                "type": "simple",
+                "totalDataSizeSorted": 0,
+                "usedDisk": false,
+                "spills": 0,
+                "spilledRecords": 0,
+                "spilledBytes": 0,
+                "spilledDataStorageSize": 0,
+                "inputStage": {
+                    "stage": "COLLSCAN",
+                    "filter": {
+                        "$and": [
+                            {
+                                "PULocationID": {
+                                    "$eq": 97
+                                }
+                            },
+                            {
+                                "hvfhs_license_num": {
+                                    "$eq": "HV0003"
+                                }
+                            },
+                            {
+                                "pickup_datetime": {
+                                    "$lt": "2021-10-02T00:00:00.000"
+                                }
+                            },
+                            {
+                                "pickup_datetime": {
+                                    "$gte": "2021-10-01T00:00:00.000"
+                                }
+                            }
+                        ]
+                    },
+                    "nReturned": 0,
+                    "executionTimeMillisEstimate": 8797,
+                    "works": 16545357,
+                    "advanced": 0,
+                    "needTime": 16545356,
+                    "needYield": 0,
+                    "saveState": 657,
+                    "restoreState": 657,
+                    "isEOF": 1,
+                    "direction": "forward",
+                    "docsExamined": 16545356
+                }
+            },
+            "indexName": null,
+            "indexBounds": null,
+            "memoryUsageBytesEstimate": null,
+            "sortPattern": null
+        },
+        "after": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "$and": [
+                    {
+                        "PULocationID": {
+                            "$eq": 97
+                        }
+                    },
+                    {
+                        "hvfhs_license_num": {
+                            "$eq": "HV0003"
+                        }
+                    },
+                    {
+                        "pickup_datetime": {
+                            "$lt": "2021-10-02T00:00:00.000"
+                        }
+                    },
+                    {
+                        "pickup_datetime": {
+                            "$gte": "2021-10-01T00:00:00.000"
+                        }
+                    }
+                ]
+            },
+            "optimizationTimeMillis": 5,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 0,
+            "executionTimeMillis": 16,
+            "totalDocsExamined": 0,
+            "totalKeysExamined": 1,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 0,
+                "executionTimeMillisEstimate": 3,
+                "works": 2,
+                "advanced": 0,
+                "needTime": 1,
+                "needYield": 0,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "docsExamined": 0,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "SORT",
+                    "nReturned": 0,
+                    "executionTimeMillisEstimate": 3,
+                    "works": 2,
+                    "advanced": 0,
+                    "needTime": 1,
+                    "needYield": 0,
+                    "saveState": 0,
+                    "restoreState": 0,
+                    "isEOF": 1,
+                    "sortPattern": {
+                        "trip_miles": -1
+                    },
+                    "memLimit": 104857600,
+                    "type": "default",
+                    "totalDataSizeSorted": 0,
+                    "usedDisk": false,
+                    "spills": 0,
+                    "spilledRecords": 0,
+                    "spilledBytes": 0,
+                    "spilledDataStorageSize": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 0,
+                        "executionTimeMillisEstimate": 3,
+                        "works": 1,
+                        "advanced": 0,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 0,
+                        "restoreState": 0,
+                        "isEOF": 1,
+                        "keyPattern": {
+                            "hvfhs_license_num": 1,
+                            "pickup_datetime": 1,
+                            "PULocationID": 1,
+                            "trip_miles": -1
+                        },
+                        "indexName": "hvfhs_license_num_1_pickup_datetime_1_PULocationID_1_trip_miles_-1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "hvfhs_license_num": [],
+                            "pickup_datetime": [],
+                            "PULocationID": [],
+                            "trip_miles": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "hvfhs_license_num": [
+                                "[\"HV0003\", \"HV0003\"]"
+                            ],
+                            "pickup_datetime": [
+                                "[\"2021-10-01T00:00:00.000\", \"2021-10-02T00:00:00.000\")"
+                            ],
+                            "PULocationID": [
+                                "[97, 97]"
+                            ],
+                            "trip_miles": [
+                                "[MaxKey, MinKey]"
+                            ]
+                        },
+                        "keysExamined": 1,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": "hvfhs_license_num_1_pickup_datetime_1_PULocationID_1_trip_miles_-1",
+            "indexBounds": {
+                "hvfhs_license_num": [
+                    "[\"HV0003\", \"HV0003\"]"
+                ],
+                "pickup_datetime": [
+                    "[\"2021-10-01T00:00:00.000\", \"2021-10-02T00:00:00.000\")"
+                ],
+                "PULocationID": [
+                    "[97, 97]"
+                ],
+                "trip_miles": [
+                    "[MaxKey, MinKey]"
+                ]
+            },
+            "memoryUsageBytesEstimate": null,
+            "sortPattern": null
+        }
+    }
+}
