@@ -173,8 +173,8 @@ if __name__ == "__main__":
     logger.info("Running SIMPLE INDEX benchmark...")
     q = {'trip_time':{'$gte': 300}}
     print(q)
-    # metrics_before = run_explain(q)
-    # print(metrics_before)
+    metrics_before = run_explain(q)
+    print(metrics_before)
     run_benchmark(
         query=q,
         index_param={ "trip_time": 1 },
