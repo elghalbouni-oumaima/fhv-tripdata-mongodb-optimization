@@ -67,7 +67,6 @@ def  run_explain(query, coll=collection,sort=None, typeOfQuery = "find"):
         if "inputStages" in stage:
             for s in stage["inputStages"]:
                 extract_index_info(s)
-
     extract_index_info(execution_stages)  
     # Final report with all the important metrics
     return {
@@ -171,41 +170,44 @@ if __name__ == "__main__":
     #result =run_explain(pipeline,typeOfQuery='aggregate')
     # result = collection.aggregate(pipeline).explain()
 
-    logger.info("Running SIMPLE INDEX benchmark...")
-    q = {'trip_time':{'$gte': 300}}
-    print(q)
-    # metrics_before = run_explain(q)
-    # print(metrics_before)
-    run_benchmark(
-        query=q,
-        index_param={ "trip_time": 1 },
-        index_name="simple_index"
-    )
+    # logger.info("Running SIMPLE INDEX benchmark...")
+    # q = {'trip_time':{'$gte': 300}}
+    # print(q)
+    # # metrics_before = run_explain(q)
+    # # print(metrics_before)
+    # run_benchmark(
+    #     query=q,
+    #     index_param={ "trip_time": 1 },
+    #     index_name="simple_index"
+    # )
     
 
     # COMPOUND INDEX TEST
-    logger.info("Running COMPOUND INDEX benchmark...")
+    logger.info("Running COMPOUND INDEX benchmark with trip filters...")
+
     run_benchmark(
         query={
-            "hvfhs_license_num": "HV0003",
-            "pickup_datetime": {
-                "$gte": "2021-10-01T00:00:00.000",
-                "$lt":  "2021-10-02T00:00:00.000"
-            },
-            "PULocationID": 97
+            "dispatching_base_num": "B02764", 
+            "trip_miles": { "$gte": 5, "$lte": 15 }, 
+            "trip_time": { "$gte": 1200 }  
         },
-        index_param={"hvfhs_license_num": 1, "pickup_datetime": 1, "PULocationID": 1, "trip_miles": -1},
+        index_param={
+            "dispatching_base_num": 1,
+            "trip_miles": 1,
+            "trip_time": -1
+        },
         index_name="compound_index",
-        sort={ "trip_miles": -1 }
+        sort={ "trip_time": -1 } 
     )
 
 
-    # # HASHED INDEX TEST
-    logger.info("Running HASHED INDEX benchmark...")
-    run_benchmark(
-        query={"PULocationID": 100},
-        index_param={"PULocationID": "hashed"},
-        index_name="hashed_index"
-    )
+
+    # # # HASHED INDEX TEST
+    # logger.info("Running HASHED INDEX benchmark...")
+    # run_benchmark(
+    #     query={"PULocationID": 100},
+    #     index_param={"PULocationID": "hashed"},
+    #     index_name="hashed_index"
+    # )
 
     logger.info("===== All benchmarks completed successfully =====")
