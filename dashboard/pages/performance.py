@@ -1,35 +1,19 @@
 import dash
 from dash import html, dcc, dash_table, Input, Output, State, ctx
-from utils.loader import load_benchmark,get_file
+from utils.loader import load_benchmark,get_file,load_latest_benchmark
 from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
 import json
 from dash_svg import Svg, Line, Polygon
 import os
-import re
 
 dash.register_page(__name__, path="/performance", name="Performance")
 
 # Chargement
-data = load_benchmark('../results/benchmarking/simple_index_2025-11-30_15-25-32.json')
-before = data['results']['before']
-after = data['results']['after']
-print(after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A'))
-def load_latest_benchmark(index_type):
-
-    folder = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "results", "benchmarking")
-    )
-
-    pattern = re.compile(rf"{index_type}_index_.*\.json")
-
-    candidates = [f for f in os.listdir(folder) if pattern.match(f)]
-
-    if not candidates:
-        return None, f"No benchmark file found for index type: {index_type}"
-
-    candidates.sort(reverse=True)
-    latest_file = os.path.join(folder, candidates[0])
-    return latest_file, None
+last_file, error = load_latest_benchmark('simple')
+data = load_benchmark(last_file) if last_file else {}
+before = data.get('results', {}).get('before', {})
+after = data.get('results', {}).get('after', {})
+# print(after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A'))
 
 def extract_execution_flow(stage, flow=None):
     """Extraire le flow MongoDB sous forme de liste ordonnée."""
