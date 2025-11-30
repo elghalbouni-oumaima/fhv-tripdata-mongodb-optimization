@@ -170,16 +170,16 @@ if __name__ == "__main__":
     #result =run_explain(pipeline,typeOfQuery='aggregate')
     # result = collection.aggregate(pipeline).explain()
 
-    logger.info("Running SIMPLE INDEX benchmark...")
-    q = {'trip_time':{'$gte': 300}}
-    print(q)
-    metrics_before = run_explain(q)
-    print(metrics_before)
-    run_benchmark(
-        query=q,
-        index_param={ "trip_time": 1 },
-        index_name="simple_index"
-    )
+    # logger.info("Running SIMPLE INDEX benchmark...")
+    # q = {'trip_time':{'$gte': 300}}
+    # print(q)
+    # # metrics_before = run_explain(q)
+    # # print(metrics_before)
+    # run_benchmark(
+    #     query=q,
+    #     index_param={ "trip_time": 1 },
+    #     index_name="simple_index"
+    # )
     
 
     # COMPOUND INDEX TEST
@@ -202,12 +202,12 @@ if __name__ == "__main__":
 
 
 
-    # # # HASHED INDEX TEST
-    # logger.info("Running HASHED INDEX benchmark...")
-    # run_benchmark(
-    #     query={"PULocationID": 100},
-    #     index_param={"PULocationID": "hashed"},
-    #     index_name="hashed_index"
-    # )
+    # # HASHED INDEX TEST
+    logger.info("Running HASHED INDEX benchmark...")
+    run_benchmark(
+        query={"PULocationID": 100},
+        index_param={"PULocationID": "hashed"},
+        index_name="hashed_index"
+    )
 
     logger.info("===== All benchmarks completed successfully =====")

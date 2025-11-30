@@ -208,7 +208,7 @@ PRESET_QUERIES = {
 
 BENCHMARK_QUERIES = {
     "simple": "db.fhvhv_trips_2021-10.find({ field: value })",
-    "compound": "db.fhvhv_trips_2021-10.find({ field1: value1 }).sort({ field2: 1 })",
+    "compound": "db.fhvhv_trips_2021-10.find({dispatching_base_num: 'B02764',trip_miles: { $gte: 5, $lte: 15 },trip_time: { $gte: 1200 }}).sort({ trip_time: -1 })",
     "hashed": "db.fhvhv_trips_2021-10.find({ hashField: value })"
 }
 

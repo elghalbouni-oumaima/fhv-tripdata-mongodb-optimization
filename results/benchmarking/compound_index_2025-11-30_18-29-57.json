@@ -32,7 +32,7 @@
                     }
                 ]
             },
-            "optimizationTimeMillis": 126,
+            "optimizationTimeMillis": 132,
             "rejectedPlans": [
                 {
                     "isCached": false,
@@ -80,7 +80,7 @@
             ],
             "executionSuccess": true,
             "nReturned": 152862,
-            "executionTimeMillis": 19682,
+            "executionTimeMillis": 21541,
             "totalDocsExamined": 6067089,
             "totalKeysExamined": 6067089,
             "executionStages": {
@@ -106,26 +106,26 @@
                     ]
                 },
                 "nReturned": 152862,
-                "executionTimeMillisEstimate": 18282,
+                "executionTimeMillisEstimate": 19848,
                 "works": 6067090,
                 "advanced": 152862,
                 "needTime": 5914227,
                 "needYield": 0,
-                "saveState": 1131,
-                "restoreState": 1131,
+                "saveState": 1209,
+                "restoreState": 1209,
                 "isEOF": 1,
                 "docsExamined": 6067089,
                 "alreadyHasObj": 0,
                 "inputStage": {
                     "stage": "IXSCAN",
                     "nReturned": 6067089,
-                    "executionTimeMillisEstimate": 4867,
+                    "executionTimeMillisEstimate": 5302,
                     "works": 6067090,
                     "advanced": 6067089,
                     "needTime": 0,
                     "needYield": 0,
-                    "saveState": 1131,
-                    "restoreState": 1131,
+                    "saveState": 1209,
+                    "restoreState": 1209,
                     "isEOF": 1,
                     "keyPattern": {
                         "trip_time": 1
@@ -186,7 +186,7 @@
                     }
                 ]
             },
-            "optimizationTimeMillis": 118,
+            "optimizationTimeMillis": 185,
             "rejectedPlans": [
                 {
                     "isCached": false,
@@ -234,7 +234,7 @@
             ],
             "executionSuccess": true,
             "nReturned": 152862,
-            "executionTimeMillis": 19670,
+            "executionTimeMillis": 22146,
             "totalDocsExamined": 6067089,
             "totalKeysExamined": 6067089,
             "executionStages": {
@@ -260,26 +260,26 @@
                     ]
                 },
                 "nReturned": 152862,
-                "executionTimeMillisEstimate": 18213,
+                "executionTimeMillisEstimate": 20555,
                 "works": 6067090,
                 "advanced": 152862,
                 "needTime": 5914227,
                 "needYield": 0,
-                "saveState": 1102,
-                "restoreState": 1102,
+                "saveState": 1252,
+                "restoreState": 1252,
                 "isEOF": 1,
                 "docsExamined": 6067089,
                 "alreadyHasObj": 0,
                 "inputStage": {
                     "stage": "IXSCAN",
                     "nReturned": 6067089,
-                    "executionTimeMillisEstimate": 4718,
+                    "executionTimeMillisEstimate": 5378,
                     "works": 6067090,
                     "advanced": 6067089,
                     "needTime": 0,
                     "needYield": 0,
-                    "saveState": 1102,
-                    "restoreState": 1102,
+                    "saveState": 1252,
+                    "restoreState": 1252,
                     "isEOF": 1,
                     "keyPattern": {
                         "trip_time": 1
