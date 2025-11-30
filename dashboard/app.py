@@ -3,7 +3,7 @@ import dash
 from dash import html, dcc
 
 # Initialisation
-app = dash.Dash(__name__, use_pages=True)
+app = dash.Dash(__name__, use_pages=True,suppress_callback_exceptions=True)
 server = app.server
 
 # Layout Principal

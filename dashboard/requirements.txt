@@ -5,7 +5,4 @@ numpy
 shapely
 pymongo
 flask
-flask-caching
-dnspython
-python-dotenv
-geopy
+dash_svg
