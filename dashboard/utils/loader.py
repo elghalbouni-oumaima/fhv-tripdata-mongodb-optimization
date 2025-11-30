@@ -2,6 +2,7 @@
 import pandas as pd
 import json
 import os
+import re
 
 # -- CORRECTION: Gestion des chemins absolus --
 # On récupère le dossier où se trouve loader.py (dashboard/utils)
@@ -41,3 +42,19 @@ def get_file(input_value):
         data = load_benchmark('../results/benchmarking/simple_index_2025-11-30_15-25-32.json')
     return data
    
+def load_latest_benchmark(index_type):
+
+    folder = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "results", "benchmarking")
+    )
+
+    pattern = re.compile(rf"{index_type}_index_.*\.json")
+
+    candidates = [f for f in os.listdir(folder) if pattern.match(f)]
+
+    if not candidates:
+        return None, f"No benchmark file found for index type: {index_type}"
+
+    candidates.sort(reverse=True)
+    latest_file = os.path.join(folder, candidates[0])
+    return latest_file, None

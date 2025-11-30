@@ -170,6 +170,7 @@ if __name__ == "__main__":
     #result =run_explain(pipeline,typeOfQuery='aggregate')
     # result = collection.aggregate(pipeline).explain()
 
+<<<<<<< HEAD
     # logger.info("Running SIMPLE INDEX benchmark...")
     # q = {'trip_time':{'$gte': 300}}
     # print(q)
@@ -180,6 +181,18 @@ if __name__ == "__main__":
     #     index_param={ "trip_time": 1 },
     #     index_name="simple_index"
     # )
+=======
+    logger.info("Running SIMPLE INDEX benchmark...")
+    q = {'trip_time':{'$gte': 300}}
+    print(q)
+    metrics_before = run_explain(q)
+    print(metrics_before)
+    run_benchmark(
+        query=q,
+        index_param={ "trip_time": 1 },
+        index_name="simple_index"
+    )
+>>>>>>> bdbefe4644ff196024cc29a0ab57ecd0300a095a
     
 
     # COMPOUND INDEX TEST
