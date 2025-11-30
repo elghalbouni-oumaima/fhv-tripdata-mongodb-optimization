@@ -9,10 +9,10 @@ import json
 dash.register_page(__name__, path="/performance", name="Performance")
 
 # Chargement
-data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
 before = data['results']['before']
 after = data['results']['after']
-
+print(after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A'))
 # ============================================
 # 1. Configuration des options
 # ============================================
@@ -211,37 +211,32 @@ layout = html.Div([
     
     # Badges
     html.Div([
-        html.Span(f"Index: {after.get('indexName', 'N/A')}", className="badge-info"),
+        html.Span(f"Index: {after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A')}", className="badge-info"),
         html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info"),
-    ], className="card"),
-    
+    ],id='badge-info', className="card"),
+    query_controls,  
     # KPI Cards
     html.Div([
         make_kpi_card("Execution Time", before.get('executionTimeMillis'), after.get('executionTimeMillis'), "ms"),
+        make_kpi_card("Optimisation Time", before.get('optimizationTimeMillis'), after.get('optimizationTimeMillis'), "ms"),
         make_kpi_card("Docs Examined", before.get('totalDocsExamined'), after.get('totalDocsExamined')),
         make_kpi_card("Keys Examined", before.get('totalKeysExamined'), after.get('totalKeysExamined')),
-    ], className="grid-3"),
+    ],id='cards-kpi', className="grid-4"),
     
     # Comparaison Graphique & Table
     html.Div([
         html.Div([
             html.H3("Performance Metrics Comparison (Before vs After Index)"),
-            #dcc.Graph(figure=make_comparison_bar(before, after, 'executionTimeMillis', "Temps d'exécution (ms)")),
-            dcc.Graph(figure=build_bar_chart(),style={'width': '100%'}),
+            dcc.Graph(id='bar_chart',figure=build_bar_chart(before,after),style={'width': '100%'}),
         ], className="card"),
         
         html.Div([
             html.H3("Documents and Keys Examined"),
             html.Div([
-                dcc.Graph(figure=build_double_donut_chart(),style={'width': '100%'}),
+                dcc.Graph(id='donut_chart',figure=build_double_donut_chart(before,after),style={'width': '100%'}),
             ],className="donut-card")
            
         ],className="card"),
-
-        # html.Div([
-        #     html.H3("Comparaison Visuelle"),
-        #     dcc.Graph(figure=make_comparison_bar(before, after, 'totalDocsExamined', "Documents Examinés"))
-        # ], className="card"),
         
         
     ], className="grid-2"),
@@ -249,12 +244,8 @@ layout = html.Div([
             html.H3("Détails Chiffrés"),
             #dcc.Graph(figure=make_comparison_bar(before, after, 'totalDocsExamined', "Documents Examinés")),
             dash_table.DataTable(
-                data=[
-                    {'Metric': 'Time (ms)', 'Before': before.get('executionTimeMillis'), 'After': after.get('executionTimeMillis')},
-                    {'Metric': 'Docs Examined', 'Before': before.get('totalDocsExamined'), 'After': after.get('totalDocsExamined')},
-                    {'Metric': 'Keys Examined', 'Before': before.get('totalKeysExamined'), 'After': after.get('totalKeysExamined')},
-                    {'Metric': 'nReturned', 'Before': before.get('nReturned'), 'After': after.get('nReturned')}
-                ],
+                id="details-table",
+                data=[],
                 style_cell={'textAlign': 'left', 'padding': '10px'},
                 style_header={'backgroundColor': '#ecf0f1', 'fontWeight': 'bold'},
                 style_as_list_view=True
@@ -277,7 +268,7 @@ layout = html.Div([
     # ], className="card")
     # html.H2("Performance & Index Benchmark Visualization"),
 
-    # query_controls,  # <-- ajouté ici
+    
 
     # html.Br(),
 
@@ -289,6 +280,102 @@ layout = html.Div([
 # ============================================
 # 4. Callbacks
 # ============================================
+@dash.callback(
+    Output("badge-info", "children"),
+    Input("benchmark-dropdown", "value")
+)
+def update_badge_info(input_value):
+    if input_value == 'hashed':
+        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
+    elif input_value == 'compound':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
+    elif input_value == 'simple':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    before = data['results']['before']
+    after = data['results']['after']
+    print(before.get('executionTimeMillis'))
+    idx_name = after.get('executionStages', 'N/A').get('inputStage', 'N/A')
+    if idx_name.get('indexName', 'N/A') == 'N/A':
+        idx_name = idx_name.get('inputStage', 'N/A')
+    dv =[
+        html.Span(f"Index: {idx_name.get('indexName', 'N/A')}", className="badge-info"),
+        html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info"),
+    ]
+    return dv
+@dash.callback(
+    Output("cards-kpi", "children"),
+    Input("benchmark-dropdown", "value")
+)
+def update_cards(input_value):
+    if input_value == 'hashed':
+        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
+    elif input_value == 'compound':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
+    elif input_value == 'simple':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    before = data['results']['before']
+    after = data['results']['after']
+    print(before.get('executionTimeMillis'))
+    dv =[
+        make_kpi_card("Execution Time", before.get('executionTimeMillis'), after.get('executionTimeMillis'), "ms"),
+        make_kpi_card("Optimisation Time", before.get('optimizationTimeMillis'), after.get('optimizationTimeMillis'), "ms"),
+        make_kpi_card("Docs Examined", before.get('totalDocsExamined'), after.get('totalDocsExamined')),
+        make_kpi_card("Keys Examined", before.get('totalKeysExamined'), after.get('totalKeysExamined')),
+    ]
+    return dv
+
+@dash.callback(
+    Output("details-table", "data"),
+    Input("benchmark-dropdown", "value")
+)
+def update_details_table(input_value):
+    if input_value == 'hashed':
+        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
+    elif input_value == 'compound':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
+    elif input_value == 'simple':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    before = data['results']['before']
+    after = data['results']['after']
+    dt=[
+            {'Metric': 'Time (ms)', 'Before': before.get('executionTimeMillis'), 'After': after.get('executionTimeMillis')},
+            {'Metric': 'Docs Examined', 'Before': before.get('totalDocsExamined'), 'After': after.get('totalDocsExamined')},
+            {'Metric': 'Keys Examined', 'Before': before.get('totalKeysExamined'), 'After': after.get('totalKeysExamined')},
+            {'Metric': 'nReturned', 'Before': before.get('nReturned'), 'After': after.get('nReturned')}
+        ]
+    return dt
+
+@dash.callback(
+    Output(component_id='bar_chart', component_property='figure'),
+    Input(component_id='benchmark-dropdown', component_property='value')
+)
+def update_bar_chart(input_value):
+    if input_value == 'hashed':
+        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
+    elif input_value == 'compound':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
+    elif input_value == 'simple':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    before = data['results']['before']
+    after = data['results']['after']
+    return build_bar_chart(before,after)
+
+
+@dash.callback(
+    Output(component_id='donut_chart', component_property='figure'),
+    Input(component_id='benchmark-dropdown', component_property='value')
+)
+def update_donut_chart(input_value):
+    if input_value == 'hashed':
+        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
+    elif input_value == 'compound':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
+    elif input_value == 'simple':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    before = data['results']['before']
+    after = data['results']['after']
+    return build_double_donut_chart(before,after)
+
 
 # Afficher / cacher le FIND builder
 @dash.callback(

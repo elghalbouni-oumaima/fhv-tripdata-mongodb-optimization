@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from dash import html
 import pandas as pd
 from plotly.subplots import make_subplots
-
+import numpy as np
 
 
 COLOR_PRIMARY = '#2c3e50'
@@ -110,9 +110,6 @@ def make_comparison_bar(before, after, metric_key, title):
 
 
 
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-
 # def build_double_donut_chart():
 #     # Shared Labels
 #     labels = ["Metric A", "Metric B", "Metric C"]
@@ -154,12 +151,12 @@ from plotly.subplots import make_subplots
 
 
 
-def build_double_donut_chart():
+def build_double_donut_chart(before,after):
     labels = ["totalKeysExamined", "totalDocsExamined", "nReturned"]
-
-    before_values = [20, 35, 30]
-    after_values = [30, 25, 45]
-
+    total_before = before.get('totalKeysExamined')+before.get('totalDocsExamined')+before.get('nReturned')
+    total_after = after.get('totalKeysExamined')+after.get('totalDocsExamined')+after.get('nReturned')
+    before_values = [before.get('totalKeysExamined')/total_before * 100,before.get('totalDocsExamined')/total_before * 100,before.get('nReturned')/total_before * 100]
+    after_values = [after.get('totalKeysExamined')/total_after * 100,after.get('totalDocsExamined')/total_after * 100,after.get('nReturned')/total_after * 100]
     fig = go.Figure()
 
     # Donut 1: Before Index
@@ -169,7 +166,7 @@ def build_double_donut_chart():
         name="Before Index",
         hole=0.55,
         domain={'x': [0, 0.45]},  # left position
-        textinfo="percent"
+        textinfo="percent",
     ))
 
     # Donut 2: After Index
@@ -187,7 +184,9 @@ def build_double_donut_chart():
         # legend
         legend_title="Categories",
         showlegend=True,
-
+        width=500,   # width in pixels
+        height=450,  # height in pixels
+        margin=dict(t=0, l=0, r=0, b=0), # control whitespace
         # Legend position
         legend=dict(
             orientation="h",
@@ -196,60 +195,50 @@ def build_double_donut_chart():
             xanchor="center",
             x=0.5,
             title_text=""
-        )
+        ),
     )
-    fig.update_layout(
-        width=500,   # width in pixels
-        height=450,  # height in pixels
-        legend_title="Metrics",
-        showlegend=True,
-        margin=dict(t=0, l=0, r=0, b=0), # control whitespace
-        title_text=""
-    )
+   
 
     # Titles above each donut
-    fig.add_annotation(x=0.22, y=1.1, text="Before Index", showarrow=False, font=dict(size=14))
-    fig.add_annotation(x=0.78, y=1.1, text="After Index", showarrow=False, font=dict(size=14))
+    fig.add_annotation(x=0.1, y=1.1, text="Before Index", showarrow=False, font=dict(size=14))
+    fig.add_annotation(x=0.85, y=1.1, text="After Index", showarrow=False, font=dict(size=14))
 
     return fig
 
-# def build_donut_charts():
-#     labels = ["Category A", "Category B", "Category C"]
 
-#     # Before value distribution
-#     values_before = [50, 30, 20]
-#     fig_before = px.pie(
-#         values=values_before,
-#         hole=0.5,  # Donut style
-#         title="Before Index"
-#     )
-
-#     # After value distribution
-#     values_after = [30, 45, 25]
-#     fig_after = px.pie(
-#         values=values_after,
-#         hole=0.5,
-#         title="After Index"
-#     )
-
-#     fig_before.update_layout(legend_title=None)
-#     fig_after.update_layout(legend_title=None)
-
-#     return fig_before, fig_after
-
-
-def build_bar_chart():
+def build_bar_chart(before_index,after_index):
+    before = before_index.get('executionStages')
+    after = after_index.get('executionStages')
     data = {
         "": [
             "works",
             "needTime",
-            "executionTimeMillis",
-            "optimizationTimeMillis"
+            "needYield",
+            "saveState",
+            "restoreState",
+            # "executionTimeMillis",
+            # "optimizationTimeMillis"
         ],
-        "Before Index": [100, 250, 60, 40],
-        "After Index": [50, 150, 30, 20]
+        "Before Index": [
+            before.get('works'),
+            before.get('needTime'),
+            before.get('needYield'),
+            before.get('saveState'),
+            before.get('restoreState'),
+            # before_index.get('executionTimeMillis'),
+            # before_index.get('optimizationTimeMillis')
+            ],
+        "After Index": [
+            after.get('works'),
+            after.get('needTime'),
+            after.get('needYield'),
+            after.get('saveState'),
+            after.get('restoreState'),
+            # after_index.get('executionTimeMillis'),
+            # after_index.get('optimizationTimeMillis')
+            ],
     }
-
+    
     df = pd.DataFrame(data)
 
     fig = px.bar(
