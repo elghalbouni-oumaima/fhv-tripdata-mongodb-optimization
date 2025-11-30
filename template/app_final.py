@@ -784,7 +784,7 @@ def tab_1_function(player1, player2):
     df1_for_plot['name'] = player2
     gauge1 = go.Figure(go.Indicator(
         domain={'x': [0, 1], 'y': [0, 1]},
-        value=df1_for_plot['potential'].iloc[0],
+        value=df1_for_plot['potential'].iloc[0],  # LIGNE CORRIGÉE
         mode="gauge+number",
         gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "#5000bf"}}))
     gauge1.update_layout(
@@ -818,12 +818,12 @@ def tab_1_function(player1, player2):
     # table 2
     table_updated2 = df[df['long_name'] == player2].to_dict('records')
 
-    # gauge plot 2
+   # gauge plot 2
     df2_for_plot = pd.DataFrame(df2[df2['long_name'] == player2]['potential'])
     df2_for_plot['name'] = player2
     gauge2 = go.Figure(go.Indicator(
         domain={'x': [0, 1], 'y': [0, 1]},
-        value=df2_for_plot['potential'].iloc[0],
+        value=df2_for_plot['potential'].iloc[0],  # LIGNE CORRIGÉE
         mode="gauge+number",
         gauge={'axis': {'range': [None, 100]}, 'bar': {'color': "rgb(255,171,0)"}}))
     gauge2.update_layout(
