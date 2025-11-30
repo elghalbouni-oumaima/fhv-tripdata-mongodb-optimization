@@ -185,27 +185,27 @@ if __name__ == "__main__":
 
     # COMPOUND INDEX TEST
     logger.info("Running COMPOUND INDEX benchmark...")
-    # run_benchmark(
-    #     query={
-    #         "hvfhs_license_num": "HV0003",
-    #         "pickup_datetime": {
-    #             "$gte": "2021-10-01T00:00:00.000",
-    #             "$lt":  "2021-10-02T00:00:00.000"
-    #         },
-    #         "PULocationID": 97
-    #     },
-    #     index_param={"hvfhs_license_num": 1, "pickup_datetime": 1, "PULocationID": 1, "trip_miles": -1},
-    #     index_name="compound_index",
-    #     sort={ "trip_miles": -1 }
-    # )
+    run_benchmark(
+        query={
+            "hvfhs_license_num": "HV0003",
+            "pickup_datetime": {
+                "$gte": "2021-10-01T00:00:00.000",
+                "$lt":  "2021-10-02T00:00:00.000"
+            },
+            "PULocationID": 97
+        },
+        index_param={"hvfhs_license_num": 1, "pickup_datetime": 1, "PULocationID": 1, "trip_miles": -1},
+        index_name="compound_index",
+        sort={ "trip_miles": -1 }
+    )
 
 
     # # HASHED INDEX TEST
     logger.info("Running HASHED INDEX benchmark...")
-    # run_benchmark(
-    #     query={"PULocationID": 100},
-    #     index_param={"PULocationID": "hashed"},
-    #     index_name="hashed_index"
-    # )
+    run_benchmark(
+        query={"PULocationID": 100},
+        index_param={"PULocationID": "hashed"},
+        index_name="hashed_index"
+    )
 
     logger.info("===== All benchmarks completed successfully =====")
