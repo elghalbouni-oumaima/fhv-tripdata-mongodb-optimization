@@ -1,6 +1,6 @@
 import dash
 from dash import html, dcc, dash_table, Input, Output, State, ctx
-from utils.loader import load_benchmark,get_file,load_latest_benchmark
+from utils.loader import load_benchmark,load_latest_benchmark
 from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
 import json
 from dash_svg import Svg, Line, Polygon
@@ -465,9 +465,10 @@ def update_title(selected_value):
     Input("benchmark-dropdown", "value")
 )
 def update_badge_info(input_value):
-    data = get_file(input_value)
-    before = data['results']['before']
-    after = data['results']['after']
+    last_file, error = load_latest_benchmark(input_value)
+    data = load_benchmark(last_file) if last_file else {}
+    before = data.get('results', {}).get('before', {})
+    after = data.get('results', {}).get('after', {})
     print(before.get('executionTimeMillis'))
     idx_name = after.get('executionStages', 'N/A').get('inputStage', 'N/A')
     if idx_name.get('indexName', 'N/A') == 'N/A':
@@ -482,9 +483,10 @@ def update_badge_info(input_value):
     Input("benchmark-dropdown", "value")
 )
 def update_cards(input_value):
-    data = get_file(input_value)
-    before = data['results']['before']
-    after = data['results']['after']
+    last_file, error = load_latest_benchmark(input_value)
+    data = load_benchmark(last_file) if last_file else {}
+    before = data.get('results', {}).get('before', {})
+    after = data.get('results', {}).get('after', {})
     print(before.get('executionTimeMillis'))
     dv =[
         make_kpi_card("Execution Time", before.get('executionTimeMillis'), after.get('executionTimeMillis'), "ms"),
@@ -499,9 +501,13 @@ def update_cards(input_value):
     Input("benchmark-dropdown", "value")
 )
 def update_details_table(input_value):
-    data = get_file(input_value)
-    before = data['results']['before']
-    after = data['results']['after']
+    last_file, error = load_latest_benchmark(input_value)
+    data = load_benchmark(last_file) if last_file else {}
+    before = data.get('results', {}).get('before', {})
+    after = data.get('results', {}).get('after', {})
+    # data = get_file(input_value)
+    # before = data['results']['before']
+    # after = data['results']['after']
     dt=[
             {'Metric': 'Time (ms)', 'Before': before.get('executionTimeMillis'), 'After': after.get('executionTimeMillis')},
             {'Metric': 'Docs Examined', 'Before': before.get('totalDocsExamined'), 'After': after.get('totalDocsExamined')},
@@ -515,9 +521,10 @@ def update_details_table(input_value):
     Input(component_id='benchmark-dropdown', component_property='value')
 )
 def update_bar_chart(input_value):
-    data = get_file(input_value)
-    before = data['results']['before']
-    after = data['results']['after']
+    last_file, error = load_latest_benchmark(input_value)
+    data = load_benchmark(last_file) if last_file else {}
+    before = data.get('results', {}).get('before', {})
+    after = data.get('results', {}).get('after', {})
     return build_bar_chart(before,after)
 
 
@@ -526,9 +533,10 @@ def update_bar_chart(input_value):
     Input(component_id='benchmark-dropdown', component_property='value')
 )
 def update_donut_chart(input_value):
-    data = get_file(input_value)
-    before = data['results']['before']
-    after = data['results']['after']
+    last_file, error = load_latest_benchmark(input_value)
+    data = load_benchmark(last_file) if last_file else {}
+    before = data.get('results', {}).get('before', {})
+    after = data.get('results', {}).get('after', {})
     return build_double_donut_chart(before,after)
 
 
