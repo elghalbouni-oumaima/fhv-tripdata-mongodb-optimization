@@ -32,3 +32,12 @@ def load_benchmark(path):
     except Exception as e:
         print(f"ERREUR CRITIQUE chargement benchmark: {e}")
         return {}
+def get_file(input_value):
+    if input_value == 'hashed':
+        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-30_15-27-30.json')
+    elif input_value == 'compound':
+        data = load_benchmark('../results/benchmarking/compound_index_2025-11-30_15-26-24.json')
+    elif input_value == 'simple':
+        data = load_benchmark('../results/benchmarking/simple_index_2025-11-30_15-25-32.json')
+    return data
+   
