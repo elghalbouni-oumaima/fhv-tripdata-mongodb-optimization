@@ -2,7 +2,8 @@ import dash
 from dash import html, dcc, dash_table, Input, Output, State, ctx
 import pandas as pd
 from utils.loader import load_benchmark
-from utils.charts import make_comparison_bar, make_kpi_card
+from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
+
 import json
 from dash_svg import Svg, Line, Polygon
 import os
