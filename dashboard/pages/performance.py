@@ -5,13 +5,168 @@ from utils.loader import load_benchmark
 from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
 
 import json
+from dash_svg import Svg, Line, Polygon
+import os
+import re
 
 dash.register_page(__name__, path="/performance", name="Performance")
 
-# Chargement
-data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
-before = data['results']['before']
-after = data['results']['after']
+def load_latest_benchmark(index_type):
+
+    folder = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "results", "benchmarking")
+    )
+
+    pattern = re.compile(rf"{index_type}_index_.*\.json")
+
+    candidates = [f for f in os.listdir(folder) if pattern.match(f)]
+
+    if not candidates:
+        return None, f"No benchmark file found for index type: {index_type}"
+
+    candidates.sort(reverse=True)
+    latest_file = os.path.join(folder, candidates[0])
+    return latest_file, None
+
+def extract_execution_flow(stage, flow=None):
+    """Extraire le flow MongoDB sous forme de liste ordonnée."""
+    if flow is None:
+        flow = []
+
+    if not stage:
+        return flow
+
+    flow.append({
+        "stage": stage.get("stage", "UNKNOWN"),
+        "nReturned": stage.get("nReturned"),
+        "executionTimeMillisEstimate": stage.get("executionTimeMillisEstimate"),
+        "docsExamined": stage.get("docsExamined"),
+        "keysExamined": stage.get("keysExamined"),
+    })
+
+    if "inputStage" in stage:
+        return extract_execution_flow(stage["inputStage"], flow)
+
+    return flow
+
+def render_flow(flow_list, title):
+
+    # Construire les blocs + flèches
+    elements = []
+    for i, item in enumerate(flow_list):
+        elements.append(render_block(item))
+
+        # Ajouter flèche sauf pour le dernier élément
+        if i < len(flow_list) - 1:
+            elements.append(render_arrow())
+
+    return html.Div([
+
+        # === TITRE ===
+        html.H4(title, style={
+            "fontWeight": "600",
+            "marginBottom": "25px"
+        }),
+
+        # === PIPELINE HORIZONTAL ===
+        html.Div(
+            elements,
+            style={
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "gap": "40px",
+                "padding": "20px",
+                "width": "100%"
+            }
+        )
+
+    ], className="card", style={
+        "padding": "30px",
+        "background": "white",
+        "borderRadius": "12px",
+        "boxShadow": "0 3px 10px rgba(0,0,0,0.08)",
+        "width": "100%"
+    })
+
+def render_block(item):
+    return html.Div(
+        [
+            html.Div(item["stage"], style={
+                "fontWeight": "700",
+                "fontSize": "18px",
+                "marginBottom": "10px"
+            }),
+
+            html.Div(f"Returned: {item['nReturned']}"),
+            html.Div(f"Exec ms: {item['executionTimeMillisEstimate']}"),
+            html.Div(f"Docs: {item['docsExamined']}"),
+            html.Div(f"Keys: {item['keysExamined']}"),
+        ],
+        style={
+            "padding": "20px",
+            "border": "1px solid #d0d0d0",
+            "borderRadius": "15px",
+            "minWidth": "240px",
+            "background": "#ffffff",
+            "boxShadow": "0px 2px 10px rgba(0,0,0,0.05)",
+            "textAlign": "left"
+        }
+    )
+
+def render_arrow():
+    return Svg([
+        Line(
+            x1="0%", y1="50%",
+            x2="100%", y2="50%",
+            stroke="#1d6ffc",
+            strokeWidth="4"
+        ),
+        Polygon(
+            points="100,50 88,43 88,57",
+            fill="#1d6ffc"
+        )
+    ], style={
+        "width": "90px",
+        "height": "40px"
+    })
+
+def render_execution_pipeline(flow_before, flow_after):
+    blocks = []
+
+    # Block before index
+    blocks.append(render_block(flow_before[0]))
+
+    # Arrow → after 1
+    blocks.append(render_arrow())
+
+    # First block after index
+    blocks.append(render_block(flow_after[0]))
+
+    # Second arrow
+    if len(flow_after) > 1:
+        blocks.append(render_arrow())
+        blocks.append(render_block(flow_after[1]))
+
+    return html.Div([
+
+        
+
+        html.Div(blocks, style={
+            "display": "flex",
+            "gap": "30px",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "padding": "20px"
+        })
+
+    ], className="card", style={
+        "padding": "25px",
+        "marginBottom": "25px",
+        "borderRadius": "15px",
+        "background": "#f8fafc"
+    })
+
 
 # ============================================
 # 1. Configuration des options
@@ -207,81 +362,29 @@ query_controls = html.Div([
 # ============================================
 
 layout = html.Div([
-    html.H2(f"Benchmark Index : {data.get('index_name', 'N/A')}"),
-    
-    # Badges
-    html.Div([
-        html.Span(f"Index: {after.get('indexName', 'N/A')}", className="badge-info"),
-        html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info"),
-    ], className="card"),
-    
-    # KPI Cards
-    html.Div([
-        make_kpi_card("Execution Time", before.get('executionTimeMillis'), after.get('executionTimeMillis'), "ms"),
-        make_kpi_card("Docs Examined", before.get('totalDocsExamined'), after.get('totalDocsExamined')),
-        make_kpi_card("Keys Examined", before.get('totalKeysExamined'), after.get('totalKeysExamined')),
-    ], className="grid-3"),
-    
-    # Comparaison Graphique & Table
-    html.Div([
-        html.Div([
-            html.H3("Performance Metrics Comparison (Before vs After Index)"),
-            #dcc.Graph(figure=make_comparison_bar(before, after, 'executionTimeMillis', "Temps d'exécution (ms)")),
-            dcc.Graph(figure=build_bar_chart(),style={'width': '100%'}),
-        ], className="card"),
-        
-        html.Div([
-            html.H3("Documents and Keys Examined"),
-            html.Div([
-                dcc.Graph(figure=build_double_donut_chart(),style={'width': '100%'}),
-            ],className="donut-card")
-           
-        ],className="card"),
+    html.H2("Performance & Index Benchmark Visualization"),
 
-        # html.Div([
-        #     html.H3("Comparaison Visuelle"),
-        #     dcc.Graph(figure=make_comparison_bar(before, after, 'totalDocsExamined', "Documents Examinés"))
-        # ], className="card"),
-        
-        
-    ], className="grid-2"),
-    html.Div([
-            html.H3("Détails Chiffrés"),
-            #dcc.Graph(figure=make_comparison_bar(before, after, 'totalDocsExamined', "Documents Examinés")),
-            dash_table.DataTable(
-                data=[
-                    {'Metric': 'Time (ms)', 'Before': before.get('executionTimeMillis'), 'After': after.get('executionTimeMillis')},
-                    {'Metric': 'Docs Examined', 'Before': before.get('totalDocsExamined'), 'After': after.get('totalDocsExamined')},
-                    {'Metric': 'Keys Examined', 'Before': before.get('totalKeysExamined'), 'After': after.get('totalKeysExamined')},
-                    {'Metric': 'nReturned', 'Before': before.get('nReturned'), 'After': after.get('nReturned')}
-                ],
-                style_cell={'textAlign': 'left', 'padding': '10px'},
-                style_header={'backgroundColor': '#ecf0f1', 'fontWeight': 'bold'},
-                style_as_list_view=True
-            )
-    ], className="card"),
-    
-    # Explain Tree
-    # html.Div([
-    #     html.H3("Explain Plan (Structure des Stages)"),
-    #     html.Div([
-    #         html.Div([
-    #             html.H4("BEFORE (CollScan)"),
-    #             generate_tree_html(before.get('executionStages'))
-    #         ], style={'flex': 1}),
-    #          html.Div([
-    #             html.H4("AFTER (IndexScan)"),
-    #             generate_tree_html(after.get('executionStages'))
-    #         ], style={'flex': 1})
-    #     ], style={'display': 'flex', 'justifyContent': 'space-around'})
-    # ], className="card")
-    # html.H2("Performance & Index Benchmark Visualization"),
+    query_controls,  # <-- ajouté ici
 
-    # query_controls,  # <-- ajouté ici
+    html.Br(),
 
-    # html.Br(),
+    dcc.Tabs(id="flow-tabs", value="graph", children=[
+        dcc.Tab(label="Graph Flow", value="graph", children=[
+            html.Div(id="execution-flow-container")
+        ]),
+        dcc.Tab(label="Raw JSON", value="json", children=[
+            html.Pre(id="raw-json-content",
+                    style={
+                        "background": "#1e1e1e",
+                        "color": "white",
+                        "padding": "20px",
+                        "borderRadius": "8px",
+                        "overflowX": "auto",
+                        "maxHeight": "600px"
+                    })
+        ])
+    ]),
 
-    # html.Div(id="benchmark-content")
 ])
 
 
@@ -289,6 +392,20 @@ layout = html.Div([
 # ============================================
 # 4. Callbacks
 # ============================================
+
+@dash.callback(
+    Output("raw-json-content", "children"),
+    Input("benchmark-dropdown", "value")
+)
+def load_raw_json(selected):
+    file_path, error = load_latest_benchmark(selected)
+    if error:
+        return error
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    return json.dumps(data, indent=4)
 
 # Afficher / cacher le FIND builder
 @dash.callback(
@@ -491,10 +608,6 @@ def show_index_builder(selected_index):
 # 5. Callback pour charger et afficher le fichier JSON sélectionné
 # ============================================
 
-@dash.callback(
-    Output("benchmark-content", "children"),
-    Input("benchmark-dropdown", "value")
-)
 def update_benchmark_display(selection):
     if not selection:
         return html.Div("Select a benchmark to display results.", className="card")
@@ -504,6 +617,10 @@ def update_benchmark_display(selection):
 
     before = data["results"]["before"]
     after = data["results"]["after"]
+
+    # === EXTRACTION DU FLOW POUR BEFORE / AFTER ===
+    flow_before = extract_execution_flow(before["executionStages"])
+    flow_after = extract_execution_flow(after["executionStages"])
 
     return html.Div([
 
@@ -536,8 +653,33 @@ def update_benchmark_display(selection):
 
     ])
 
+@dash.callback(
+    Output("execution-flow-container", "children"),
+    Input("benchmark-dropdown", "value")
+)
+def update_flow_display(selected):
 
+    file_path, error = load_latest_benchmark(selected)
+    if error:
+        return html.Div(error)
 
-# ============================================
-# FIN DU FICHIER
-# ============================================
+    data = load_benchmark(file_path)
+
+    before = data["results"]["before"]
+    after = data["results"]["after"]
+
+    flow_before = extract_execution_flow(before["executionStages"])
+    flow_after = extract_execution_flow(after["executionStages"])
+
+    return html.Div([
+        html.Div([
+            render_flow(flow_before, "Execution Flow (Before Index)"),
+            render_flow(flow_after, "Execution Flow (After Index)"),
+        ],
+        style={
+            "display": "flex",
+            "gap": "30px",
+            "justifyContent": "space-between",
+            "width": "100%"
+        })
+    ])
