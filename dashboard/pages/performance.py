@@ -1,9 +1,7 @@
 import dash
 from dash import html, dcc, dash_table, Input, Output, State, ctx
-import pandas as pd
-from utils.loader import load_benchmark
+from utils.loader import load_benchmark,get_file
 from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
-
 import json
 from dash_svg import Svg, Line, Polygon
 import os
@@ -12,7 +10,7 @@ import re
 dash.register_page(__name__, path="/performance", name="Performance")
 
 # Chargement
-data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
+data = load_benchmark('../results/benchmarking/simple_index_2025-11-30_15-25-32.json')
 before = data['results']['before']
 after = data['results']['after']
 print(after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A'))
@@ -70,7 +68,7 @@ def render_flow(flow_list, title):
         # === TITRE ===
         html.H4(title, style={
             "fontWeight": "600",
-            "marginBottom": "25px"
+            # "marginBottom": "10px"
         }),
 
         # === PIPELINE HORIZONTAL ===
@@ -80,7 +78,7 @@ def render_flow(flow_list, title):
                 "display": "flex",
                 "alignItems": "center",
                 "justifyContent": "center",
-                "gap": "40px",
+                "gap": "30px",
                 "padding": "20px",
                 "width": "100%"
             }
@@ -89,9 +87,10 @@ def render_flow(flow_list, title):
     ], className="card", style={
         "padding": "30px",
         "background": "white",
-        "borderRadius": "12px",
+        "borderRadius": "0",
         "boxShadow": "0 3px 10px rgba(0,0,0,0.08)",
-        "width": "100%"
+        "width": "100%",
+        "margin-top": "10px"
     })
 
 def render_block(item):
@@ -245,9 +244,13 @@ query_controls = html.Div([
                 type="text",
                 placeholder="Benchmark query will appear here...",
                 style={
-                    "width": "800px",
+                    "width": "700px",
                     "height": "38px",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "border-radius": "50px",
+                    "border-color": "#3498db",
+                    "color":"#aaa",
+                    "padding":"0px 10px",
                 }
             )
         ], style={
@@ -263,9 +266,9 @@ query_controls = html.Div([
             dcc.Dropdown(
                 id="benchmark-dropdown",
                 options=[
-                    {"label": "Simple Index Query", "value": "simple"},
-                    {"label": "Compound Index Query", "value": "compound"},
-                    {"label": "Hashed Index Query", "value": "hashed"},
+                    {"label": "Simple Index", "value": "simple"},
+                    {"label": "Compound Index", "value": "compound"},
+                    {"label": "Hashed Index", "value": "hashed"},
                 ],
                 value="simple",
                 style={"width": "250px"}
@@ -281,7 +284,8 @@ query_controls = html.Div([
         "display": "flex",
         "gap": "20px",
         "alignItems": "center",
-        "marginBottom": "20px"
+        "marginBottom": "20px",
+        "padding": "10px"
     }),
 
 
@@ -354,7 +358,8 @@ query_controls = html.Div([
             "display": "flex",
             "gap": "20px",
             "flexDirection": "row",
-            "marginTop": "20px"
+            "marginTop": "20px",
+           
         })
 
 
@@ -367,13 +372,14 @@ query_controls = html.Div([
 # ============================================
 
 layout = html.Div([
-    html.H2(f"Benchmark Index : {data.get('index_name', 'N/A')}"),
+    html.H2(f"Benchmark Index : {data.get('index_name', 'N/A')}",id='Benchmark-Index'),
     
     # Badges
     html.Div([
         html.Span(f"Index: {after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A')}", className="badge-info"),
-        html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info"),
-    ],id='badge-info', className="card"),
+        html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info")
+    ],
+    id='badge-info',className="card", style={"overflow": "hidden", "display": "block", "width": "100%"},),
     query_controls,  
     # KPI Cards
     html.Div([
@@ -455,16 +461,27 @@ layout = html.Div([
 # 4. Callbacks
 # ============================================
 @dash.callback(
+    Output("Benchmark-Index", "children"),
+    Input("benchmark-dropdown", "value")
+)
+def update_title(selected_value):
+    if selected_value == "hashed":
+        index_name = "Hashed Index"
+    elif selected_value == "compound":
+        index_name = "Compound Index"
+    elif selected_value == "simple":
+        index_name = "Simple Index"
+    else:
+        index_name = "Unknown"
+
+    return f"Benchmark Index: {index_name}"
+
+@dash.callback(
     Output("badge-info", "children"),
     Input("benchmark-dropdown", "value")
 )
 def update_badge_info(input_value):
-    if input_value == 'hashed':
-        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
-    elif input_value == 'compound':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
-    elif input_value == 'simple':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    data = get_file(input_value)
     before = data['results']['before']
     after = data['results']['after']
     print(before.get('executionTimeMillis'))
@@ -481,12 +498,7 @@ def update_badge_info(input_value):
     Input("benchmark-dropdown", "value")
 )
 def update_cards(input_value):
-    if input_value == 'hashed':
-        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
-    elif input_value == 'compound':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
-    elif input_value == 'simple':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    data = get_file(input_value)
     before = data['results']['before']
     after = data['results']['after']
     print(before.get('executionTimeMillis'))
@@ -503,12 +515,7 @@ def update_cards(input_value):
     Input("benchmark-dropdown", "value")
 )
 def update_details_table(input_value):
-    if input_value == 'hashed':
-        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
-    elif input_value == 'compound':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
-    elif input_value == 'simple':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    data = get_file(input_value)
     before = data['results']['before']
     after = data['results']['after']
     dt=[
@@ -524,12 +531,7 @@ def update_details_table(input_value):
     Input(component_id='benchmark-dropdown', component_property='value')
 )
 def update_bar_chart(input_value):
-    if input_value == 'hashed':
-        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
-    elif input_value == 'compound':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
-    elif input_value == 'simple':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    data = get_file(input_value)
     before = data['results']['before']
     after = data['results']['after']
     return build_bar_chart(before,after)
@@ -540,12 +542,7 @@ def update_bar_chart(input_value):
     Input(component_id='benchmark-dropdown', component_property='value')
 )
 def update_donut_chart(input_value):
-    if input_value == 'hashed':
-        data = load_benchmark('../results/benchmarking/compound_index_2025-11-24_12-23-33.json')
-    elif input_value == 'compound':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-27_11-46-38.json')
-    elif input_value == 'simple':
-        data = load_benchmark('../results/benchmarking/hashed_index_2025-11-24_12-12-50.json')
+    data = get_file(input_value)
     before = data['results']['before']
     after = data['results']['after']
     return build_double_donut_chart(before,after)
@@ -836,8 +833,8 @@ def update_flow_display(selected):
         ],
         style={
             "display": "flex",
-            "gap": "30px",
-            "justifyContent": "space-between",
+            "gap": "10px",
+            # "justifyContent": "space-between",
             "width": "100%"
         })
     ])
