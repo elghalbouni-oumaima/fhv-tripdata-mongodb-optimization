@@ -6,47 +6,8 @@
     "index_type": "simple index",
     "results": {
         "before": {
-            "executionTimeMillis": 18455,
-            "totalDocsExamined": 3248325,
-            "totalKeysExamined": 0,
-            "nReturned": 10000,
-            "executionStages": {
-                "isCached": false,
-                "stage": "LIMIT",
-                "nReturned": 10000,
-                "executionTimeMillisEstimate": 17183,
-                "works": 3248326,
-                "advanced": 10000,
-                "needTime": 3238325,
-                "needYield": 0,
-                "saveState": 1043,
-                "restoreState": 1043,
-                "isEOF": 1,
-                "limitAmount": 10000,
-                "inputStage": {
-                    "stage": "COLLSCAN",
-                    "filter": {
-                        "DOLocationID": {
-                            "$eq": 85
-                        }
-                    },
-                    "nReturned": 10000,
-                    "executionTimeMillisEstimate": 16519,
-                    "works": 3248325,
-                    "advanced": 10000,
-                    "needTime": 3238325,
-                    "needYield": 0,
-                    "saveState": 1043,
-                    "restoreState": 1043,
-                    "isEOF": 0,
-                    "direction": "forward",
-                    "docsExamined": 3248325
-                }
-            },
-            "indexName": null
-        },
-        "after": {
-            "executionTimeMillis": 5800,
+            "executionTimeMillis": 4067,
+            "optimizationTimeMillis": 1,
             "totalDocsExamined": 10000,
             "totalKeysExamined": 10000,
             "nReturned": 10000,
@@ -54,38 +15,108 @@
                 "isCached": false,
                 "stage": "LIMIT",
                 "nReturned": 10000,
-                "executionTimeMillisEstimate": 5390,
+                "executionTimeMillisEstimate": 3986,
                 "works": 10001,
                 "advanced": 10000,
                 "needTime": 0,
                 "needYield": 0,
-                "saveState": 272,
-                "restoreState": 272,
+                "saveState": 233,
+                "restoreState": 233,
                 "isEOF": 1,
                 "limitAmount": 10000,
                 "inputStage": {
                     "stage": "FETCH",
                     "nReturned": 10000,
-                    "executionTimeMillisEstimate": 5364,
+                    "executionTimeMillisEstimate": 3986,
                     "works": 10000,
                     "advanced": 10000,
                     "needTime": 0,
                     "needYield": 0,
-                    "saveState": 272,
-                    "restoreState": 272,
+                    "saveState": 233,
+                    "restoreState": 233,
                     "isEOF": 0,
                     "docsExamined": 10000,
                     "alreadyHasObj": 0,
                     "inputStage": {
                         "stage": "IXSCAN",
                         "nReturned": 10000,
-                        "executionTimeMillisEstimate": 87,
+                        "executionTimeMillisEstimate": 62,
                         "works": 10000,
                         "advanced": 10000,
                         "needTime": 0,
                         "needYield": 0,
-                        "saveState": 272,
-                        "restoreState": 272,
+                        "saveState": 233,
+                        "restoreState": 233,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "DOLocationID": 1
+                        },
+                        "indexName": "DOLocationID_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "DOLocationID": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "DOLocationID": [
+                                "[85, 85]"
+                            ]
+                        },
+                        "keysExamined": 10000,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 2094,
+            "optimizationTimeMillis": 28,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10000,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 1941,
+                "works": 10001,
+                "advanced": 10000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 103,
+                "restoreState": 103,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 1932,
+                    "works": 10000,
+                    "advanced": 10000,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 103,
+                    "restoreState": 103,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 42,
+                        "works": 10000,
+                        "advanced": 10000,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 103,
+                        "restoreState": 103,
                         "isEOF": 0,
                         "keyPattern": {
                             "DOLocationID": 1

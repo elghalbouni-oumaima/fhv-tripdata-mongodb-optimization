@@ -100,6 +100,7 @@ def run_explain(query, coll=collection):
 
     return {
         "executionTimeMillis": stats.get("executionTimeMillis"),
+        "optimizationTimeMillis": planner.get("optimizationTimeMillis"),
         "totalDocsExamined": stats.get("totalDocsExamined"),
         "totalKeysExamined": stats.get("totalKeysExamined"),
         "nReturned": stats.get("nReturned"),

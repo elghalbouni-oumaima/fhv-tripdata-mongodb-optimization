@@ -1,12 +1,14 @@
 {
-    "query_name": "q1_triptime_gte_300",
+    "query_name": "q3_license_PU",
     "index_param": {
-        "trip_time": 1
+        "hvfhs_license_num": 1,
+        "PULocationID": 1
     },
-    "index_type": "simple index",
+    "index_type": "compound index",
     "results": {
         "before": {
-            "executionTimeMillis": 4322,
+            "executionTimeMillis": 4848,
+            "optimizationTimeMillis": 160,
             "totalDocsExamined": 10000,
             "totalKeysExamined": 10000,
             "nReturned": 10000,
@@ -14,46 +16,48 @@
                 "isCached": false,
                 "stage": "LIMIT",
                 "nReturned": 10000,
-                "executionTimeMillisEstimate": 4128,
+                "executionTimeMillisEstimate": 4574,
                 "works": 10001,
                 "advanced": 10000,
                 "needTime": 0,
                 "needYield": 0,
-                "saveState": 229,
-                "restoreState": 229,
+                "saveState": 242,
+                "restoreState": 242,
                 "isEOF": 1,
                 "limitAmount": 10000,
                 "inputStage": {
                     "stage": "FETCH",
                     "nReturned": 10000,
-                    "executionTimeMillisEstimate": 4117,
+                    "executionTimeMillisEstimate": 4563,
                     "works": 10000,
                     "advanced": 10000,
                     "needTime": 0,
                     "needYield": 0,
-                    "saveState": 229,
-                    "restoreState": 229,
+                    "saveState": 242,
+                    "restoreState": 242,
                     "isEOF": 0,
                     "docsExamined": 10000,
                     "alreadyHasObj": 0,
                     "inputStage": {
                         "stage": "IXSCAN",
                         "nReturned": 10000,
-                        "executionTimeMillisEstimate": 49,
+                        "executionTimeMillisEstimate": 84,
                         "works": 10000,
                         "advanced": 10000,
                         "needTime": 0,
                         "needYield": 0,
-                        "saveState": 229,
-                        "restoreState": 229,
+                        "saveState": 242,
+                        "restoreState": 242,
                         "isEOF": 0,
                         "keyPattern": {
-                            "trip_time": 1
+                            "hvfhs_license_num": 1,
+                            "PULocationID": 1
                         },
-                        "indexName": "trip_time_1",
+                        "indexName": "hvfhs_license_num_1_PULocationID_1",
                         "isMultiKey": false,
                         "multiKeyPaths": {
-                            "trip_time": []
+                            "hvfhs_license_num": [],
+                            "PULocationID": []
                         },
                         "isUnique": false,
                         "isSparse": false,
@@ -61,8 +65,11 @@
                         "indexVersion": 2,
                         "direction": "forward",
                         "indexBounds": {
-                            "trip_time": [
-                                "[300, inf]"
+                            "hvfhs_license_num": [
+                                "[\"HV0003\", \"HV0003\"]"
+                            ],
+                            "PULocationID": [
+                                "[97, 97]"
                             ]
                         },
                         "keysExamined": 10000,
@@ -75,7 +82,8 @@
             "indexName": null
         },
         "after": {
-            "executionTimeMillis": 5382,
+            "executionTimeMillis": 3610,
+            "optimizationTimeMillis": 151,
             "totalDocsExamined": 10000,
             "totalKeysExamined": 10000,
             "nReturned": 10000,
@@ -83,46 +91,48 @@
                 "isCached": false,
                 "stage": "LIMIT",
                 "nReturned": 10000,
-                "executionTimeMillisEstimate": 5163,
+                "executionTimeMillisEstimate": 3418,
                 "works": 10001,
                 "advanced": 10000,
                 "needTime": 0,
                 "needYield": 0,
-                "saveState": 293,
-                "restoreState": 293,
+                "saveState": 202,
+                "restoreState": 202,
                 "isEOF": 1,
                 "limitAmount": 10000,
                 "inputStage": {
                     "stage": "FETCH",
                     "nReturned": 10000,
-                    "executionTimeMillisEstimate": 5160,
+                    "executionTimeMillisEstimate": 3415,
                     "works": 10000,
                     "advanced": 10000,
                     "needTime": 0,
                     "needYield": 0,
-                    "saveState": 293,
-                    "restoreState": 293,
+                    "saveState": 202,
+                    "restoreState": 202,
                     "isEOF": 0,
                     "docsExamined": 10000,
                     "alreadyHasObj": 0,
                     "inputStage": {
                         "stage": "IXSCAN",
                         "nReturned": 10000,
-                        "executionTimeMillisEstimate": 84,
+                        "executionTimeMillisEstimate": 57,
                         "works": 10000,
                         "advanced": 10000,
                         "needTime": 0,
                         "needYield": 0,
-                        "saveState": 293,
-                        "restoreState": 293,
+                        "saveState": 202,
+                        "restoreState": 202,
                         "isEOF": 0,
                         "keyPattern": {
-                            "trip_time": 1
+                            "hvfhs_license_num": 1,
+                            "PULocationID": 1
                         },
-                        "indexName": "trip_time_1",
+                        "indexName": "hvfhs_license_num_1_PULocationID_1",
                         "isMultiKey": false,
                         "multiKeyPaths": {
-                            "trip_time": []
+                            "hvfhs_license_num": [],
+                            "PULocationID": []
                         },
                         "isUnique": false,
                         "isSparse": false,
@@ -130,8 +140,11 @@
                         "indexVersion": 2,
                         "direction": "forward",
                         "indexBounds": {
-                            "trip_time": [
-                                "[300, inf]"
+                            "hvfhs_license_num": [
+                                "[\"HV0003\", \"HV0003\"]"
+                            ],
+                            "PULocationID": [
+                                "[97, 97]"
                             ]
                         },
                         "keysExamined": 10000,

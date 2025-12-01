@@ -1,58 +1,53 @@
 {
-    "query_name": "q8_license_miles_time",
+    "query_name": "q5_miles_time",
     "index_param": {
-        "hvfhs_license_num": 1,
         "trip_miles": 1,
         "trip_time": -1
     },
     "index_type": "compound index",
     "results": {
         "before": {
-            "executionTimeMillis": 13377,
-            "totalDocsExamined": 13774,
-            "totalKeysExamined": 13844,
+            "executionTimeMillis": 5700,
+            "optimizationTimeMillis": 67,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10010,
             "nReturned": 10000,
             "executionStages": {
                 "isCached": false,
                 "stage": "LIMIT",
                 "nReturned": 10000,
-                "executionTimeMillisEstimate": 12600,
-                "works": 13845,
+                "executionTimeMillisEstimate": 5423,
+                "works": 10011,
                 "advanced": 10000,
-                "needTime": 3844,
+                "needTime": 10,
                 "needYield": 0,
-                "saveState": 608,
-                "restoreState": 608,
+                "saveState": 299,
+                "restoreState": 299,
                 "isEOF": 1,
                 "limitAmount": 10000,
                 "inputStage": {
                     "stage": "FETCH",
-                    "filter": {
-                        "hvfhs_license_num": {
-                            "$eq": "HV0003"
-                        }
-                    },
                     "nReturned": 10000,
-                    "executionTimeMillisEstimate": 12600,
-                    "works": 13844,
+                    "executionTimeMillisEstimate": 5415,
+                    "works": 10010,
                     "advanced": 10000,
-                    "needTime": 3844,
+                    "needTime": 10,
                     "needYield": 0,
-                    "saveState": 608,
-                    "restoreState": 608,
+                    "saveState": 299,
+                    "restoreState": 299,
                     "isEOF": 0,
-                    "docsExamined": 13774,
+                    "docsExamined": 10000,
                     "alreadyHasObj": 0,
                     "inputStage": {
                         "stage": "IXSCAN",
-                        "nReturned": 13774,
-                        "executionTimeMillisEstimate": 112,
-                        "works": 13844,
-                        "advanced": 13774,
-                        "needTime": 70,
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 97,
+                        "works": 10010,
+                        "advanced": 10000,
+                        "needTime": 10,
                         "needYield": 0,
-                        "saveState": 608,
-                        "restoreState": 608,
+                        "saveState": 299,
+                        "restoreState": 299,
                         "isEOF": 0,
                         "keyPattern": {
                             "trip_miles": 1,
@@ -71,14 +66,14 @@
                         "direction": "forward",
                         "indexBounds": {
                             "trip_miles": [
-                                "[10, inf]"
+                                "[5, inf]"
                             ],
                             "trip_time": [
-                                "[inf, 1800]"
+                                "[inf, 1200]"
                             ]
                         },
-                        "keysExamined": 13844,
-                        "seeks": 71,
+                        "keysExamined": 10010,
+                        "seeks": 11,
                         "dupsTested": 0,
                         "dupsDropped": 0
                     }
@@ -87,56 +82,55 @@
             "indexName": null
         },
         "after": {
-            "executionTimeMillis": 6246,
+            "executionTimeMillis": 4257,
+            "optimizationTimeMillis": 185,
             "totalDocsExamined": 10000,
-            "totalKeysExamined": 10007,
+            "totalKeysExamined": 10010,
             "nReturned": 10000,
             "executionStages": {
                 "isCached": false,
                 "stage": "LIMIT",
                 "nReturned": 10000,
-                "executionTimeMillisEstimate": 5515,
-                "works": 10008,
+                "executionTimeMillisEstimate": 3961,
+                "works": 10011,
                 "advanced": 10000,
-                "needTime": 7,
+                "needTime": 10,
                 "needYield": 0,
-                "saveState": 327,
-                "restoreState": 327,
+                "saveState": 226,
+                "restoreState": 226,
                 "isEOF": 1,
                 "limitAmount": 10000,
                 "inputStage": {
                     "stage": "FETCH",
                     "nReturned": 10000,
-                    "executionTimeMillisEstimate": 5505,
-                    "works": 10007,
+                    "executionTimeMillisEstimate": 3961,
+                    "works": 10010,
                     "advanced": 10000,
-                    "needTime": 7,
+                    "needTime": 10,
                     "needYield": 0,
-                    "saveState": 327,
-                    "restoreState": 327,
+                    "saveState": 226,
+                    "restoreState": 226,
                     "isEOF": 0,
                     "docsExamined": 10000,
                     "alreadyHasObj": 0,
                     "inputStage": {
                         "stage": "IXSCAN",
                         "nReturned": 10000,
-                        "executionTimeMillisEstimate": 96,
-                        "works": 10007,
+                        "executionTimeMillisEstimate": 72,
+                        "works": 10010,
                         "advanced": 10000,
-                        "needTime": 7,
+                        "needTime": 10,
                         "needYield": 0,
-                        "saveState": 327,
-                        "restoreState": 327,
+                        "saveState": 226,
+                        "restoreState": 226,
                         "isEOF": 0,
                         "keyPattern": {
-                            "hvfhs_license_num": 1,
                             "trip_miles": 1,
                             "trip_time": -1
                         },
-                        "indexName": "hvfhs_license_num_1_trip_miles_1_trip_time_-1",
+                        "indexName": "trip_miles_1_trip_time_-1",
                         "isMultiKey": false,
                         "multiKeyPaths": {
-                            "hvfhs_license_num": [],
                             "trip_miles": [],
                             "trip_time": []
                         },
@@ -146,18 +140,15 @@
                         "indexVersion": 2,
                         "direction": "forward",
                         "indexBounds": {
-                            "hvfhs_license_num": [
-                                "[\"HV0003\", \"HV0003\"]"
-                            ],
                             "trip_miles": [
-                                "[10, inf]"
+                                "[5, inf]"
                             ],
                             "trip_time": [
-                                "[inf, 1800]"
+                                "[inf, 1200]"
                             ]
                         },
-                        "keysExamined": 10007,
-                        "seeks": 8,
+                        "keysExamined": 10010,
+                        "seeks": 11,
                         "dupsTested": 0,
                         "dupsDropped": 0
                     }

@@ -6,7 +6,7 @@
                 "$gte": 300
             }
         },
-        "executionTimeMillis": 9376,
+        "executionTimeMillis": 11295,
         "index_type": "simple index"
     },
     {
@@ -14,7 +14,7 @@
         "query": {
             "PULocationID": 100
         },
-        "executionTimeMillis": 9477,
+        "executionTimeMillis": 3982,
         "index_type": "hashed index"
     },
     {
@@ -23,7 +23,7 @@
             "hvfhs_license_num": "HV0003",
             "PULocationID": 97
         },
-        "executionTimeMillis": 9730,
+        "executionTimeMillis": 3473,
         "index_type": "compound index"
     },
     {
@@ -34,7 +34,7 @@
                 "$lte": 10
             }
         },
-        "executionTimeMillis": 175,
+        "executionTimeMillis": 13466,
         "index_type": "simple index"
     },
     {
@@ -47,7 +47,7 @@
                 "$gte": 1200
             }
         },
-        "executionTimeMillis": 19653,
+        "executionTimeMillis": 4622,
         "index_type": "compound index"
     },
     {
@@ -55,7 +55,7 @@
         "query": {
             "dispatching_base_num": "B02764"
         },
-        "executionTimeMillis": 728,
+        "executionTimeMillis": 456,
         "index_type": "simple index"
     },
     {
@@ -65,7 +65,7 @@
                 "$gte": 20
             }
         },
-        "executionTimeMillis": 68,
+        "executionTimeMillis": 70,
         "index_type": "simple index"
     },
     {
@@ -79,7 +79,7 @@
                 "$gte": 1800
             }
         },
-        "executionTimeMillis": 32587,
+        "executionTimeMillis": 6904,
         "index_type": "compound index"
     },
     {
@@ -87,7 +87,7 @@
         "query": {
             "DOLocationID": 85
         },
-        "executionTimeMillis": 18513,
+        "executionTimeMillis": 6037,
         "index_type": "simple index"
     },
     {
@@ -95,7 +95,7 @@
         "query": {
             "hvfhs_license_num": "HV0005"
         },
-        "executionTimeMillis": 98,
+        "executionTimeMillis": 474,
         "index_type": "simple index"
     }
 ]
