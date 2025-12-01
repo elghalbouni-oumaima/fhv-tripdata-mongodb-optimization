@@ -86,6 +86,7 @@ def detect_index_type(index_param):
 # -------------------------------------------------------------------
 # 3 — EXPLAIN OPTIMISÉ
 # -------------------------------------------------------------------
+
 def run_explain(query, coll=collection):
     """
     Explain optimisé :
@@ -100,6 +101,7 @@ def run_explain(query, coll=collection):
 
     return {
         "executionTimeMillis": stats.get("executionTimeMillis"),
+        "optimizationTimeMillis": planner.get("optimizationTimeMillis"),
         "totalDocsExamined": stats.get("totalDocsExamined"),
         "totalKeysExamined": stats.get("totalKeysExamined"),
         "nReturned": stats.get("nReturned"),
@@ -110,7 +112,6 @@ def run_explain(query, coll=collection):
                    .get("indexName")
         )
     }
-
 
 # -------------------------------------------------------------------
 # 4 — Save BEFORE execution time for ALL queries
