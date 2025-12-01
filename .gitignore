@@ -218,3 +218,4 @@ __marimo__/
 /test
 /notebooks/*.ipynb
 /data
+/results

@@ -250,9 +250,16 @@ query_controls = html.Div([
             dcc.Dropdown(
                 id="benchmark-dropdown",
                 options=[
-                    {"label": "Simple Index", "value": "q4"},
-                    {"label": "Compound Index", "value": "q8"},
-                    {"label": "Hashed Index", "value": "q2"},
+                    {"label": "1", "value": "q1"},
+                    {"label": "2 Index", "value": "q2"},
+                    {"label": "3 Index", "value": "q3"},
+                    {"label": "4 Index", "value": "q4"},
+                    {"label": "5 Index", "value": "q5"},
+                    {"label": "6 Index", "value": "q6"},
+                    {"label": "7 Index", "value": "q7"},
+                    {"label": "8 Index", "value": "q8"},
+                    {"label": "9 Index", "value": "q9"},
+                    {"label": "10 Index", "value": "q10"},
                 ],
                 value="q4",
                 style={"width": "250px"}
@@ -347,7 +354,7 @@ query_controls = html.Div([
         })
 
 
-    ], className="card")
+    ], className="card-builder-container ")
 
 
 

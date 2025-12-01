@@ -37,29 +37,47 @@ collection = db[COLLECTION_NAME]
 # 1 — LISTE DES REQUÊTES DE TEST
 # -------------------------------------------------------------------
 SLOW_QUERY_CANDIDATES = [
-    {"name": "q1_triptime_gte_300", "query": {"trip_time": {"$gte": 300}}, "index": {"trip_time": 1}},
-    {"name": "q2_PULocation_100", "query": {"PULocationID": 100}, "index": {"PULocationID": "hashed"}},
-    {"name": "q3_license_PU",
-     "query": {"hvfhs_license_num": "HV0003", "PULocationID": 97},
-     "index": {"hvfhs_license_num": 1, "PULocationID": 1}},
-    {"name": "q4_miles_range",
-     "query": {"trip_miles": {"$gte": 5, "$lte": 10}},
+    {"name": "q1_triptime_range",
+     "query": {"trip_time": {"$gte": 60, "$lte": 1200}},
+     "index": {"trip_time": 1}},
+
+    {"name": "q2_tripmiles_large",
+     "query": {"trip_miles": {"$gte": 1, "$lte": 20}},
      "index": {"trip_miles": 1}},
-    {"name": "q5_miles_time",
-     "query": {"trip_miles": {"$gte": 5}, "trip_time": {"$gte": 1200}},
-     "index": {"trip_miles": 1, "trip_time": -1}},
-    {"name": "q6_base_B02764",
+
+    {"name": "q3_fare_range",
+     "query": {"base_passenger_fare": {"$gte": 5, "$lte": 50}},
+     "index": {"base_passenger_fare": 1}},
+
+    {"name": "q4_license_time_miles",
+     "query": {"hvfhs_license_num": "HV0003", "trip_time": {"$gte": 300}, "trip_miles": {"$gte": 5}},
+     "index": {"hvfhs_license_num": 1, "trip_time": 1, "trip_miles": 1}},
+
+    {"name": "q5_base_num",
      "query": {"dispatching_base_num": "B02764"},
      "index": {"dispatching_base_num": 1}},
-    {"name": "q7_fare_gte_20",
-     "query": {"base_passenger_fare": {"$gte": 20}},
-     "index": {"base_passenger_fare": 1}},
-    {"name": "q8_license_miles_time",
-     "query": {"hvfhs_license_num": "HV0003", "trip_miles": {"$gte": 10}, "trip_time": {"$gte": 1800}},
-     "index": {"hvfhs_license_num": 1, "trip_miles": 1, "trip_time": -1}},
-    {"name": "q9_DOLocation_85", "query": {"DOLocationID": 85}, "index": {"DOLocationID": 1}},
-    {"name": "q10_license_exact", "query": {"hvfhs_license_num": "HV0005"}, "index": {"hvfhs_license_num": 1}},
+
+    {"name": "q6_time_filtered_sorted",
+     "query": {"trip_time": {"$gte": 300}},
+     "index": {"trip_time": 1, "trip_miles": -1}},
+
+    {"name": "q7_PULoc_time",
+     "query": {"PULocationID": 132, "trip_miles": {"$gte": 2, "$lte": 15}},
+     "index": {"PULocationID": 1, "trip_miles": 1}},
+
+    {"name": "q8_DOLocation",
+     "query": {"DOLocationID": 230},
+     "index": {"DOLocationID": 1}},
+
+    {"name": "q9_flags",
+     "query": {"shared_request_flag": True, "wav_request_flag": False},
+     "index": {"shared_request_flag": 1, "wav_request_flag": 1}},
+
+    {"name": "q10_license_time",
+     "query": {"hvfhs_license_num": "HV0005", "trip_time": {"$gte": 600, "$lte": 2400}, "trip_miles": {"$gte": 3}},
+     "index": {"hvfhs_license_num": 1, "trip_time": 1, "trip_miles": 1}},
 ]
+
 
 
 # -------------------------------------------------------------------
@@ -193,6 +211,7 @@ def drop_conflicting_indexes(index_param):
 
     for index_name, meta in info.items():
         if index_name == "_id_":
+            print('1')
             continue
 
         fields = {field: v for field, v in meta["key"]}
@@ -200,6 +219,7 @@ def drop_conflicting_indexes(index_param):
         if set(fields.keys()) == set(index_param.keys()):
             logger.warning(f"Dropping old index: {index_name}")
             collection.drop_index(index_name)
+            print('kkdjflsdkfjlkfjlfkjlk')
 
 
 # -------------------------------------------------------------------
