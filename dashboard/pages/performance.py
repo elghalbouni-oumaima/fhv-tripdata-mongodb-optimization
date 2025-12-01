@@ -173,7 +173,7 @@ PRESET_QUERIES = {
     "simple": {
         "query": {"trip_time": {"$gte": 300}},
         "index": {"trip_time": 1},
-        "name": "simple_index"
+        "name": "q4"
     },
     "compound": {
         "query": {
@@ -181,12 +181,12 @@ PRESET_QUERIES = {
             "PULocationID": 97
         },
         "index": {"hvfhs_license_num": 1, "PULocationID": 1},
-        "name": "compound_index"
+        "name": "q8"
     },
     "hashed": {
         "query": {"PULocationID": 100},
         "index": {"PULocationID": "hashed"},
-        "name": "hashed_index"
+        "name": "q2"
     }
 }
 
@@ -250,11 +250,11 @@ query_controls = html.Div([
             dcc.Dropdown(
                 id="benchmark-dropdown",
                 options=[
-                    {"label": "Simple Index", "value": "simple"},
-                    {"label": "Compound Index", "value": "compound"},
-                    {"label": "Hashed Index", "value": "hashed"},
+                    {"label": "Simple Index", "value": "q4"},
+                    {"label": "Compound Index", "value": "q8"},
+                    {"label": "Hashed Index", "value": "q2"},
                 ],
-                value="simple",
+                value="q4",
                 style={"width": "250px"}
             )
         ], style={
@@ -486,6 +486,7 @@ def update_cards(input_value):
     last_file, error = load_latest_benchmark(input_value)
     data = load_benchmark(last_file) if last_file else {}
     before = data.get('results', {}).get('before', {})
+    print(before.get('executionTimeMillis'))
     after = data.get('results', {}).get('after', {})
     print(before.get('executionTimeMillis'))
     dv =[
