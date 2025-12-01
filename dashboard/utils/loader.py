@@ -43,14 +43,15 @@ def get_file(input_value):
     return data
    
 def load_latest_benchmark(index_type):
-
+    print("Loading latest benchmark for index type:", index_type)
     folder = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "..", "results", "benchmarking")
     )
 
-    pattern = re.compile(rf"{index_type}_index_.*\.json")
+    pattern = re.compile(rf"{index_type}.*\.json")
 
     candidates = [f for f in os.listdir(folder) if pattern.match(f)]
+    print("Found candidates:", candidates)
 
     if not candidates:
         return None, f"No benchmark file found for index type: {index_type}"
