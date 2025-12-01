@@ -1,0 +1,120 @@
+{
+    "query_name": "q3_simple_distinct_lookup",
+    "index_param": {
+        "dispatching_base_num": 1
+    },
+    "index_type": "simple index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 3958,
+            "optimizationTimeMillis": 0,
+            "totalDocsExamined": 1809760,
+            "totalKeysExamined": 0,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 3692,
+                "works": 1809761,
+                "advanced": 10000,
+                "needTime": 1799760,
+                "needYield": 0,
+                "saveState": 234,
+                "restoreState": 234,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "COLLSCAN",
+                    "filter": {
+                        "dispatching_base_num": {
+                            "$eq": "B02800"
+                        }
+                    },
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 3342,
+                    "works": 1809760,
+                    "advanced": 10000,
+                    "needTime": 1799760,
+                    "needYield": 0,
+                    "saveState": 234,
+                    "restoreState": 234,
+                    "isEOF": 0,
+                    "direction": "forward",
+                    "docsExamined": 1809760
+                }
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 176,
+            "optimizationTimeMillis": 0,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10000,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 171,
+                "works": 10001,
+                "advanced": 10000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 10,
+                "restoreState": 10,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 171,
+                    "works": 10000,
+                    "advanced": 10000,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 10,
+                    "restoreState": 10,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 49,
+                        "works": 10000,
+                        "advanced": 10000,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 10,
+                        "restoreState": 10,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "dispatching_base_num": 1
+                        },
+                        "indexName": "dispatching_base_num_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "dispatching_base_num": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "dispatching_base_num": [
+                                "[\"B02800\", \"B02800\"]"
+                            ]
+                        },
+                        "keysExamined": 10000,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        }
+    }
+}
