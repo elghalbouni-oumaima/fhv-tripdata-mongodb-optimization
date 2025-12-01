@@ -9,7 +9,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 from functools import lru_cache
 from shapely import wkt
-
+import glob
 
 dash.register_page(__name__, path='/', name='Dataset')
 
@@ -25,14 +25,20 @@ def load_json_file(file_name):
         return json.load(f)
 
 #############################
-cart_data = load_json_file(f"{folder}/cart_visualization_{date_today}.json")
+pattern = os.path.join(folder, "cart_visualization_*.json")
+files_1 = glob.glob(pattern)
+cart_data = load_json_file(files_1[0])
 
 #############################
-df_distance_time_by_company = pd.DataFrame(load_json_file(f"{folder}/trips_distance_time_by_company_{date_today}.json"))
+pattern_2 = os.path.join(folder, "trips_distance_time_by_company_*.json")
+files_2 = glob.glob(pattern_2)
+df_distance_time_by_company = pd.DataFrame(load_json_file(files_2[0]))
 df_distance_time_by_company["AvgTimeMin"] = df_distance_time_by_company["AvgTime"] / 60
 
-###############################3
-profit = pd.DataFrame(load_json_file(f"{folder}/total_profit_by_company_{date_today}.json"))
+###############################
+pattern_3 = os.path.join(folder, "total_profit_by_company_*.json")
+files_3 = glob.glob(pattern_3)
+profit = pd.DataFrame(load_json_file(files_3[0]))
 
 def prepare_profit_pie_data(profit_df):
     df = profit_df.copy()
@@ -57,7 +63,9 @@ fig = px.pie(
     custom_data="custom_data"  
 )
 ###############################
-prive_drive = pd.DataFrame(load_json_file(f"{folder}/Average_Price_driver_company_{date_today}.json"))
+pattern_4 = os.path.join(folder, "Average_Price_driver_company_*.json")
+files_4 = glob.glob(pattern_4)
+prive_drive = pd.DataFrame(load_json_file(files_4[0]))
 prive_drive = prive_drive.rename(columns={"_id": "Company"})
 
 ######### map ###############
@@ -70,7 +78,9 @@ df_locations['lon'] = df_locations['centroid'].apply(lambda x: x.x)
 
 df_locations_coords = df_locations[['LocationID', 'lat', 'lon']]
 
-df_trips = pd.DataFrame(load_json_file(f"{folder}/trips_locations_{date_today}.json"))
+pattern_5 = os.path.join(folder, "trips_locations_*.json")
+files_5 = glob.glob(pattern_5)
+df_trips = pd.DataFrame(load_json_file(files_5[0]))
 
 df_trips = df_trips.merge(df_locations_coords, how='left', left_on='PULocationID', right_on='LocationID')
 df_trips.rename(columns={'lat': 'PU_lat', 'lon': 'PU_lon'}, inplace=True)
@@ -80,7 +90,12 @@ df_trips = df_trips.merge(df_locations_coords, how='left', left_on='DOLocationID
 df_trips.rename(columns={'lat': 'DO_lat', 'lon': 'DO_lon'}, inplace=True)
 df_trips.drop(columns=['LocationID'], inplace=True)
 
+###############################
+pattern_6 = os.path.join(folder, "trips_per_day_by_company_*.json")
+files_6 = glob.glob(pattern_6)
 
+pattern_7 = os.path.join(folder, "trips_distance_total_by_day_*.json")
+files_7 = glob.glob(pattern_7)
 # --- Cartes (KPIs) ---
 card_style = {
     'flex':'1', 
@@ -138,7 +153,8 @@ layout = html.Div([
     html.Div(cards, className="kpi-grid", style={'display': 'flex', 'gap': '20px', 'margin-bottom':'30px'}),
     
     # --- Linear graph of 3 companies ---
-    dcc.Graph(figure=px.line(load_json_file(f"{folder}/trips_per_day_by_company_{date_today}.json"), x='Date', y='Trips', color='Company', title="Trips per day and Company"), className="card", style={'margin-bottom':'30px'}),
+    
+    dcc.Graph(figure=px.line(load_json_file(files_6[0]), x='Date', y='Trips', color='Company', title="Trips per day and Company"), className="card", style={'margin-bottom':'30px'}),
 
     # --- Maps côte à côte  ---
 
@@ -193,6 +209,6 @@ layout = html.Div([
     dcc.Graph(figure=px.bar(df_distance_time_by_company, x='Company', y=['AvgDistance','AvgTimeMin'], barmode='group', title="Distance (miles) vs. Time (minutes) by Company"), className="card", style={'margin-bottom':'30px'}),
 
     # --- Distance par jour ---
-    dcc.Graph(figure=px.line(load_json_file(f"{folder}/trips_distance_total_by_day_{date_today}.json"),x='Date',y='AvgDistance',title="Total distance per day"),className="card"),
+    dcc.Graph(figure=px.line(load_json_file(files_7[0]),x='Date',y='AvgDistance',title="Total distance per day"),className="card"),
 
 ])

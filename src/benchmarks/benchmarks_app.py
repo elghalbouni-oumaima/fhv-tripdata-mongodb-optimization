@@ -141,7 +141,11 @@ def save_metrics(metrics, index_param, index_name, filename=None):
 def create_index(index_param):
     collection.create_index(index_param)
 
+def drop_all_indexes(coll=collection):
+    coll.drop_indexes()
+
 def run_benchmark(query, index_param, index_name,sort=None, typeOfQuery = "find"):
+    drop_all_indexes()
     #Before Index
     metrics_before = run_explain(query, sort=sort, typeOfQuery=typeOfQuery)
     filename = save_metrics( metrics_before, index_param, index_name, filename=None)
@@ -199,15 +203,15 @@ if __name__ == "__main__":
     logger.info("Running COMPOUND INDEX benchmark with trip filters...")
 
     run_benchmark(
-        query={
-            "dispatching_base_num": "B02764", 
-            "trip_miles": { "$gte": 5, "$lte": 15 }, 
-            "trip_time": { "$gte": 1200 }  
+        query = {
+            "dispatching_base_num": "B02764",
+            "trip_miles": { "$gte": 5, "$lte": 15 },
+            "trip_time": { "$gte": 2000 }
         },
         index_param={
             "dispatching_base_num": 1,
             "trip_miles": 1,
-            "trip_time": -1
+            "trip_time": 1
         },
         index_name="compound_index",
         sort={ "trip_time": -1 } 

@@ -1,0 +1,634 @@
+{
+    "index_name": "idx_compound_dispatch_miles_time",
+    "index_param": {
+        "dispatching_base_num": 1,
+        "trip_miles": 1,
+        "trip_time": 1
+    },
+    "results": {
+        "before": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "$and": [
+                    {
+                        "dispatching_base_num": {
+                            "$eq": "B02764"
+                        }
+                    },
+                    {
+                        "trip_miles": {
+                            "$lte": 15
+                        }
+                    },
+                    {
+                        "trip_miles": {
+                            "$gte": 5
+                        }
+                    },
+                    {
+                        "trip_time": {
+                            "$gte": 2000
+                        }
+                    }
+                ]
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 56347,
+            "executionTimeMillis": 39841,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "executionStages": {
+                "isCached": false,
+                "stage": "SORT",
+                "nReturned": 56347,
+                "executionTimeMillisEstimate": 35926,
+                "works": 16601705,
+                "advanced": 56347,
+                "needTime": 16545357,
+                "needYield": 0,
+                "saveState": 2378,
+                "restoreState": 2378,
+                "isEOF": 1,
+                "sortPattern": {
+                    "trip_time": -1
+                },
+                "memLimit": 104857600,
+                "type": "simple",
+                "totalDataSizeSorted": 29075052,
+                "usedDisk": false,
+                "spills": 0,
+                "spilledRecords": 0,
+                "spilledBytes": 0,
+                "spilledDataStorageSize": 0,
+                "inputStage": {
+                    "stage": "COLLSCAN",
+                    "filter": {
+                        "$and": [
+                            {
+                                "dispatching_base_num": {
+                                    "$eq": "B02764"
+                                }
+                            },
+                            {
+                                "trip_miles": {
+                                    "$lte": 15
+                                }
+                            },
+                            {
+                                "trip_miles": {
+                                    "$gte": 5
+                                }
+                            },
+                            {
+                                "trip_time": {
+                                    "$gte": 2000
+                                }
+                            }
+                        ]
+                    },
+                    "nReturned": 56347,
+                    "executionTimeMillisEstimate": 31387,
+                    "works": 16545357,
+                    "advanced": 56347,
+                    "needTime": 16489009,
+                    "needYield": 0,
+                    "saveState": 2378,
+                    "restoreState": 2378,
+                    "isEOF": 1,
+                    "direction": "forward",
+                    "docsExamined": 16545356
+                }
+            },
+            "indexName": null,
+            "indexBounds": null,
+            "memoryUsageBytesEstimate": null,
+            "sortPattern": null,
+            "rawExplain": {
+                "explainVersion": "1",
+                "queryPlanner": {
+                    "namespace": "trips_db.fhvhv_trips_2021-10",
+                    "parsedQuery": {
+                        "$and": [
+                            {
+                                "dispatching_base_num": {
+                                    "$eq": "B02764"
+                                }
+                            },
+                            {
+                                "trip_miles": {
+                                    "$lte": 15
+                                }
+                            },
+                            {
+                                "trip_miles": {
+                                    "$gte": 5
+                                }
+                            },
+                            {
+                                "trip_time": {
+                                    "$gte": 2000
+                                }
+                            }
+                        ]
+                    },
+                    "indexFilterSet": false,
+                    "queryHash": "83AF0D77",
+                    "planCacheShapeHash": "83AF0D77",
+                    "planCacheKey": "FF822A36",
+                    "optimizationTimeMillis": 0,
+                    "maxIndexedOrSolutionsReached": false,
+                    "maxIndexedAndSolutionsReached": false,
+                    "maxScansToExplodeReached": false,
+                    "prunedSimilarIndexes": false,
+                    "winningPlan": {
+                        "isCached": false,
+                        "stage": "SORT",
+                        "sortPattern": {
+                            "trip_time": -1
+                        },
+                        "memLimit": 104857600,
+                        "type": "simple",
+                        "inputStage": {
+                            "stage": "COLLSCAN",
+                            "filter": {
+                                "$and": [
+                                    {
+                                        "dispatching_base_num": {
+                                            "$eq": "B02764"
+                                        }
+                                    },
+                                    {
+                                        "trip_miles": {
+                                            "$lte": 15
+                                        }
+                                    },
+                                    {
+                                        "trip_miles": {
+                                            "$gte": 5
+                                        }
+                                    },
+                                    {
+                                        "trip_time": {
+                                            "$gte": 2000
+                                        }
+                                    }
+                                ]
+                            },
+                            "direction": "forward"
+                        }
+                    },
+                    "rejectedPlans": []
+                },
+                "executionStats": {
+                    "executionSuccess": true,
+                    "nReturned": 56347,
+                    "executionTimeMillis": 39841,
+                    "totalKeysExamined": 0,
+                    "totalDocsExamined": 16545356,
+                    "executionStages": {
+                        "isCached": false,
+                        "stage": "SORT",
+                        "nReturned": 56347,
+                        "executionTimeMillisEstimate": 35926,
+                        "works": 16601705,
+                        "advanced": 56347,
+                        "needTime": 16545357,
+                        "needYield": 0,
+                        "saveState": 2378,
+                        "restoreState": 2378,
+                        "isEOF": 1,
+                        "sortPattern": {
+                            "trip_time": -1
+                        },
+                        "memLimit": 104857600,
+                        "type": "simple",
+                        "totalDataSizeSorted": 29075052,
+                        "usedDisk": false,
+                        "spills": 0,
+                        "spilledRecords": 0,
+                        "spilledBytes": 0,
+                        "spilledDataStorageSize": 0,
+                        "inputStage": {
+                            "stage": "COLLSCAN",
+                            "filter": {
+                                "$and": [
+                                    {
+                                        "dispatching_base_num": {
+                                            "$eq": "B02764"
+                                        }
+                                    },
+                                    {
+                                        "trip_miles": {
+                                            "$lte": 15
+                                        }
+                                    },
+                                    {
+                                        "trip_miles": {
+                                            "$gte": 5
+                                        }
+                                    },
+                                    {
+                                        "trip_time": {
+                                            "$gte": 2000
+                                        }
+                                    }
+                                ]
+                            },
+                            "nReturned": 56347,
+                            "executionTimeMillisEstimate": 31387,
+                            "works": 16545357,
+                            "advanced": 56347,
+                            "needTime": 16489009,
+                            "needYield": 0,
+                            "saveState": 2378,
+                            "restoreState": 2378,
+                            "isEOF": 1,
+                            "direction": "forward",
+                            "docsExamined": 16545356
+                        }
+                    },
+                    "allPlansExecution": []
+                },
+                "queryShapeHash": "F5274988FD590031C94AC722C1761D8773FBBBD41B18467A209BD787D941CDD0",
+                "command": {
+                    "find": "fhvhv_trips_2021-10",
+                    "filter": {
+                        "dispatching_base_num": "B02764",
+                        "trip_miles": {
+                            "$gte": 5,
+                            "$lte": 15
+                        },
+                        "trip_time": {
+                            "$gte": 2000
+                        }
+                    },
+                    "sort": {
+                        "trip_time": -1
+                    },
+                    "$db": "trips_db"
+                },
+                "serverInfo": {
+                    "host": "DESKTOP-91QMJ5A",
+                    "port": 27017,
+                    "version": "8.2.1",
+                    "gitVersion": "3312bdcf28aa65f5930005e21c2cb130f648b8c3"
+                },
+                "serverParameters": {
+                    "internalQueryFacetBufferSizeBytes": 104857600,
+                    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+                    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+                    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+                    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+                    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+                    "internalQueryMaxAddToSetBytes": 104857600,
+                    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+                    "internalQueryFrameworkControl": "trySbeRestricted",
+                    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+                },
+                "ok": 1.0
+            }
+        },
+        "after": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "$and": [
+                    {
+                        "dispatching_base_num": {
+                            "$eq": "B02764"
+                        }
+                    },
+                    {
+                        "trip_miles": {
+                            "$lte": 15
+                        }
+                    },
+                    {
+                        "trip_miles": {
+                            "$gte": 5
+                        }
+                    },
+                    {
+                        "trip_time": {
+                            "$gte": 2000
+                        }
+                    }
+                ]
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 56347,
+            "executionTimeMillis": 1316,
+            "totalDocsExamined": 56347,
+            "totalKeysExamined": 57348,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 56347,
+                "executionTimeMillisEstimate": 1291,
+                "works": 113696,
+                "advanced": 56347,
+                "needTime": 57348,
+                "needYield": 0,
+                "saveState": 77,
+                "restoreState": 77,
+                "isEOF": 1,
+                "docsExamined": 56347,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "SORT",
+                    "nReturned": 56347,
+                    "executionTimeMillisEstimate": 492,
+                    "works": 113696,
+                    "advanced": 56347,
+                    "needTime": 57348,
+                    "needYield": 0,
+                    "saveState": 77,
+                    "restoreState": 77,
+                    "isEOF": 1,
+                    "sortPattern": {
+                        "trip_time": -1
+                    },
+                    "memLimit": 104857600,
+                    "type": "default",
+                    "totalDataSizeSorted": 4620454,
+                    "usedDisk": false,
+                    "spills": 0,
+                    "spilledRecords": 0,
+                    "spilledBytes": 0,
+                    "spilledDataStorageSize": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 56347,
+                        "executionTimeMillisEstimate": 275,
+                        "works": 57348,
+                        "advanced": 56347,
+                        "needTime": 1000,
+                        "needYield": 0,
+                        "saveState": 77,
+                        "restoreState": 77,
+                        "isEOF": 1,
+                        "keyPattern": {
+                            "dispatching_base_num": 1,
+                            "trip_miles": 1,
+                            "trip_time": 1
+                        },
+                        "indexName": "dispatching_base_num_1_trip_miles_1_trip_time_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "dispatching_base_num": [],
+                            "trip_miles": [],
+                            "trip_time": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "dispatching_base_num": [
+                                "[\"B02764\", \"B02764\"]"
+                            ],
+                            "trip_miles": [
+                                "[5, 15]"
+                            ],
+                            "trip_time": [
+                                "[2000, inf]"
+                            ]
+                        },
+                        "keysExamined": 57348,
+                        "seeks": 1001,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": "dispatching_base_num_1_trip_miles_1_trip_time_1",
+            "indexBounds": {
+                "dispatching_base_num": [
+                    "[\"B02764\", \"B02764\"]"
+                ],
+                "trip_miles": [
+                    "[5, 15]"
+                ],
+                "trip_time": [
+                    "[2000, inf]"
+                ]
+            },
+            "memoryUsageBytesEstimate": null,
+            "sortPattern": null,
+            "rawExplain": {
+                "explainVersion": "1",
+                "queryPlanner": {
+                    "namespace": "trips_db.fhvhv_trips_2021-10",
+                    "parsedQuery": {
+                        "$and": [
+                            {
+                                "dispatching_base_num": {
+                                    "$eq": "B02764"
+                                }
+                            },
+                            {
+                                "trip_miles": {
+                                    "$lte": 15
+                                }
+                            },
+                            {
+                                "trip_miles": {
+                                    "$gte": 5
+                                }
+                            },
+                            {
+                                "trip_time": {
+                                    "$gte": 2000
+                                }
+                            }
+                        ]
+                    },
+                    "indexFilterSet": false,
+                    "queryHash": "83AF0D77",
+                    "planCacheShapeHash": "83AF0D77",
+                    "planCacheKey": "E66B4922",
+                    "optimizationTimeMillis": 0,
+                    "maxIndexedOrSolutionsReached": false,
+                    "maxIndexedAndSolutionsReached": false,
+                    "maxScansToExplodeReached": false,
+                    "prunedSimilarIndexes": false,
+                    "winningPlan": {
+                        "isCached": false,
+                        "stage": "FETCH",
+                        "inputStage": {
+                            "stage": "SORT",
+                            "sortPattern": {
+                                "trip_time": -1
+                            },
+                            "memLimit": 104857600,
+                            "type": "default",
+                            "inputStage": {
+                                "stage": "IXSCAN",
+                                "keyPattern": {
+                                    "dispatching_base_num": 1,
+                                    "trip_miles": 1,
+                                    "trip_time": 1
+                                },
+                                "indexName": "dispatching_base_num_1_trip_miles_1_trip_time_1",
+                                "isMultiKey": false,
+                                "multiKeyPaths": {
+                                    "dispatching_base_num": [],
+                                    "trip_miles": [],
+                                    "trip_time": []
+                                },
+                                "isUnique": false,
+                                "isSparse": false,
+                                "isPartial": false,
+                                "indexVersion": 2,
+                                "direction": "forward",
+                                "indexBounds": {
+                                    "dispatching_base_num": [
+                                        "[\"B02764\", \"B02764\"]"
+                                    ],
+                                    "trip_miles": [
+                                        "[5, 15]"
+                                    ],
+                                    "trip_time": [
+                                        "[2000, inf]"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "rejectedPlans": []
+                },
+                "executionStats": {
+                    "executionSuccess": true,
+                    "nReturned": 56347,
+                    "executionTimeMillis": 1316,
+                    "totalKeysExamined": 57348,
+                    "totalDocsExamined": 56347,
+                    "executionStages": {
+                        "isCached": false,
+                        "stage": "FETCH",
+                        "nReturned": 56347,
+                        "executionTimeMillisEstimate": 1291,
+                        "works": 113696,
+                        "advanced": 56347,
+                        "needTime": 57348,
+                        "needYield": 0,
+                        "saveState": 77,
+                        "restoreState": 77,
+                        "isEOF": 1,
+                        "docsExamined": 56347,
+                        "alreadyHasObj": 0,
+                        "inputStage": {
+                            "stage": "SORT",
+                            "nReturned": 56347,
+                            "executionTimeMillisEstimate": 492,
+                            "works": 113696,
+                            "advanced": 56347,
+                            "needTime": 57348,
+                            "needYield": 0,
+                            "saveState": 77,
+                            "restoreState": 77,
+                            "isEOF": 1,
+                            "sortPattern": {
+                                "trip_time": -1
+                            },
+                            "memLimit": 104857600,
+                            "type": "default",
+                            "totalDataSizeSorted": 4620454,
+                            "usedDisk": false,
+                            "spills": 0,
+                            "spilledRecords": 0,
+                            "spilledBytes": 0,
+                            "spilledDataStorageSize": 0,
+                            "inputStage": {
+                                "stage": "IXSCAN",
+                                "nReturned": 56347,
+                                "executionTimeMillisEstimate": 275,
+                                "works": 57348,
+                                "advanced": 56347,
+                                "needTime": 1000,
+                                "needYield": 0,
+                                "saveState": 77,
+                                "restoreState": 77,
+                                "isEOF": 1,
+                                "keyPattern": {
+                                    "dispatching_base_num": 1,
+                                    "trip_miles": 1,
+                                    "trip_time": 1
+                                },
+                                "indexName": "dispatching_base_num_1_trip_miles_1_trip_time_1",
+                                "isMultiKey": false,
+                                "multiKeyPaths": {
+                                    "dispatching_base_num": [],
+                                    "trip_miles": [],
+                                    "trip_time": []
+                                },
+                                "isUnique": false,
+                                "isSparse": false,
+                                "isPartial": false,
+                                "indexVersion": 2,
+                                "direction": "forward",
+                                "indexBounds": {
+                                    "dispatching_base_num": [
+                                        "[\"B02764\", \"B02764\"]"
+                                    ],
+                                    "trip_miles": [
+                                        "[5, 15]"
+                                    ],
+                                    "trip_time": [
+                                        "[2000, inf]"
+                                    ]
+                                },
+                                "keysExamined": 57348,
+                                "seeks": 1001,
+                                "dupsTested": 0,
+                                "dupsDropped": 0
+                            }
+                        }
+                    },
+                    "allPlansExecution": []
+                },
+                "queryShapeHash": "F5274988FD590031C94AC722C1761D8773FBBBD41B18467A209BD787D941CDD0",
+                "command": {
+                    "find": "fhvhv_trips_2021-10",
+                    "filter": {
+                        "dispatching_base_num": "B02764",
+                        "trip_miles": {
+                            "$gte": 5,
+                            "$lte": 15
+                        },
+                        "trip_time": {
+                            "$gte": 2000
+                        }
+                    },
+                    "sort": {
+                        "trip_time": -1
+                    },
+                    "$db": "trips_db"
+                },
+                "serverInfo": {
+                    "host": "DESKTOP-91QMJ5A",
+                    "port": 27017,
+                    "version": "8.2.1",
+                    "gitVersion": "3312bdcf28aa65f5930005e21c2cb130f648b8c3"
+                },
+                "serverParameters": {
+                    "internalQueryFacetBufferSizeBytes": 104857600,
+                    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+                    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+                    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+                    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+                    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+                    "internalQueryMaxAddToSetBytes": 104857600,
+                    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+                    "internalQueryFrameworkControl": "trySbeRestricted",
+                    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+                },
+                "ok": 1.0
+            }
+        }
+    }
+}
