@@ -279,3 +279,10 @@ def make_kpi_card(title, before_val, after_val, unit=""):
         html.Div(f"{before_val} → {after_val} {unit}", className="kpi-value-main"),
         html.Div(f"{diff:+d} ({diff_pct:.1f}%)", className=f"kpi-diff {color_class}")
     ], className="card kpi-card")
+
+def make_query_card(title, val, unit=""):
+    
+    return html.Div([
+        html.Div(title, className="kpi-title"),
+        html.Div(f"{val} {unit}", className="kpi-value-main"),
+    ], className="card kpi-card")

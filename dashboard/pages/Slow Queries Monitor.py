@@ -1,7 +1,7 @@
 import dash
 from dash import html, dcc, dash_table, Input, Output, State, ctx
 from utils.loader import load_benchmark,load_latest_benchmark
-from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
+from utils.charts import make_comparison_bar,make_query_card, make_kpi_card,build_double_donut_chart,build_bar_chart
 import json
 from dash_svg import Svg, Line, Polygon
 import os
@@ -30,14 +30,28 @@ queries=[
     {"Query Tested": ' {"DOLocationID": 85}', "index": '{"DOLocationID": 1}'},
     {"Query Tested":' {"hvfhs_license_num": "HV0005"}', "index": '{"hvfhs_license_num": 1}'},
 ]
+
+# average Excution Time
+execution_time_file = load_benchmark('../results/benchmarking/execution_time.json') 
+print(execution_time_file)
+s = 0
+SlowedQuery = 0
+for i in range(len(execution_time_file)):
+    s += execution_time_file[i]['executionTimeMillis']
+    if execution_time_file[i]['executionTimeMillis'] >200:
+        SlowedQuery +=1
+avrg_time = s/len(execution_time_file)
+
+#Slowed Query
+
 layout = html.Div([
     html.H2(f"Identifying and analyzing queries with high execution time"),
     # KPI Cards
     html.Div([
-        make_kpi_card("Execution Time", before.get('executionTimeMillis'), after.get('executionTimeMillis'), "ms"),
-        make_kpi_card("Optimisation Time", before.get('optimizationTimeMillis'), after.get('optimizationTimeMillis'), "ms"),
-        make_kpi_card("Docs Examined", before.get('totalDocsExamined'), after.get('totalDocsExamined')),
-        make_kpi_card("Keys Examined", before.get('totalKeysExamined'), after.get('totalKeysExamined')),
+        make_query_card("Nomber of querey tested ", len(execution_time_file)),
+        make_query_card("Slowed query",SlowedQuery),
+        make_query_card("FAst query", len(execution_time_file) - SlowedQuery),
+        make_query_card("Average execution time",avrg_time,'ms'),
     ],id='cards-kpi', className="grid-4"),    
     html.Div([
             html.H3("Détails Chiffrés"),
