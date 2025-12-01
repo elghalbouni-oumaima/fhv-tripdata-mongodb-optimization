@@ -16,89 +16,111 @@ after = data.get('results', {}).get('after', {})
 # print(after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A'))
 
 def extract_execution_flow(stage, flow=None):
-    """Extraire le flow MongoDB sous forme de liste ordonnée."""
+    """Extraire le flow MongoDB sous forme de liste."""
     if flow is None:
         flow = []
 
     if not stage:
         return flow
 
-    flow.append({
+    # On récupère le nom de l'index s'il existe (souvent dans IXSCAN)
+    index_name = stage.get("indexName", None) 
+    
+    # Création de l'objet étape
+    step_data = {
         "stage": stage.get("stage", "UNKNOWN"),
-        "nReturned": stage.get("nReturned"),
-        "executionTimeMillisEstimate": stage.get("executionTimeMillisEstimate"),
-        "docsExamined": stage.get("docsExamined"),
-        "keysExamined": stage.get("keysExamined"),
-    })
+        "nReturned": stage.get("nReturned", 0),
+        "executionTimeMillisEstimate": stage.get("executionTimeMillisEstimate", 0),
+        "docsExamined": stage.get("docsExamined", 0),
+        "keysExamined": stage.get("keysExamined", 0),
+        "indexName": index_name # <-- Ajout ici
+    }
 
+    flow.append(step_data)
+
+    # Récursion : on descend dans l'arbre
     if "inputStage" in stage:
         return extract_execution_flow(stage["inputStage"], flow)
+    
+    # Gestion des cas complexes ($or, $lookup) qui ont plusieurs inputStages
+    elif "inputStages" in stage:
+        for sub_stage in stage["inputStages"]:
+            extract_execution_flow(sub_stage, flow)
 
     return flow
 
 def render_flow(flow_list, title):
+    # --- CORRECTION MAJEURE ICI ---
+    # On inverse la liste pour avoir l'ordre chronologique :
+    # Source (IXSCAN/COLLSCAN) -> Traitement -> Résultat (FETCH/LIMIT)
+    ordered_flow = list(reversed(flow_list))
 
-    # Construire les blocs + flèches
     elements = []
-    for i, item in enumerate(flow_list):
+    for i, item in enumerate(ordered_flow):
         elements.append(render_block(item))
 
-        # Ajouter flèche sauf pour le dernier élément
-        if i < len(flow_list) - 1:
+        # Ajouter une flèche après chaque bloc, sauf le dernier
+        if i < len(ordered_flow) - 1:
             elements.append(render_arrow())
 
     return html.Div([
+        # Titre
+        html.H4(title, style={"fontWeight": "600", "color": "#2c3e50"}),
 
-        # === TITRE ===
-        html.H4(title, style={
-            "fontWeight": "600",
-            # "marginBottom": "10px"
-        }),
-
-        # === PIPELINE HORIZONTAL ===
+        # Container du pipeline avec scroll horizontal si nécessaire
         html.Div(
             elements,
             style={
                 "display": "flex",
                 "alignItems": "center",
-                "justifyContent": "center",
-                "gap": "30px",
-                "padding": "20px",
-                "width": "100%"
+                "justifyContent": "flex-start", # Alignement à gauche pour le flux
+                "gap": "15px",
+                "padding": "20px 0",
+                "width": "100%",
+                "overflowX": "auto" # Permet de scroller si le plan est long
             }
         )
 
-    ], className="card", style={
-        "padding": "30px",
-        "background": "white",
-        "borderRadius": "0",
-        "boxShadow": "0 3px 10px rgba(0,0,0,0.08)",
-        "width": "100%",
-        "margin-top": "10px"
-    })
+    ], className="card", style={"padding": "20px", "marginTop": "20px"})
 
 def render_block(item):
-    return html.Div(
-        [
-            html.Div(item["stage"], style={
-                "fontWeight": "700",
-                "fontSize": "18px",
-                "marginBottom": "10px"
-            }),
+    # Couleur différente si c'est un scan d'index (vert) ou scan complet (rouge)
+    border_color = "#d0d0d0"
+    bg_color = "#ffffff"
+    
+    # if item["stage"] == "IXSCAN":
+    #     border_color = "#27ae60" # Vert
+    #     bg_color = "#f0fdf4"
+    # elif item["stage"] == "COLLSCAN":
+    #     border_color = "#e74c3c" # Rouge
+    #     bg_color = "#fdf2f2"
 
-            html.Div(f"Returned: {item['nReturned']}"),
-            html.Div(f"Exec ms: {item['executionTimeMillisEstimate']}"),
-            html.Div(f"Docs: {item['docsExamined']}"),
-            html.Div(f"Keys: {item['keysExamined']}"),
-        ],
+    content = [
+        html.Div(item["stage"], style={"fontWeight": "800", "fontSize": "16px", "marginBottom": "8px"}),
+        html.Div(f"Docs: {item['docsExamined']}", style={"fontSize": "12px"}),
+        html.Div(f"Keys: {item['keysExamined']}", style={"fontSize": "12px"}),
+        html.Div(f"Time: {item['executionTimeMillisEstimate']}ms", style={"fontSize": "12px", "color": "#7f8c8d"}),
+    ]
+
+    # Si un nom d'index existe, on l'affiche
+    if item.get("indexName"):
+        content.append(
+            html.Div(f"Idx: {item['indexName']}", 
+                     style={"marginTop": "5px", "fontSize": "10px", "color": "#2980b9", "fontWeight": "bold", "wordBreak": "break-all"})
+        )
+
+    return html.Div(
+        content,
         style={
-            "padding": "20px",
-            "border": "1px solid #d0d0d0",
-            "borderRadius": "15px",
-            "minWidth": "240px",
-            "background": "#ffffff",
-            "boxShadow": "0px 2px 10px rgba(0,0,0,0.05)",
-            "textAlign": "left"
+            "padding": "15px",
+            "border": f"2px solid {border_color}", # Bordure colorée selon le type
+            "borderRadius": "10px",
+            "minWidth": "160px",
+            "maxWidth": "200px",
+            "background": bg_color,
+            "boxShadow": "0 2px 5px rgba(0,0,0,0.05)",
+            "textAlign": "center",
+            "flexShrink": 0 # Empêche le rétrécissement
         }
     )
 
@@ -173,7 +195,7 @@ PRESET_QUERIES = {
     "simple": {
         "query": {"trip_time": {"$gte": 300}},
         "index": {"trip_time": 1},
-        "name": "q4"
+        "name": "q1"
     },
     "compound": {
         "query": {
@@ -181,7 +203,7 @@ PRESET_QUERIES = {
             "PULocationID": 97
         },
         "index": {"hvfhs_license_num": 1, "PULocationID": 1},
-        "name": "q8"
+        "name": "q9"
     },
     "hashed": {
         "query": {"PULocationID": 100},
@@ -261,7 +283,7 @@ query_controls = html.Div([
                     {"label": "9 Index", "value": "q9"},
                     {"label": "10 Index", "value": "q10"},
                 ],
-                value="q4",
+                value="q1",
                 style={"width": "250px"}
             )
         ], style={
@@ -456,11 +478,11 @@ layout = html.Div([
     Input("benchmark-dropdown", "value")
 )
 def update_title(selected_value):
-    if selected_value == "hashed":
+    if selected_value == "q2":
         index_name = "Hashed Index"
-    elif selected_value == "compound":
+    elif selected_value == "q9":
         index_name = "Compound Index"
-    elif selected_value == "simple":
+    elif selected_value == "q4":
         index_name = "Simple Index"
     else:
         index_name = "Unknown"

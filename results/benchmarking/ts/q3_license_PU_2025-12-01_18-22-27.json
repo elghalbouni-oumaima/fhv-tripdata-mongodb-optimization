@@ -1,0 +1,160 @@
+{
+    "query_name": "q3_license_PU",
+    "index_param": {
+        "hvfhs_license_num": 1,
+        "PULocationID": 1
+    },
+    "index_type": "compound index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 288,
+            "optimizationTimeMillis": 33,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10000,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 237,
+                "works": 10001,
+                "advanced": 10000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 15,
+                "restoreState": 15,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 237,
+                    "works": 10000,
+                    "advanced": 10000,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 15,
+                    "restoreState": 15,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 6,
+                        "works": 10000,
+                        "advanced": 10000,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 15,
+                        "restoreState": 15,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "hvfhs_license_num": 1,
+                            "PULocationID": 1
+                        },
+                        "indexName": "hvfhs_license_num_1_PULocationID_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "hvfhs_license_num": [],
+                            "PULocationID": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "hvfhs_license_num": [
+                                "[\"HV0003\", \"HV0003\"]"
+                            ],
+                            "PULocationID": [
+                                "[97, 97]"
+                            ]
+                        },
+                        "keysExamined": 10000,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 379,
+            "optimizationTimeMillis": 39,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10000,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 334,
+                "works": 10001,
+                "advanced": 10000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 22,
+                "restoreState": 22,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 334,
+                    "works": 10000,
+                    "advanced": 10000,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 22,
+                    "restoreState": 22,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 53,
+                        "works": 10000,
+                        "advanced": 10000,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 22,
+                        "restoreState": 22,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "hvfhs_license_num": 1,
+                            "PULocationID": 1
+                        },
+                        "indexName": "hvfhs_license_num_1_PULocationID_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "hvfhs_license_num": [],
+                            "PULocationID": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "hvfhs_license_num": [
+                                "[\"HV0003\", \"HV0003\"]"
+                            ],
+                            "PULocationID": [
+                                "[97, 97]"
+                            ]
+                        },
+                        "keysExamined": 10000,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        }
+    }
+}

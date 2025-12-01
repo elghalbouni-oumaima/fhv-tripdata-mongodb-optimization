@@ -37,47 +37,99 @@ collection = db[COLLECTION_NAME]
 # 1 — LISTE DES REQUÊTES DE TEST
 # -------------------------------------------------------------------
 SLOW_QUERY_CANDIDATES = [
-    {"name": "q1_triptime_range",
-     "query": {"trip_time": {"$gte": 60, "$lte": 1200}},
-     "index": {"trip_time": 1}},
+    # ---------------------------------------------------------
+    # TYPE 1: INDEX SIMPLE (Single Field)
+    # Objectif: Passer d'un scan complet à un scan ciblé sur des valeurs rares.
+    # ---------------------------------------------------------
+    {
+        "name": "q1_simple_outlier_range",
+        # AVANT: Scanne toute la base.
+        # APRÈS: Scanne seulement les quelques trajets > 5000s.
+        "query": {"trip_time": {"$gte": 5000}}, 
+        "index": {"trip_time": 1}
+    },
+    {
+        "name": "q2_simple_sort_blocking",
+        # AVANT: "Blocking Sort" (Erreur mémoire possible ou très lent).
+        # APRÈS: Résultat instantané car l'index est déjà trié.
+        "query": {"trip_miles": {"$gte": 5}},
+        "sort": {"trip_miles": -1}, 
+        "index": {"trip_miles": 1}
+    },
+    {
+        "name": "q3_simple_distinct_lookup",
+        # Chercher une valeur précise rare.
+        "query": {"dispatching_base_num": "B02800"}, 
+        "index": {"dispatching_base_num": 1}
+    },
 
-    {"name": "q2_tripmiles_large",
-     "query": {"trip_miles": {"$gte": 1, "$lte": 20}},
-     "index": {"trip_miles": 1}},
+    # ---------------------------------------------------------
+    # TYPE 2: INDEX HASHED (Haché)
+    # Objectif: Égalité stricte uniquement. Très rapide pour le point lookup.
+    # ---------------------------------------------------------
+    {
+        "name": "q4_hashed_equality",
+        # Le hachage distribue les valeurs. Idéal pour des IDs.
+        "query": {"hvfhs_license_num": "HV0003"},
+        "index": {"hvfhs_license_num": "hashed"}
+    },
+    {
+        "name": "q5_hashed_location",
+        # Recherche exacte sur un ID de lieu.
+        "query": {"PULocationID": 132},
+        "index": {"PULocationID": "hashed"}
+    },
 
-    {"name": "q3_fare_range",
-     "query": {"base_passenger_fare": {"$gte": 5, "$lte": 50}},
-     "index": {"base_passenger_fare": 1}},
-
-    {"name": "q4_license_time_miles",
-     "query": {"hvfhs_license_num": "HV0003", "trip_time": {"$gte": 300}, "trip_miles": {"$gte": 5}},
-     "index": {"hvfhs_license_num": 1, "trip_time": 1, "trip_miles": 1}},
-
-    {"name": "q5_base_num",
-     "query": {"dispatching_base_num": "B02764"},
-     "index": {"dispatching_base_num": 1}},
-
-    {"name": "q6_time_filtered_sorted",
-     "query": {"trip_time": {"$gte": 300}},
-     "index": {"trip_time": 1, "trip_miles": -1}},
-
-    {"name": "q7_PULoc_time",
-     "query": {"PULocationID": 132, "trip_miles": {"$gte": 2, "$lte": 15}},
-     "index": {"PULocationID": 1, "trip_miles": 1}},
-
-    {"name": "q8_DOLocation",
-     "query": {"DOLocationID": 230},
-     "index": {"DOLocationID": 1}},
-
-    {"name": "q9_flags",
-     "query": {"shared_request_flag": True, "wav_request_flag": False},
-     "index": {"shared_request_flag": 1, "wav_request_flag": 1}},
-
-    {"name": "q10_license_time",
-     "query": {"hvfhs_license_num": "HV0005", "trip_time": {"$gte": 600, "$lte": 2400}, "trip_miles": {"$gte": 3}},
-     "index": {"hvfhs_license_num": 1, "trip_time": 1, "trip_miles": 1}},
+    # ---------------------------------------------------------
+    # TYPE 3: INDEX COMPOUND (Composé)
+    # Règle d'or ESR : Equality (Égalité) -> Sort (Tri) -> Range (Plage)
+    # ---------------------------------------------------------
+    {
+        "name": "q6_compound_ESR_perfect",
+        # Respecte la règle ESR.
+        # Equality: PULocationID, Sort: trip_miles, Range: trip_time
+        "query": {"PULocationID": 79, "trip_time": {"$gt": 600}},
+        "sort": {"trip_miles": 1},
+        "index": {"PULocationID": 1, "trip_miles": 1, "trip_time": 1}
+    },
+    {
+        "name": "q7_compound_covered_query",
+        # *** TRES IMPORTANT *** : REQUÊTE COUVERTE
+        # Si on ne demande QUE les champs de l'index (_id: 0), 
+        # DocsExamined tombera à 0. C'est l'optimisation ultime.
+        "query": {"hvfhs_license_num": "HV0005", "trip_miles": {"$gte": 2}},
+        "projection": {"hvfhs_license_num": 1, "trip_miles": 1, "_id": 0},
+        "index": {"hvfhs_license_num": 1, "trip_miles": 1}
+    },
+    {
+        "name": "q8_compound_sort_optimization",
+        # Sans index: MongoDB doit trouver tous les B02510 puis les trier en RAM.
+        # Avec index: Il lit l'index dans l'ordre. Il s'arrête dès qu'il a les 10 premiers.
+        "query": {"dispatching_base_num": "B02510"},
+        "sort": {"request_datetime": -1},
+        "limit": 10,
+        "index": {"dispatching_base_num": 1, "request_datetime": -1}
+    },
+    {
+        "name": "q9_compound_multi_equality",
+        # Filtrage précis sur deux champs. Réduit drastiquement l'ensemble scanné.
+        "query": {
+            "PULocationID": 138, 
+            "DOLocationID": 230,
+            "shared_request_flag": 1
+        },
+        "index": {"PULocationID": 1, "DOLocationID": 1}
+    },
+    {
+        "name": "q10_compound_range_sort_heavy",
+        # Un cas lourd : Plage de date + Tri sur miles.
+        # Avant : Lent car beaucoup de données dans la plage de dates.
+        # Après : L'index aide à filtrer, mais surtout à éviter le tri mémoire.
+        "query": {"request_datetime": {"$gte": "2019-01-01", "$lt": "2019-02-01"}},
+        "sort": {"trip_miles": -1},
+        "index": {"request_datetime": 1, "trip_miles": -1}
+    }
 ]
-
 
 
 # -------------------------------------------------------------------
@@ -202,25 +254,36 @@ def save_metrics(name, before, after, index_param):
 # -------------------------------------------------------------------
 # 6 — DROP INDEXES intelligently
 # -------------------------------------------------------------------
+
 def drop_conflicting_indexes(index_param):
     """
-    Supprime uniquement les index ayant EXACTEMENT
-    les mêmes champs que l’index proposé.
+    Supprime TOUS les index qui commencent par le même champ 
+    que l'index proposé. Cela évite que MongoDB utilise un index 
+    composé existant (ex: 'trip_time_1_miles_1') pour optimiser 
+    une requête sur 'trip_time'.
     """
-    info = collection.index_information()
+    try:
+        info = collection.index_information()
+        
+        # On récupère le premier champ de l'index qu'on veut tester
+        # Ex: Si index_param est {"trip_time": 1}, target_root = "trip_time"
+        target_root = list(index_param.keys())[0]
 
-    for index_name, meta in info.items():
-        if index_name == "_id_":
-            print('1')
-            continue
+        for index_name, meta in info.items():
+            if index_name == "_id_":
+                continue
 
-        fields = {field: v for field, v in meta["key"]}
+            existing_keys = meta["key"] # Ex: [('trip_time', 1), ('trip_miles', -1)]
+            existing_root = existing_keys[0][0] # Le premier champ de l'index existant
 
-        if set(fields.keys()) == set(index_param.keys()):
-            logger.warning(f"Dropping old index: {index_name}")
-            collection.drop_index(index_name)
-            print('kkdjflsdkfjlkfjlfkjlk')
+            # Si l'index existant commence par le même champ, il faut le supprimer
+            # sinon le benchmark "Before" sera faussé (IXSCAN au lieu de COLLSCAN)
+            if existing_root == target_root:
+                logger.warning(f"🧹 Dropping interfering index '{index_name}'...")
+                collection.drop_index(index_name)
 
+    except Exception as e:
+        logger.error(f"Error checking indexes: {e}")
 
 # -------------------------------------------------------------------
 # 7 — MAIN: Slow Query Detection
@@ -239,6 +302,10 @@ def run_slow_query_detection(threshold_ms=200):
 
         logger.info(f"\n=== TEST {name} ===")
 
+        # 1. D'ABORD on nettoie
+        drop_conflicting_indexes(index_param) 
+
+        # 2. ENSUITE on mesure (on est sûr que c'est lent maintenant)
         before = run_explain(query)
         time_before = before["executionTimeMillis"]
 
@@ -250,8 +317,7 @@ def run_slow_query_detection(threshold_ms=200):
 
         logger.warning(f"⚠ SLOW QUERY → Creating index {index_param}")
 
-        drop_conflicting_indexes(index_param)
-        collection.create_index(index_param)
+        collection.create_index(list(index_param.items()))
 
         after = run_explain(query)
 
