@@ -1,0 +1,164 @@
+{
+    "query_name": "q3_license_PU",
+    "index_param": {
+        "hvfhs_license_num": 1,
+        "PULocationID": 1
+    },
+    "index_type": "compound index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 1282,
+            "totalDocsExamined": 15190,
+            "totalKeysExamined": 15190,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 1233,
+                "works": 15191,
+                "advanced": 10000,
+                "needTime": 5190,
+                "needYield": 0,
+                "saveState": 71,
+                "restoreState": 71,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "filter": {
+                        "$and": [
+                            {
+                                "PULocationID": {
+                                    "$eq": 97
+                                }
+                            },
+                            {
+                                "hvfhs_license_num": {
+                                    "$eq": "HV0003"
+                                }
+                            }
+                        ]
+                    },
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 1233,
+                    "works": 15190,
+                    "advanced": 10000,
+                    "needTime": 5190,
+                    "needYield": 0,
+                    "saveState": 71,
+                    "restoreState": 71,
+                    "isEOF": 0,
+                    "docsExamined": 15190,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 15190,
+                        "executionTimeMillisEstimate": 82,
+                        "works": 15190,
+                        "advanced": 15190,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 71,
+                        "restoreState": 71,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "PULocationID": "hashed"
+                        },
+                        "indexName": "PULocationID_hashed",
+                        "isMultiKey": false,
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "PULocationID": [
+                                "[3872724372820757591, 3872724372820757591]"
+                            ]
+                        },
+                        "keysExamined": 15190,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 721,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10000,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 626,
+                "works": 10001,
+                "advanced": 10000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 34,
+                "restoreState": 34,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 626,
+                    "works": 10000,
+                    "advanced": 10000,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 34,
+                    "restoreState": 34,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 9,
+                        "works": 10000,
+                        "advanced": 10000,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 34,
+                        "restoreState": 34,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "hvfhs_license_num": 1,
+                            "PULocationID": 1
+                        },
+                        "indexName": "hvfhs_license_num_1_PULocationID_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "hvfhs_license_num": [],
+                            "PULocationID": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "hvfhs_license_num": [
+                                "[\"HV0003\", \"HV0003\"]"
+                            ],
+                            "PULocationID": [
+                                "[97, 97]"
+                            ]
+                        },
+                        "keysExamined": 10000,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        }
+    }
+}
