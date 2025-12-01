@@ -1,101 +1,97 @@
 [
     {
-        "query_name": "q1_triptime_gte_300",
+        "query_name": "q1_simple_outlier_range",
         "query": {
             "trip_time": {
-                "$gte": 300
+                "$gte": 5000
             }
         },
-        "executionTimeMillis": 2857,
+        "executionTimeMillis": 10625,
         "index_type": "simple index"
     },
     {
-        "query_name": "q2_PULocation_100",
-        "query": {
-            "PULocationID": 100
-        },
-        "executionTimeMillis": 1617,
-        "index_type": "hashed index"
-    },
-    {
-        "query_name": "q3_license_PU",
-        "query": {
-            "hvfhs_license_num": "HV0003",
-            "PULocationID": 97
-        },
-        "executionTimeMillis": 1155,
-        "index_type": "compound index"
-    },
-    {
-        "query_name": "q4_miles_range",
-        "query": {
-            "trip_miles": {
-                "$gte": 5,
-                "$lte": 10
-            }
-        },
-        "executionTimeMillis": 2919,
-        "index_type": "simple index"
-    },
-    {
-        "query_name": "q5_miles_time",
+        "query_name": "q2_simple_sort_blocking",
         "query": {
             "trip_miles": {
                 "$gte": 5
-            },
-            "trip_time": {
-                "$gte": 1200
             }
         },
-        "executionTimeMillis": 1537,
+        "executionTimeMillis": 46,
+        "index_type": "simple index"
+    },
+    {
+        "query_name": "q3_simple_distinct_lookup",
+        "query": {
+            "dispatching_base_num": "B02800"
+        },
+        "executionTimeMillis": 74,
+        "index_type": "simple index"
+    },
+    {
+        "query_name": "q4_hashed_equality",
+        "query": {
+            "hvfhs_license_num": "HV0003"
+        },
+        "executionTimeMillis": 30,
+        "index_type": "hashed index"
+    },
+    {
+        "query_name": "q5_hashed_location",
+        "query": {
+            "PULocationID": 132
+        },
+        "executionTimeMillis": 3919,
+        "index_type": "hashed index"
+    },
+    {
+        "query_name": "q6_compound_ESR_perfect",
+        "query": {
+            "PULocationID": 79,
+            "trip_time": {
+                "$gt": 600
+            }
+        },
+        "executionTimeMillis": 21797,
         "index_type": "compound index"
     },
     {
-        "query_name": "q6_base_B02764",
+        "query_name": "q7_compound_covered_query",
         "query": {
-            "dispatching_base_num": "B02764"
-        },
-        "executionTimeMillis": 349,
-        "index_type": "simple index"
-    },
-    {
-        "query_name": "q7_fare_gte_20",
-        "query": {
-            "base_passenger_fare": {
-                "$gte": 20
-            }
-        },
-        "executionTimeMillis": 71,
-        "index_type": "simple index"
-    },
-    {
-        "query_name": "q8_license_miles_time",
-        "query": {
-            "hvfhs_license_num": "HV0003",
+            "hvfhs_license_num": "HV0005",
             "trip_miles": {
-                "$gte": 10
-            },
-            "trip_time": {
-                "$gte": 1800
+                "$gte": 2
             }
         },
-        "executionTimeMillis": 2950,
+        "executionTimeMillis": 93,
         "index_type": "compound index"
     },
     {
-        "query_name": "q9_DOLocation_85",
+        "query_name": "q8_compound_sort_optimization",
         "query": {
-            "DOLocationID": 85
+            "dispatching_base_num": "B02510"
         },
-        "executionTimeMillis": 1165,
-        "index_type": "simple index"
+        "executionTimeMillis": 5,
+        "index_type": "compound index"
     },
     {
-        "query_name": "q10_license_exact",
+        "query_name": "q9_compound_multi_equality",
         "query": {
-            "hvfhs_license_num": "HV0005"
+            "PULocationID": 138,
+            "DOLocationID": 230,
+            "shared_request_flag": 1
         },
-        "executionTimeMillis": 163,
-        "index_type": "simple index"
+        "executionTimeMillis": 17403,
+        "index_type": "compound index"
+    },
+    {
+        "query_name": "q10_compound_range_sort_heavy",
+        "query": {
+            "request_datetime": {
+                "$gte": "2019-01-01",
+                "$lt": "2019-02-01"
+            }
+        },
+        "executionTimeMillis": 2,
+        "index_type": "compound index"
     }
 ]
