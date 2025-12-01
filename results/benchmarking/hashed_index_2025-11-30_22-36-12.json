@@ -15,66 +15,31 @@
             "rejectedPlans": [],
             "executionSuccess": true,
             "nReturned": 96643,
-            "executionTimeMillis": 253,
-            "totalDocsExamined": 96643,
-            "totalKeysExamined": 96643,
+            "executionTimeMillis": 28013,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
             "executionStages": {
                 "isCached": false,
-                "stage": "FETCH",
+                "stage": "COLLSCAN",
                 "filter": {
                     "PULocationID": {
                         "$eq": 100
                     }
                 },
                 "nReturned": 96643,
-                "executionTimeMillisEstimate": 225,
-                "works": 96644,
+                "executionTimeMillisEstimate": 24871,
+                "works": 16545357,
                 "advanced": 96643,
-                "needTime": 0,
+                "needTime": 16448713,
                 "needYield": 0,
-                "saveState": 15,
-                "restoreState": 15,
+                "saveState": 1630,
+                "restoreState": 1630,
                 "isEOF": 1,
-                "docsExamined": 96643,
-                "alreadyHasObj": 0,
-                "inputStage": {
-                    "stage": "IXSCAN",
-                    "nReturned": 96643,
-                    "executionTimeMillisEstimate": 74,
-                    "works": 96644,
-                    "advanced": 96643,
-                    "needTime": 0,
-                    "needYield": 0,
-                    "saveState": 15,
-                    "restoreState": 15,
-                    "isEOF": 1,
-                    "keyPattern": {
-                        "PULocationID": "hashed"
-                    },
-                    "indexName": "PULocationID_hashed",
-                    "isMultiKey": false,
-                    "isUnique": false,
-                    "isSparse": false,
-                    "isPartial": false,
-                    "indexVersion": 2,
-                    "direction": "forward",
-                    "indexBounds": {
-                        "PULocationID": [
-                            "[-5582987830488433087, -5582987830488433087]"
-                        ]
-                    },
-                    "keysExamined": 96643,
-                    "seeks": 1,
-                    "dupsTested": 0,
-                    "dupsDropped": 0
-                }
+                "direction": "forward",
+                "docsExamined": 16545356
             },
-            "indexName": "PULocationID_hashed",
-            "indexBounds": {
-                "PULocationID": [
-                    "[-5582987830488433087, -5582987830488433087]"
-                ]
-            },
+            "indexName": null,
+            "indexBounds": null,
             "memoryUsageBytesEstimate": null,
             "sortPattern": null
         },
@@ -89,7 +54,7 @@
             "rejectedPlans": [],
             "executionSuccess": true,
             "nReturned": 96643,
-            "executionTimeMillis": 262,
+            "executionTimeMillis": 624,
             "totalDocsExamined": 96643,
             "totalKeysExamined": 96643,
             "executionStages": {
@@ -101,26 +66,26 @@
                     }
                 },
                 "nReturned": 96643,
-                "executionTimeMillisEstimate": 251,
+                "executionTimeMillisEstimate": 590,
                 "works": 96644,
                 "advanced": 96643,
                 "needTime": 0,
                 "needYield": 0,
-                "saveState": 14,
-                "restoreState": 14,
+                "saveState": 34,
+                "restoreState": 34,
                 "isEOF": 1,
                 "docsExamined": 96643,
                 "alreadyHasObj": 0,
                 "inputStage": {
                     "stage": "IXSCAN",
                     "nReturned": 96643,
-                    "executionTimeMillisEstimate": 42,
+                    "executionTimeMillisEstimate": 169,
                     "works": 96644,
                     "advanced": 96643,
                     "needTime": 0,
                     "needYield": 0,
-                    "saveState": 14,
-                    "restoreState": 14,
+                    "saveState": 34,
+                    "restoreState": 34,
                     "isEOF": 1,
                     "keyPattern": {
                         "PULocationID": "hashed"
