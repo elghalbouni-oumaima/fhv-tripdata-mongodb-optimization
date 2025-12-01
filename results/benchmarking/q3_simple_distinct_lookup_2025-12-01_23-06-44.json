@@ -6,7 +6,7 @@
     "index_type": "simple index",
     "results": {
         "before": {
-            "executionTimeMillis": 3958,
+            "executionTimeMillis": 2969,
             "optimizationTimeMillis": 0,
             "totalDocsExamined": 1809760,
             "totalKeysExamined": 0,
@@ -15,13 +15,13 @@
                 "isCached": false,
                 "stage": "LIMIT",
                 "nReturned": 10000,
-                "executionTimeMillisEstimate": 3692,
+                "executionTimeMillisEstimate": 2681,
                 "works": 1809761,
                 "advanced": 10000,
                 "needTime": 1799760,
                 "needYield": 0,
-                "saveState": 234,
-                "restoreState": 234,
+                "saveState": 167,
+                "restoreState": 167,
                 "isEOF": 1,
                 "limitAmount": 10000,
                 "inputStage": {
@@ -32,13 +32,13 @@
                         }
                     },
                     "nReturned": 10000,
-                    "executionTimeMillisEstimate": 3342,
+                    "executionTimeMillisEstimate": 2378,
                     "works": 1809760,
                     "advanced": 10000,
                     "needTime": 1799760,
                     "needYield": 0,
-                    "saveState": 234,
-                    "restoreState": 234,
+                    "saveState": 167,
+                    "restoreState": 167,
                     "isEOF": 0,
                     "direction": "forward",
                     "docsExamined": 1809760
@@ -47,8 +47,8 @@
             "indexName": null
         },
         "after": {
-            "executionTimeMillis": 176,
-            "optimizationTimeMillis": 0,
+            "executionTimeMillis": 174,
+            "optimizationTimeMillis": 1,
             "totalDocsExamined": 10000,
             "totalKeysExamined": 10000,
             "nReturned": 10000,
@@ -56,7 +56,7 @@
                 "isCached": false,
                 "stage": "LIMIT",
                 "nReturned": 10000,
-                "executionTimeMillisEstimate": 171,
+                "executionTimeMillisEstimate": 172,
                 "works": 10001,
                 "advanced": 10000,
                 "needTime": 0,
@@ -68,7 +68,7 @@
                 "inputStage": {
                     "stage": "FETCH",
                     "nReturned": 10000,
-                    "executionTimeMillisEstimate": 171,
+                    "executionTimeMillisEstimate": 172,
                     "works": 10000,
                     "advanced": 10000,
                     "needTime": 0,
@@ -81,7 +81,7 @@
                     "inputStage": {
                         "stage": "IXSCAN",
                         "nReturned": 10000,
-                        "executionTimeMillisEstimate": 49,
+                        "executionTimeMillisEstimate": 43,
                         "works": 10000,
                         "advanced": 10000,
                         "needTime": 0,

@@ -1,0 +1,141 @@
+{
+    "query_name": "q6_compound_ESR_perfect",
+    "index_param": {
+        "PULocationID": 1,
+        "trip_miles": 1,
+        "trip_time": 1
+    },
+    "index_type": "compound index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 1433,
+            "optimizationTimeMillis": 2,
+            "totalDocsExamined": 644486,
+            "totalKeysExamined": 0,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 1311,
+                "works": 644487,
+                "advanced": 10000,
+                "needTime": 634486,
+                "needYield": 0,
+                "saveState": 85,
+                "restoreState": 85,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "COLLSCAN",
+                    "filter": {
+                        "$and": [
+                            {
+                                "PULocationID": {
+                                    "$eq": 79
+                                }
+                            },
+                            {
+                                "trip_time": {
+                                    "$gt": 600
+                                }
+                            }
+                        ]
+                    },
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 1204,
+                    "works": 644486,
+                    "advanced": 10000,
+                    "needTime": 634486,
+                    "needYield": 0,
+                    "saveState": 85,
+                    "restoreState": 85,
+                    "isEOF": 0,
+                    "direction": "forward",
+                    "docsExamined": 644486
+                }
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 2541,
+            "optimizationTimeMillis": 4,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10994,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 2483,
+                "works": 10995,
+                "advanced": 10000,
+                "needTime": 994,
+                "needYield": 0,
+                "saveState": 133,
+                "restoreState": 133,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 2446,
+                    "works": 10994,
+                    "advanced": 10000,
+                    "needTime": 994,
+                    "needYield": 0,
+                    "saveState": 133,
+                    "restoreState": 133,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 132,
+                        "works": 10994,
+                        "advanced": 10000,
+                        "needTime": 994,
+                        "needYield": 0,
+                        "saveState": 133,
+                        "restoreState": 133,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "PULocationID": 1,
+                            "trip_miles": 1,
+                            "trip_time": 1
+                        },
+                        "indexName": "PULocationID_1_trip_miles_1_trip_time_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "PULocationID": [],
+                            "trip_miles": [],
+                            "trip_time": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "PULocationID": [
+                                "[79, 79]"
+                            ],
+                            "trip_miles": [
+                                "[MinKey, MaxKey]"
+                            ],
+                            "trip_time": [
+                                "(600, inf]"
+                            ]
+                        },
+                        "keysExamined": 10994,
+                        "seeks": 995,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        }
+    }
+}

@@ -6,7 +6,7 @@
                 "$gte": 5000
             }
         },
-        "executionTimeMillis": 10625,
+        "executionTimeMillis": 2077,
         "index_type": "simple index"
     },
     {
@@ -16,7 +16,7 @@
                 "$gte": 5
             }
         },
-        "executionTimeMillis": 46,
+        "executionTimeMillis": 82,
         "index_type": "simple index"
     },
     {
@@ -24,7 +24,7 @@
         "query": {
             "dispatching_base_num": "B02800"
         },
-        "executionTimeMillis": 74,
+        "executionTimeMillis": 5311,
         "index_type": "simple index"
     },
     {
@@ -32,7 +32,7 @@
         "query": {
             "hvfhs_license_num": "HV0003"
         },
-        "executionTimeMillis": 30,
+        "executionTimeMillis": 27,
         "index_type": "hashed index"
     },
     {
@@ -40,7 +40,7 @@
         "query": {
             "PULocationID": 132
         },
-        "executionTimeMillis": 3919,
+        "executionTimeMillis": 2101,
         "index_type": "hashed index"
     },
     {
@@ -51,7 +51,7 @@
                 "$gt": 600
             }
         },
-        "executionTimeMillis": 21797,
+        "executionTimeMillis": 1382,
         "index_type": "compound index"
     },
     {
@@ -62,7 +62,7 @@
                 "$gte": 2
             }
         },
-        "executionTimeMillis": 93,
+        "executionTimeMillis": 72,
         "index_type": "compound index"
     },
     {
@@ -70,7 +70,7 @@
         "query": {
             "dispatching_base_num": "B02510"
         },
-        "executionTimeMillis": 5,
+        "executionTimeMillis": 44891,
         "index_type": "compound index"
     },
     {
@@ -80,7 +80,7 @@
             "DOLocationID": 230,
             "shared_request_flag": 1
         },
-        "executionTimeMillis": 17403,
+        "executionTimeMillis": 13846,
         "index_type": "compound index"
     },
     {
@@ -91,7 +91,7 @@
                 "$lt": "2019-02-01"
             }
         },
-        "executionTimeMillis": 2,
+        "executionTimeMillis": 5,
         "index_type": "compound index"
     }
 ]

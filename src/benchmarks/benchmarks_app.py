@@ -256,34 +256,34 @@ def save_metrics(name, before, after, index_param):
 
 def drop_conflicting_indexes(index_param):
     """
-    Supprime TOUS les index qui commencent par le même champ 
-    que l'index proposé. Cela évite que MongoDB utilise un index 
-    composé existant (ex: 'trip_time_1_miles_1') pour optimiser 
-    une requête sur 'trip_time'.
+    Supprime TOUS les index qui pourraient interférer avec le benchmark.
+    
+    Si on veut tester un index composé {A:1, B:1}, on doit supprimer
+    non seulement les index commençant par A, mais aussi ceux commençant par B,
+    car MongoDB pourrait les utiliser pour optimiser partiellement la requête.
     """
     try:
         info = collection.index_information()
         
-        # On récupère le premier champ de l'index qu'on veut tester
-        # Ex: Si index_param est {"trip_time": 1}, target_root = "trip_time"
-        target_root = list(index_param.keys())[0]
+        # On récupère TOUS les champs du futur index (ex: ['PULocationID', 'trip_time'])
+        target_fields = list(index_param.keys())
 
         for index_name, meta in info.items():
             if index_name == "_id_":
                 continue
 
-            existing_keys = meta["key"] # Ex: [('trip_time', 1), ('trip_miles', -1)]
+            existing_keys = meta["key"] 
             existing_root = existing_keys[0][0] # Le premier champ de l'index existant
 
-            # Si l'index existant commence par le même champ, il faut le supprimer
-            # sinon le benchmark "Before" sera faussé (IXSCAN au lieu de COLLSCAN)
-            if existing_root == target_root:
-                logger.warning(f"🧹 Dropping interfering index '{index_name}'...")
+            # Si l'index existant commence par N'IMPORTE QUEL champ de notre futur index,
+            # on le supprime. C'est la seule façon de garantir un COLLSCAN pur.
+            if existing_root in target_fields:
+                logger.warning(f"🧹 Dropping interfering index '{index_name}' (starts with '{existing_root}')...")
                 collection.drop_index(index_name)
 
     except Exception as e:
         logger.error(f"Error checking indexes: {e}")
-
+        
 # -------------------------------------------------------------------
 # 7 — MAIN: Slow Query Detection
 # -------------------------------------------------------------------

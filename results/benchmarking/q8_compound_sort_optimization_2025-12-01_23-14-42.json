@@ -1,0 +1,126 @@
+{
+    "query_name": "q8_compound_sort_optimization",
+    "index_param": {
+        "dispatching_base_num": 1,
+        "request_datetime": -1
+    },
+    "index_type": "compound index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 42933,
+            "optimizationTimeMillis": 0,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 0,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 0,
+                "executionTimeMillisEstimate": 39508,
+                "works": 16545357,
+                "advanced": 0,
+                "needTime": 16545356,
+                "needYield": 0,
+                "saveState": 2416,
+                "restoreState": 2416,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "COLLSCAN",
+                    "filter": {
+                        "dispatching_base_num": {
+                            "$eq": "B02510"
+                        }
+                    },
+                    "nReturned": 0,
+                    "executionTimeMillisEstimate": 36967,
+                    "works": 16545357,
+                    "advanced": 0,
+                    "needTime": 16545356,
+                    "needYield": 0,
+                    "saveState": 2416,
+                    "restoreState": 2416,
+                    "isEOF": 1,
+                    "direction": "forward",
+                    "docsExamined": 16545356
+                }
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 120,
+            "optimizationTimeMillis": 38,
+            "totalDocsExamined": 0,
+            "totalKeysExamined": 0,
+            "nReturned": 0,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 0,
+                "executionTimeMillisEstimate": 79,
+                "works": 1,
+                "advanced": 0,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 0,
+                    "executionTimeMillisEstimate": 79,
+                    "works": 1,
+                    "advanced": 0,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 0,
+                    "restoreState": 0,
+                    "isEOF": 1,
+                    "docsExamined": 0,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 0,
+                        "executionTimeMillisEstimate": 79,
+                        "works": 1,
+                        "advanced": 0,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 0,
+                        "restoreState": 0,
+                        "isEOF": 1,
+                        "keyPattern": {
+                            "dispatching_base_num": 1,
+                            "request_datetime": -1
+                        },
+                        "indexName": "dispatching_base_num_1_request_datetime_-1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "dispatching_base_num": [],
+                            "request_datetime": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "dispatching_base_num": [
+                                "[\"B02510\", \"B02510\"]"
+                            ],
+                            "request_datetime": [
+                                "[MaxKey, MinKey]"
+                            ]
+                        },
+                        "keysExamined": 0,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        }
+    }
+}
