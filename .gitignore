@@ -217,5 +217,7 @@ __marimo__/
 /logs
 /test
 /notebooks/*.ipynb
+/data/processed/
+/data/raw/
 /data
 /results
