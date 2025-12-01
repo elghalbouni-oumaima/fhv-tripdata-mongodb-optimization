@@ -1,0 +1,91 @@
+[
+    {
+        "query_name": "q1_triptime_gte_300",
+        "query": {
+            "trip_time": {
+                "$gte": 300
+            }
+        },
+        "executionTimeMillis": 49
+    },
+    {
+        "query_name": "q2_PULocation_100",
+        "query": {
+            "PULocationID": 100
+        },
+        "executionTimeMillis": 44
+    },
+    {
+        "query_name": "q3_license_PU",
+        "query": {
+            "hvfhs_license_num": "HV0003",
+            "PULocationID": 97
+        },
+        "executionTimeMillis": 74
+    },
+    {
+        "query_name": "q4_miles_range",
+        "query": {
+            "trip_miles": {
+                "$gte": 5,
+                "$lte": 10
+            }
+        },
+        "executionTimeMillis": 71
+    },
+    {
+        "query_name": "q5_miles_time",
+        "query": {
+            "trip_miles": {
+                "$gte": 5
+            },
+            "trip_time": {
+                "$gte": 1200
+            }
+        },
+        "executionTimeMillis": 139
+    },
+    {
+        "query_name": "q6_base_B02764",
+        "query": {
+            "dispatching_base_num": "B02764"
+        },
+        "executionTimeMillis": 118
+    },
+    {
+        "query_name": "q7_fare_gte_20",
+        "query": {
+            "base_passenger_fare": {
+                "$gte": 20
+            }
+        },
+        "executionTimeMillis": 27
+    },
+    {
+        "query_name": "q8_license_miles_time",
+        "query": {
+            "hvfhs_license_num": "HV0003",
+            "trip_miles": {
+                "$gte": 10
+            },
+            "trip_time": {
+                "$gte": 1800
+            }
+        },
+        "executionTimeMillis": 265
+    },
+    {
+        "query_name": "q9_DOLocation_85",
+        "query": {
+            "DOLocationID": 85
+        },
+        "executionTimeMillis": 33
+    },
+    {
+        "query_name": "q10_license_exact",
+        "query": {
+            "hvfhs_license_num": "HV0005"
+        },
+        "executionTimeMillis": 40
+    }
+]
