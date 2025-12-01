@@ -1,0 +1,149 @@
+{
+    "query_name": "q9_DOLocation_85",
+    "index_param": {
+        "DOLocationID": 1
+    },
+    "index_type": "simple index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 1238,
+            "optimizationTimeMillis": 0,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10000,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 1204,
+                "works": 10001,
+                "advanced": 10000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 68,
+                "restoreState": 68,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 1204,
+                    "works": 10000,
+                    "advanced": 10000,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 68,
+                    "restoreState": 68,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 24,
+                        "works": 10000,
+                        "advanced": 10000,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 68,
+                        "restoreState": 68,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "DOLocationID": 1
+                        },
+                        "indexName": "DOLocationID_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "DOLocationID": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "DOLocationID": [
+                                "[85, 85]"
+                            ]
+                        },
+                        "keysExamined": 10000,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 607,
+            "optimizationTimeMillis": 5,
+            "totalDocsExamined": 10000,
+            "totalKeysExamined": 10000,
+            "nReturned": 10000,
+            "executionStages": {
+                "isCached": false,
+                "stage": "LIMIT",
+                "nReturned": 10000,
+                "executionTimeMillisEstimate": 579,
+                "works": 10001,
+                "advanced": 10000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 31,
+                "restoreState": 31,
+                "isEOF": 1,
+                "limitAmount": 10000,
+                "inputStage": {
+                    "stage": "FETCH",
+                    "nReturned": 10000,
+                    "executionTimeMillisEstimate": 579,
+                    "works": 10000,
+                    "advanced": 10000,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 31,
+                    "restoreState": 31,
+                    "isEOF": 0,
+                    "docsExamined": 10000,
+                    "alreadyHasObj": 0,
+                    "inputStage": {
+                        "stage": "IXSCAN",
+                        "nReturned": 10000,
+                        "executionTimeMillisEstimate": 97,
+                        "works": 10000,
+                        "advanced": 10000,
+                        "needTime": 0,
+                        "needYield": 0,
+                        "saveState": 31,
+                        "restoreState": 31,
+                        "isEOF": 0,
+                        "keyPattern": {
+                            "DOLocationID": 1
+                        },
+                        "indexName": "DOLocationID_1",
+                        "isMultiKey": false,
+                        "multiKeyPaths": {
+                            "DOLocationID": []
+                        },
+                        "isUnique": false,
+                        "isSparse": false,
+                        "isPartial": false,
+                        "indexVersion": 2,
+                        "direction": "forward",
+                        "indexBounds": {
+                            "DOLocationID": [
+                                "[85, 85]"
+                            ]
+                        },
+                        "keysExamined": 10000,
+                        "seeks": 1,
+                        "dupsTested": 0,
+                        "dupsDropped": 0
+                    }
+                }
+            },
+            "indexName": null
+        }
+    }
+}
