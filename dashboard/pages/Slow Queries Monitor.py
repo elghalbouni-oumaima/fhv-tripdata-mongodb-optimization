@@ -59,7 +59,7 @@ queries = [
 
 
 # average Excution Time
-execution_time_file = load_benchmark('../results/benchmarking/execution_time_file.json') 
+execution_time_file = load_benchmark('../results/benchmarking/execution_time.json') 
 print(execution_time_file)
 s = 0
 SlowedQuery = 0
