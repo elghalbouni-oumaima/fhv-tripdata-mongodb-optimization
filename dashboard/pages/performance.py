@@ -8,7 +8,7 @@ from dash_svg import Svg, Line, Polygon
 dash.register_page(__name__, path="/performance", name="Performance")
 
 # Chargement
-last_file, error = load_latest_benchmark('q7')
+last_file, error = load_latest_benchmark('q3')
 data = load_benchmark(last_file) if last_file else {}
 before = data.get('results', {}).get('before', {})
 after = data.get('results', {}).get('after', {})
@@ -470,6 +470,7 @@ layout = html.Div([
     Input("benchmark-dropdown", "value")
 )
 def update_title(selected_value):
+    print(selected_value)
     if selected_value == "q5":
         index_name = "Hashed Index"
     elif selected_value == "q6":
