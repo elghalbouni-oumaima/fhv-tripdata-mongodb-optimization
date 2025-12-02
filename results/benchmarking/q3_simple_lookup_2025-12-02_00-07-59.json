@@ -1,0 +1,94 @@
+{
+    "query_name": "q3_simple_lookup",
+    "index_param": {
+        "dispatching_base_num": 1
+    },
+    "index_type": "simple index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 61824,
+            "optimizationTimeMillis": 15,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 28674,
+            "executionStages": {
+                "isCached": false,
+                "stage": "COLLSCAN",
+                "filter": {
+                    "dispatching_base_num": {
+                        "$eq": "B02800"
+                    }
+                },
+                "nReturned": 28674,
+                "executionTimeMillisEstimate": 57508,
+                "works": 16545357,
+                "advanced": 28674,
+                "needTime": 16516682,
+                "needYield": 0,
+                "saveState": 3502,
+                "restoreState": 3502,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 16545356
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 7776,
+            "optimizationTimeMillis": 52,
+            "totalDocsExamined": 28674,
+            "totalKeysExamined": 28674,
+            "nReturned": 28674,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 28674,
+                "executionTimeMillisEstimate": 7486,
+                "works": 28675,
+                "advanced": 28674,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 415,
+                "restoreState": 415,
+                "isEOF": 1,
+                "docsExamined": 28674,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 28674,
+                    "executionTimeMillisEstimate": 208,
+                    "works": 28675,
+                    "advanced": 28674,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 415,
+                    "restoreState": 415,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "dispatching_base_num": 1
+                    },
+                    "indexName": "dispatching_base_num_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "dispatching_base_num": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "dispatching_base_num": [
+                            "[\"B02800\", \"B02800\"]"
+                        ]
+                    },
+                    "keysExamined": 28674,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "dispatching_base_num_1"
+        }
+    }
+}

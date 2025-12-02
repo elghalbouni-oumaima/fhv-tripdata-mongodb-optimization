@@ -203,7 +203,7 @@ PRESET_QUERIES = {
             "PULocationID": 97
         },
         "index": {"hvfhs_license_num": 1, "PULocationID": 1},
-        "name": "q8"
+        "name": "q6"
     },
     "hashed": {
         "query": {"PULocationID": 100},
@@ -273,7 +273,7 @@ query_controls = html.Div([
                 id="benchmark-dropdown",
                 options=[
                     {"label": "Simple Index", "value": "q3"},
-                    {"label": "Compound Index", "value": "q8"},
+                    {"label": "Compound Index", "value": "q6"},
                     {"label": "Hashed Index", "value": "q5"},
                 ],
                 value="q3",
@@ -473,7 +473,7 @@ layout = html.Div([
 def update_title(selected_value):
     if selected_value == "q5":
         index_name = "Hashed Index"
-    elif selected_value == "q8":
+    elif selected_value == "q6":
         index_name = "Compound Index"
     elif selected_value == "q3":
         index_name = "Simple Index"

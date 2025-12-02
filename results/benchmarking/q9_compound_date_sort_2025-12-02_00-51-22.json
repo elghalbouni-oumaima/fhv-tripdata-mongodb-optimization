@@ -1,0 +1,94 @@
+{
+    "query_name": "q9_compound_date_sort",
+    "index_param": {
+        "request_datetime": 1
+    },
+    "index_type": "simple index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 61232,
+            "optimizationTimeMillis": 3,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 16545356,
+            "executionStages": {
+                "isCached": false,
+                "stage": "COLLSCAN",
+                "filter": {
+                    "request_datetime": {
+                        "$gte": "2019-01-15"
+                    }
+                },
+                "nReturned": 16545356,
+                "executionTimeMillisEstimate": 56107,
+                "works": 16545357,
+                "advanced": 16545356,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 3461,
+                "restoreState": 3461,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 16545356
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 171223,
+            "optimizationTimeMillis": 17,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 16545356,
+            "nReturned": 16545356,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 16545356,
+                "executionTimeMillisEstimate": 162280,
+                "works": 16545357,
+                "advanced": 16545356,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 9649,
+                "restoreState": 9649,
+                "isEOF": 1,
+                "docsExamined": 16545356,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 16545356,
+                    "executionTimeMillisEstimate": 46404,
+                    "works": 16545357,
+                    "advanced": 16545356,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 9649,
+                    "restoreState": 9649,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "request_datetime": 1
+                    },
+                    "indexName": "request_datetime_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "request_datetime": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "request_datetime": [
+                            "[\"2019-01-15\", {})"
+                        ]
+                    },
+                    "keysExamined": 16545356,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "request_datetime_1"
+        }
+    }
+}

@@ -1,97 +1,102 @@
 [
     {
-        "query_name": "q1_simple_outlier_range",
+        "query_name": "q1_simple_outlier",
         "query": {
             "trip_time": {
-                "$gte": 5000
+                "$gte": 4000
             }
         },
-        "executionTimeMillis": 2077,
+        "executionTimeMillis": 30404,
         "index_type": "simple index"
     },
     {
-        "query_name": "q2_simple_sort_blocking",
+        "query_name": "q2_simple_sort",
         "query": {
+            "trip_miles": {
+                "$gte": 10
+            }
+        },
+        "executionTimeMillis": 54083,
+        "index_type": "simple index"
+    },
+    {
+        "query_name": "q3_simple_lookup",
+        "query": {
+            "dispatching_base_num": "B02800"
+        },
+        "executionTimeMillis": 3948,
+        "index_type": "simple index"
+    },
+    {
+        "query_name": "q4_hashed_license",
+        "query": {
+            "hvfhs_license_num": "HV0003"
+        },
+        "executionTimeMillis": 44482,
+        "index_type": "hashed index"
+    },
+    {
+        "query_name": "q5_hashed_puloc",
+        "query": {
+            "PULocationID": 132
+        },
+        "executionTimeMillis": 29778,
+        "index_type": "hashed index"
+    },
+    {
+        "query_name": "q6_compound_esr_sort",
+        "query": {
+            "PULocationID": 79,
             "trip_miles": {
                 "$gte": 5
             }
         },
-        "executionTimeMillis": 82,
-        "index_type": "simple index"
-    },
-    {
-        "query_name": "q3_simple_distinct_lookup",
-        "query": {
-            "dispatching_base_num": "B02800"
-        },
-        "executionTimeMillis": 5311,
-        "index_type": "simple index"
-    },
-    {
-        "query_name": "q4_hashed_equality",
-        "query": {
-            "hvfhs_license_num": "HV0003"
-        },
-        "executionTimeMillis": 27,
-        "index_type": "hashed index"
-    },
-    {
-        "query_name": "q5_hashed_location",
-        "query": {
-            "PULocationID": 132
-        },
-        "executionTimeMillis": 2101,
-        "index_type": "hashed index"
-    },
-    {
-        "query_name": "q6_compound_ESR_perfect",
-        "query": {
-            "PULocationID": 79,
-            "trip_time": {
-                "$gt": 600
-            }
-        },
-        "executionTimeMillis": 1382,
+        "executionTimeMillis": 33875,
         "index_type": "compound index"
     },
     {
-        "query_name": "q7_compound_covered_query",
+        "query_name": "q7_compound_covered",
         "query": {
             "hvfhs_license_num": "HV0005",
             "trip_miles": {
                 "$gte": 2
             }
         },
-        "executionTimeMillis": 72,
+        "executionTimeMillis": 35796,
         "index_type": "compound index"
     },
     {
-        "query_name": "q8_compound_sort_optimization",
+        "query_name": "q8_compound_multi_filter",
         "query": {
-            "dispatching_base_num": "B02510"
+            "shared_request_flag": 1,
+            "PULocationID": 230
         },
-        "executionTimeMillis": 44891,
+        "executionTimeMillis": 4931,
         "index_type": "compound index"
     },
     {
-        "query_name": "q9_compound_multi_equality",
-        "query": {
-            "PULocationID": 138,
-            "DOLocationID": 230,
-            "shared_request_flag": 1
-        },
-        "executionTimeMillis": 13846,
-        "index_type": "compound index"
-    },
-    {
-        "query_name": "q10_compound_range_sort_heavy",
+        "query_name": "q9_compound_date_sort",
         "query": {
             "request_datetime": {
-                "$gte": "2019-01-01",
-                "$lt": "2019-02-01"
+                "$gte": "2019-01-15"
             }
         },
-        "executionTimeMillis": 5,
+        "executionTimeMillis": 332279,
+        "index_type": "simple index"
+    },
+    {
+        "query_name": "q10_complex_user_request",
+        "query": {
+            "dispatching_base_num": "B02764",
+            "trip_miles": {
+                "$gte": 5,
+                "$lte": 15
+            },
+            "trip_time": {
+                "$gte": 2000
+            }
+        },
+        "executionTimeMillis": 35352,
         "index_type": "compound index"
     }
 ]

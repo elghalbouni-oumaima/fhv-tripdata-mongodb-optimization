@@ -1,0 +1,115 @@
+{
+    "query_name": "q6_compound_esr_sort",
+    "index_param": {
+        "PULocationID": 1,
+        "trip_time": 1,
+        "trip_miles": 1
+    },
+    "index_type": "compound index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 62775,
+            "optimizationTimeMillis": 6,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 60644,
+            "executionStages": {
+                "isCached": false,
+                "stage": "COLLSCAN",
+                "filter": {
+                    "$and": [
+                        {
+                            "PULocationID": {
+                                "$eq": 79
+                            }
+                        },
+                        {
+                            "trip_miles": {
+                                "$gte": 5
+                            }
+                        }
+                    ]
+                },
+                "nReturned": 60644,
+                "executionTimeMillisEstimate": 58088,
+                "works": 16545357,
+                "advanced": 60644,
+                "needTime": 16484712,
+                "needYield": 0,
+                "saveState": 3548,
+                "restoreState": 3548,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 16545356
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 21409,
+            "optimizationTimeMillis": 18,
+            "totalDocsExamined": 60644,
+            "totalKeysExamined": 63434,
+            "nReturned": 60644,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 60644,
+                "executionTimeMillisEstimate": 20544,
+                "works": 63434,
+                "advanced": 60644,
+                "needTime": 2789,
+                "needYield": 0,
+                "saveState": 1135,
+                "restoreState": 1135,
+                "isEOF": 1,
+                "docsExamined": 60644,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 60644,
+                    "executionTimeMillisEstimate": 1091,
+                    "works": 63434,
+                    "advanced": 60644,
+                    "needTime": 2789,
+                    "needYield": 0,
+                    "saveState": 1135,
+                    "restoreState": 1135,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "PULocationID": 1,
+                        "trip_time": 1,
+                        "trip_miles": 1
+                    },
+                    "indexName": "PULocationID_1_trip_time_1_trip_miles_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "PULocationID": [],
+                        "trip_time": [],
+                        "trip_miles": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "PULocationID": [
+                            "[79, 79]"
+                        ],
+                        "trip_time": [
+                            "[MinKey, MaxKey]"
+                        ],
+                        "trip_miles": [
+                            "[5, inf]"
+                        ]
+                    },
+                    "keysExamined": 63434,
+                    "seeks": 2790,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "PULocationID_1_trip_time_1_trip_miles_1"
+        }
+    }
+}
