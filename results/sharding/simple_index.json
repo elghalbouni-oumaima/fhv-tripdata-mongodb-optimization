@@ -1,0 +1,124 @@
+{
+    "index_name": "dispatching_base_num_index",
+    "index_param": {
+        "dispatching_base_num": 1
+    },
+    "results": {
+        "before": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "dispatching_base_num": {
+                    "$eq": "B02800"
+                }
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 28674,
+            "executionTimeMillis": 41116,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "executionStages": {
+                "stage": "SHARD_MERGE",
+                "nReturned": 28674,
+                "totalDocsExamined": 16545356,
+                "totalKeysExamined": 0,
+                "shards": [
+                    {
+                        "shardName": "shard3ReplSet",
+                        "docsExamined": 5412120,
+                        "nReturned": 9262,
+                        "usedDisk": false,
+                        "spills": 0,
+                        "spilledDataStorageSize": 0
+                    },
+                    {
+                        "shardName": "shard2ReplSet",
+                        "docsExamined": 5410365,
+                        "nReturned": 11205,
+                        "usedDisk": false,
+                        "spills": 0,
+                        "spilledDataStorageSize": 0
+                    },
+                    {
+                        "shardName": "shard1ReplSet",
+                        "docsExamined": 5722871,
+                        "nReturned": 8207,
+                        "usedDisk": false,
+                        "spills": 0,
+                        "spilledDataStorageSize": 0
+                    }
+                ]
+            },
+            "indexName": null,
+            "indexBounds": null,
+            "sortPattern": null
+        },
+        "after": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "dispatching_base_num": {
+                    "$eq": "B02800"
+                }
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 28674,
+            "executionTimeMillis": 56,
+            "totalDocsExamined": 28674,
+            "totalKeysExamined": 28674,
+            "executionStages": {
+                "stage": "SHARD_MERGE",
+                "nReturned": 28674,
+                "totalDocsExamined": 28674,
+                "totalKeysExamined": 28674,
+                "shards": [
+                    {
+                        "shardName": "shard1ReplSet",
+                        "docsExamined": 8207,
+                        "nReturned": 8207,
+                        "usedDisk": false,
+                        "indexName": "dispatching_base_num_1",
+                        "indexBounds": {
+                            "dispatching_base_num": [
+                                "[\"B02800\", \"B02800\"]"
+                            ]
+                        }
+                    },
+                    {
+                        "shardName": "shard3ReplSet",
+                        "docsExamined": 9262,
+                        "nReturned": 9262,
+                        "usedDisk": false,
+                        "indexName": "dispatching_base_num_1",
+                        "indexBounds": {
+                            "dispatching_base_num": [
+                                "[\"B02800\", \"B02800\"]"
+                            ]
+                        }
+                    },
+                    {
+                        "shardName": "shard2ReplSet",
+                        "docsExamined": 11205,
+                        "nReturned": 11205,
+                        "usedDisk": false,
+                        "indexName": "dispatching_base_num_1",
+                        "indexBounds": {
+                            "dispatching_base_num": [
+                                "[\"B02800\", \"B02800\"]"
+                            ]
+                        }
+                    }
+                ]
+            },
+            "indexName": "dispatching_base_num_1",
+            "indexBounds": {
+                "dispatching_base_num": [
+                    "[\"B02800\", \"B02800\"]"
+                ]
+            },
+            "sortPattern": null
+        }
+    }
+}
