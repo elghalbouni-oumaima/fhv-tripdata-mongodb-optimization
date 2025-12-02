@@ -4,12 +4,11 @@ from utils.loader import load_benchmark,load_latest_benchmark
 from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_chart,build_bar_chart
 import json
 from dash_svg import Svg, Line, Polygon
-import os
 
 dash.register_page(__name__, path="/performance", name="Performance")
 
 # Chargement
-last_file, error = load_latest_benchmark('simple')
+last_file, error = load_latest_benchmark('q7')
 data = load_benchmark(last_file) if last_file else {}
 before = data.get('results', {}).get('before', {})
 after = data.get('results', {}).get('after', {})
@@ -272,18 +271,12 @@ query_controls = html.Div([
             dcc.Dropdown(
                 id="benchmark-dropdown",
                 options=[
-                    {"label": "1", "value": "q1"},
-                    {"label": "2 Index", "value": "q2"},
-                    {"label": "3 Index", "value": "q3"},
-                    {"label": "4 Index", "value": "q4"},
-                    {"label": "5 Index", "value": "q5"},
-                    {"label": "6 Index", "value": "q6"},
-                    {"label": "7 Index", "value": "q7"},
-                    {"label": "8 Index", "value": "q8"},
-                    {"label": "9 Index", "value": "q9"},
-                    {"label": "10 Index", "value": "q10"},
+                    {"label": "1", "value": "q7"},
+                    {"label": "2 Index", "value": "q9"},
+                    {"label": "3 Index", "value": "q10"},
+                   
                 ],
-                value="q1",
+                value="q7",
                 style={"width": "250px"}
             )
         ], style={

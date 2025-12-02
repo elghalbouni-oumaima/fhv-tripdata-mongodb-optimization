@@ -7,7 +7,7 @@ from dash_svg import Svg, Line, Polygon
 import os
 
 dash.register_page(__name__, path="/slow-queries-monitor", name="Slow Queries Monitor")
-last_file, error = load_latest_benchmark('simple')
+last_file, error = load_latest_benchmark('q7')
 data = load_benchmark(last_file) if last_file else {}
 before = data.get('results', {}).get('before', {})
 after = data.get('results', {}).get('after', {})
@@ -59,13 +59,15 @@ queries = [
 
 
 # average Excution Time
-execution_time_file = load_benchmark('../results/benchmarking/execution_time.json') 
+execution_time_file = load_benchmark('../results/benchmarking/execution_time_file.json') 
 print(execution_time_file)
 s = 0
 SlowedQuery = 0
 for i in range(len(execution_time_file)):
     s += execution_time_file[i]['executionTimeMillis']
     queries[i]['executionTimeMillis'] = execution_time_file[i]['executionTimeMillis']
+    if execution_time_file[i]['executionTimeMillis'] > 200:
+        SlowedQuery +=1
 avrg_time = s/len(execution_time_file)
 queries = [
     {k: v for k, v in q.items() if k != "name"} 
