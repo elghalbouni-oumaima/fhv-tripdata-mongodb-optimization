@@ -1,0 +1,94 @@
+{
+    "query_name": "q1_simple_outlier",
+    "index_param": {
+        "trip_time": 1
+    },
+    "index_type": "simple index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 49525,
+            "optimizationTimeMillis": 3,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 185784,
+            "executionStages": {
+                "isCached": false,
+                "stage": "COLLSCAN",
+                "filter": {
+                    "trip_time": {
+                        "$gte": 4000
+                    }
+                },
+                "nReturned": 185784,
+                "executionTimeMillisEstimate": 45573,
+                "works": 16545357,
+                "advanced": 185784,
+                "needTime": 16359572,
+                "needYield": 0,
+                "saveState": 2828,
+                "restoreState": 2828,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 16545356
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 26770,
+            "optimizationTimeMillis": 43,
+            "totalDocsExamined": 185784,
+            "totalKeysExamined": 185784,
+            "nReturned": 185784,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 185784,
+                "executionTimeMillisEstimate": 26113,
+                "works": 185785,
+                "advanced": 185784,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1462,
+                "restoreState": 1462,
+                "isEOF": 1,
+                "docsExamined": 185784,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 185784,
+                    "executionTimeMillisEstimate": 612,
+                    "works": 185785,
+                    "advanced": 185784,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 1462,
+                    "restoreState": 1462,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "trip_time": 1
+                    },
+                    "indexName": "trip_time_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "trip_time": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "trip_time": [
+                            "[4000, inf]"
+                        ]
+                    },
+                    "keysExamined": 185784,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "trip_time_1"
+        }
+    }
+}

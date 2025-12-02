@@ -1,0 +1,109 @@
+{
+    "query_name": "q8_compound_multi_filter",
+    "index_param": {
+        "PULocationID": 1,
+        "shared_request_flag": 1
+    },
+    "index_type": "compound index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 60934,
+            "optimizationTimeMillis": 9,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 219,
+            "executionStages": {
+                "isCached": false,
+                "stage": "COLLSCAN",
+                "filter": {
+                    "$and": [
+                        {
+                            "PULocationID": {
+                                "$eq": 230
+                            }
+                        },
+                        {
+                            "shared_request_flag": {
+                                "$eq": 1
+                            }
+                        }
+                    ]
+                },
+                "nReturned": 219,
+                "executionTimeMillisEstimate": 56777,
+                "works": 16545357,
+                "advanced": 219,
+                "needTime": 16545137,
+                "needYield": 0,
+                "saveState": 3382,
+                "restoreState": 3382,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 16545356
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 266,
+            "optimizationTimeMillis": 28,
+            "totalDocsExamined": 219,
+            "totalKeysExamined": 219,
+            "nReturned": 219,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 219,
+                "executionTimeMillisEstimate": 223,
+                "works": 220,
+                "advanced": 219,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 9,
+                "restoreState": 9,
+                "isEOF": 1,
+                "docsExamined": 219,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 219,
+                    "executionTimeMillisEstimate": 61,
+                    "works": 220,
+                    "advanced": 219,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 9,
+                    "restoreState": 9,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "PULocationID": 1,
+                        "shared_request_flag": 1
+                    },
+                    "indexName": "PULocationID_1_shared_request_flag_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "PULocationID": [],
+                        "shared_request_flag": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "PULocationID": [
+                            "[230, 230]"
+                        ],
+                        "shared_request_flag": [
+                            "[1, 1]"
+                        ]
+                    },
+                    "keysExamined": 219,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "PULocationID_1_shared_request_flag_1"
+        }
+    }
+}
