@@ -1,0 +1,109 @@
+{
+    "query_name": "q7_compound_covered",
+    "index_param": {
+        "hvfhs_license_num": 1,
+        "trip_miles": 1
+    },
+    "index_type": "compound index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 83681,
+            "optimizationTimeMillis": 2,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 3049220,
+            "executionStages": {
+                "isCached": false,
+                "stage": "COLLSCAN",
+                "filter": {
+                    "$and": [
+                        {
+                            "hvfhs_license_num": {
+                                "$eq": "HV0005"
+                            }
+                        },
+                        {
+                            "trip_miles": {
+                                "$gte": 2
+                            }
+                        }
+                    ]
+                },
+                "nReturned": 3049220,
+                "executionTimeMillisEstimate": 78492,
+                "works": 16545357,
+                "advanced": 3049220,
+                "needTime": 13496136,
+                "needYield": 0,
+                "saveState": 4699,
+                "restoreState": 4699,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 16545356
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 778475,
+            "optimizationTimeMillis": 32,
+            "totalDocsExamined": 3049220,
+            "totalKeysExamined": 3049220,
+            "nReturned": 3049220,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "nReturned": 3049220,
+                "executionTimeMillisEstimate": 756355,
+                "works": 3049221,
+                "advanced": 3049220,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 42020,
+                "restoreState": 42020,
+                "isEOF": 1,
+                "docsExamined": 3049220,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 3049220,
+                    "executionTimeMillisEstimate": 19963,
+                    "works": 3049221,
+                    "advanced": 3049220,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 42020,
+                    "restoreState": 42020,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "hvfhs_license_num": 1,
+                        "trip_miles": 1
+                    },
+                    "indexName": "hvfhs_license_num_1_trip_miles_1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                        "hvfhs_license_num": [],
+                        "trip_miles": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "hvfhs_license_num": [
+                            "[\"HV0005\", \"HV0005\"]"
+                        ],
+                        "trip_miles": [
+                            "[2, inf]"
+                        ]
+                    },
+                    "keysExamined": 3049220,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "hvfhs_license_num_1_trip_miles_1"
+        }
+    }
+}

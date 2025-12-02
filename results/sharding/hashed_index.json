@@ -1,0 +1,103 @@
+{
+  "index_name": "PULocationID_hashed_index",
+  "index_param": {
+    "PULocationID": "hashed"
+  },
+  "results": {
+    "before": {
+      "namespace": "trips_db.fhvhv_trips_2021-10",
+      "parsedQuery": {
+        "PULocationID": { "$eq": 132 }
+      },
+      "optimizationTimeMillis": 0,
+      "rejectedPlans": [],
+      "executionSuccess": true,
+      "nReturned": 214096,
+      "executionTimeMillis": 1276,
+      "totalDocsExamined": 214096,
+      "totalKeysExamined": 214096,
+      "executionStages": {
+        "stage": "SINGLE_SHARD",
+        "nReturned": 214096,
+        "totalDocsExamined": 214096,
+        "totalKeysExamined": 214096,
+        "shards": [
+          {
+            "shardName": "shard1ReplSet",
+            "docsExamined": 214096,
+            "nReturned": 214096,
+            "usedDisk": false,
+            "indexName": "PULocationID_1_hvfhs_license_num_1",
+            "indexBounds": {
+              "PULocationID": ["[132, 132]"],
+              "hvfhs_license_num": ["[MinKey, MaxKey]"]
+            }
+          }
+        ]
+      },
+      "indexName": "PULocationID_1_hvfhs_license_num_1",
+      "indexBounds": {
+        "PULocationID": ["[132, 132]"],
+        "hvfhs_license_num": ["[MinKey, MaxKey]"]
+      },
+      "sortPattern": null
+    },
+
+    "after": {
+      "namespace": "trips_db.fhvhv_trips_2021-10",
+      "parsedQuery": {
+        "PULocationID": { "$eq": 132 }
+      },
+      "optimizationTimeMillis": 10,
+      "rejectedPlans": [
+        {
+          "stage": "SHARDING_FILTER",
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": { "PULocationID": { "$eq": 132 } },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": { "PULocationID": "hashed" },
+              "indexName": "PULocationID_hashed",
+              "indexBounds": {
+                "PULocationID": [
+                  "[644290046732697149, 644290046732697149]"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "executionSuccess": true,
+      "nReturned": 214096,
+      "executionTimeMillis": 692,
+      "totalDocsExamined": 214096,
+      "totalKeysExamined": 214096,
+      "executionStages": {
+        "stage": "SINGLE_SHARD",
+        "nReturned": 214096,
+        "totalDocsExamined": 214096,
+        "totalKeysExamined": 214096,
+        "shards": [
+          {
+            "shardName": "shard1ReplSet",
+            "docsExamined": 214096,
+            "nReturned": 214096,
+            "usedDisk": false,
+            "indexName": "PULocationID_1_hvfhs_license_num_1",
+            "indexBounds": {
+              "PULocationID": ["[132, 132]"],
+              "hvfhs_license_num": ["[MinKey, MaxKey]"]
+            }
+          }
+        ]
+      },
+      "indexName": "PULocationID_1_hvfhs_license_num_1",
+      "indexBounds": {
+        "PULocationID": ["[132, 132]"],
+        "hvfhs_license_num": ["[MinKey, MaxKey]"]
+      },
+      "sortPattern": null
+    }
+  }
+}

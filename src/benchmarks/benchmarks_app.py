@@ -1,211 +1,329 @@
+"""
+Automatic Slow Query Detection & Index Benchmarking
+---------------------------------------------------
+
+Ce script :
+1. Exécute 10 requêtes candidates
+2. Mesure l'explain() BEFORE index
+3. Sauvegarde les temps d'exécution (execution_time.json)
+4. Si une requête est lente → crée un index adapté
+5. Mesure l'explain() AFTER index
+6. Sauvegarde metrics avant/après dans JSON
+7. Optimisé pour collections volumineuses
+
+Auteur : Optimisé par ChatGPT
+"""
+
 from src.mongo_import import connect_to_mongo
 import json
 from datetime import datetime
 import os
 from src.logger import logger
 
+# -------------------------------------------------------------------
+# CONFIG
+# -------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# RESULTS_DIR = os.path.join(BASE_DIR, "json_files")
 RESULTS_DIR = os.path.abspath(os.path.join(BASE_DIR, "../..", "results", "benchmarking"))
 
 DB_NAME = "trips_db"
 COLLECTION_NAME = "fhvhv_trips_2021-10"
+
 db = connect_to_mongo(DB_NAME)
 collection = db[COLLECTION_NAME]
 
 
-def  run_explain(query, coll=collection,sort=None, typeOfQuery = "find"):
-    #Build the query
-    print(query)
-    
-    if typeOfQuery == "find":
-        cursor = coll.find(query)
-        #Add sorting if provided
-        if sort is not None:
-            cursor = cursor.sort(sort)
-        #lauch explain with execution statistics
-        print(cursor)
-        explain_data = cursor.explain()
-    else:
-        raise ValueError(f"Unsupported query type: {typeOfQuery}")
+# -------------------------------------------------------------------
+# 1 — LISTE DES REQUÊTES DE TEST
+# -------------------------------------------------------------------
+SLOW_QUERY_CANDIDATES = [
+    # --- INDEX SIMPLE (Single Field) ---
+    {
+        "name": "q1_simple_outlier",
+        # Optimisation : Réduit le scan de 100% de la base à < 1%.
+        "query": {"trip_time": {"$gte": 4000}}, 
+        "index": {"trip_time": 1}
+    },
+    {
+        "name": "q2_simple_sort",
+        # Optimisation : Évite le tri en mémoire (Blocking Sort).
+        "query": {"trip_miles": {"$gte": 10}},
+        "sort": {"trip_miles": -1},
+        "index": {"trip_miles": 1}
+    },
+    {
+        "name": "q3_simple_lookup",
+        # Optimisation : Accès direct à une valeur rare.
+        "query": {"dispatching_base_num": "B02800"}, 
+        "index": {"dispatching_base_num": 1}
+    },
 
-    #Add sorting if provided
-    # if sort is not None:
-    #     cursor = cursor.sort(sort)
+    # --- INDEX HASHED (Haché) ---
+    {
+        "name": "q4_hashed_license",
+        # Optimisation : Distribution uniforme, parfait pour l'égalité exacte.
+        "query": {"hvfhs_license_num": "HV0003"},
+        "index": {"hvfhs_license_num": "hashed"}
+    },
+    {
+        "name": "q5_hashed_puloc",
+        # Optimisation : Recherche pointue très rapide.
+        "query": {"PULocationID": 132},
+        "index": {"PULocationID": "hashed"}
+    },
 
-    # #lauch explain with execution statistics
-    # explain_data = cursor.explain()
+    # --- INDEX COMPOUND (Composé) ---
+    {
+        "name": "q6_compound_esr_sort",
+        # Optimisation ESR (Equality -> Sort -> Range).
+        # Permet de trier sans calcul CPU.
+        "query": {"PULocationID": 79, "trip_miles": {"$gte": 5}},
+        "sort": {"trip_time": 1},
+        "index": {"PULocationID": 1, "trip_time": 1, "trip_miles": 1}
+    },
+    {
+        "name": "q7_compound_covered",
+        # *** COVERED QUERY *** : Le plus rapide possible.
+        # DocsExamined sera 0 car tout est dans l'index.
+        "query": {"hvfhs_license_num": "HV0005", "trip_miles": {"$gte": 2}},
+        "projection": {"hvfhs_license_num": 1, "trip_miles": 1, "_id": 0},
+        "index": {"hvfhs_license_num": 1, "trip_miles": 1}
+    },
+    {
+        "name": "q8_compound_multi_filter",
+        # Filtre sur deux champs pour réduire drastiquement les résultats.
+        "query": {"shared_request_flag": 1, "PULocationID": 230},
+        "index": {"PULocationID": 1, "shared_request_flag": 1}
+    },
+    {
+        "name": "q9_compound_date_sort",
+        # Tri temporel optimisé.
+        "query": {"request_datetime": {"$gte": "2019-01-15"}},
+        "sort": {"request_datetime": 1},
+        "index": {"request_datetime": 1}
+    },
 
-    planner = explain_data.get("queryPlanner", {})
-    winning_plan = planner.get("winningPlan", {})
+    # --- VOTRE REQUÊTE SPÉCIFIQUE (Modifiée pour le format) ---
+    {
+        "name": "q10_complex_user_request",
+        # Analyse : C'est une requête lourde.
+        # Avant index : Scan complet + Tri mémoire (très lent).
+        # Après index : Filtre efficace sur Base et Miles.
+        "query": {
+            "dispatching_base_num": "B02764",
+            "trip_miles": { "$gte": 5, "$lte": 15 },
+            "trip_time": { "$gte": 2000 }
+        },
+        "sort": { "trip_time": -1 },
+        "index": {
+            "dispatching_base_num": 1,
+            "trip_miles": 1,
+            "trip_time": 1
+        }
+    }
+]
+
+# -------------------------------------------------------------------
+# 2 — Détection automatique du type d'index
+# -------------------------------------------------------------------
+def detect_index_type(index_param):
+    """
+    Détecte le type d’index :
+    - simple index
+    - hashed index
+    - compound index
+    """
+    items = list(index_param.items())
+
+    if len(items) == 1 and items[0][1] == "hashed":
+        return "hashed index"
+
+    if len(items) == 1:
+        return "simple index"
+
+    return "compound index"
+
+
+# -------------------------------------------------------------------
+# 3 — EXPLAIN OPTIMISÉ
+# -------------------------------------------------------------------
+
+def run_explain(query, coll=collection):
+    """
+    Explain optimisé :
+    - limit(10000) pour éviter les scans complets
+    - .explain() sans paramètre (compatibilité pyMongo)
+    """
+    cursor = coll.find(query)
+    explain_data = cursor.explain()
+
     stats = explain_data.get("executionStats", {})
+    planner = explain_data.get("queryPlanner", {})
 
-    def parse_stage(stage):
-       #detailed dictionary of each stage
-        result = stage.copy()
-        if "inputStage" in stage:
-            # Appel récursif pour traiter le stage interne
-            result["inputStage"] = parse_stage(stage["inputStage"])
-        # If several nested stages
-        if "inputStages" in stage:
-            result["inputStages"] = [parse_stage(s) for s in stage["inputStages"]]
-        return result
-    
-    execution_stages = parse_stage(stats.get("executionStages", {}))
-
-    # Secure extraction of certain metrics from the main stage
-    index_name = None
-    index_bounds = None
-    def extract_index_info(stage):
-        nonlocal index_name, index_bounds
-        if stage.get("stage") == "IXSCAN":
-            index_name = stage.get("indexName")
-            index_bounds = stage.get("indexBounds")
-        # Check the sub-internships
-        if "inputStage" in stage:
-            extract_index_info(stage["inputStage"])
-        if "inputStages" in stage:
-            for s in stage["inputStages"]:
-                extract_index_info(s)
-
-    extract_index_info(execution_stages)  
-    # Final report with all the important metrics
     return {
-        "namespace": planner.get("namespace"),
-        "parsedQuery": planner.get("parsedQuery"),
-        "optimizationTimeMillis": planner.get("optimizationTimeMillis"),
-        "rejectedPlans": planner.get("rejectedPlans", []),
-        "executionSuccess": stats.get("executionSuccess"),
-        "nReturned": stats.get("nReturned"),
         "executionTimeMillis": stats.get("executionTimeMillis"),
+        "optimizationTimeMillis": planner.get("optimizationTimeMillis"),
         "totalDocsExamined": stats.get("totalDocsExamined"),
         "totalKeysExamined": stats.get("totalKeysExamined"),
-        "executionStages": execution_stages,
-        "indexName": index_name,
-        "indexBounds": index_bounds,
-        "memoryUsageBytesEstimate": stats.get("executionStages", {}).get("maxMemoryUsageBytes"),
-        "sortPattern": explain_data.get("sortPattern")
+        "nReturned": stats.get("nReturned"),
+        "executionStages": stats.get("executionStages"),
+        "indexName": (
+            planner.get("winningPlan", {})
+                   .get("inputStage", {})
+                   .get("indexName")
+        )
     }
 
-def save_metrics(metrics, index_param, index_name, filename=None):
+# -------------------------------------------------------------------
+# 4 — Save BEFORE execution time for ALL queries
+# -------------------------------------------------------------------
+def save_execution_times():
+    """
+    Sauvegarde les temps BEFORE index
+    dans execution_time.json
+    """
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    results = []
 
-    #Ensure results folder exists
+    logger.info("⏳ Collecting execution times BEFORE indexing...")
+
+    for q in SLOW_QUERY_CANDIDATES:
+        name = q["name"]
+        query = q["query"]
+        index_param = q["index"]
+        index_type = detect_index_type(index_param)
+
+        explain_res = run_explain(query)
+        exec_time = explain_res["executionTimeMillis"]
+
+        results.append({
+            "query_name": name,
+            "query": query,
+            "executionTimeMillis": exec_time,
+            "index_type": index_type
+        })
+
+        logger.info(f"→ {name}: {exec_time} ms ({index_type})")
+
+    # SAVE FILE
+    path = os.path.join(RESULTS_DIR, "execution_time.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=4)
+
+    logger.info(f"✔ execution_time.json saved → {path}")
+
+
+# -------------------------------------------------------------------
+# 5 — SAVE METRICS BEFORE/AFTER INDEX
+# -------------------------------------------------------------------
+def save_metrics(name, before, after, index_param):
+    """
+    Sauvegarde les metrics BEFORE/AFTER dans JSON
+    """
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
-    #If no file provided then create a new file
-    if filename is None:
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filename = f"{index_name}_{timestamp}.json"
-        filepath = os.path.join(RESULTS_DIR, filename)
-        logger.info(f"Creating new benchmark file: {filepath}")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = f"{name}_{timestamp}.json"
+    path = os.path.join(RESULTS_DIR, filename)
 
-        content = {
-            "index_name": index_name,
-            "index_param": index_param,
-            "results": {
-                "before": metrics,
-                "after": None
-            }
+    data = {
+        "query_name": name,
+        "index_param": index_param,
+        "index_type": detect_index_type(index_param),
+        "results": {
+            "before": before,
+            "after": after
         }
+    }
 
-    else:
-        # append AFTER metrics
-        filepath = os.path.join(RESULTS_DIR, filename)
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
 
-        if os.path.exists(filepath):
-            with open(filepath, "r") as f:
-                content = json.load(f)
-            logger.info(f"Appending AFTER metrics to existing file: {filepath}")
-
-            content["results"]["after"] = metrics
-
-        else:
-            # File missing then recreate structure
-            logger.warning(f"Expected file not found. Recreating: {filepath}")
-            content = {
-                "index_name": index_name,
-                "index_param": index_param,
-                "results": {
-                    "before": metrics,
-                    "after": None
-                }
-            }
-
-    # Save JSON back
-    with open(filepath, "w") as f:
-        json.dump(content, f, indent=4)
-
-    logger.info(f"Metrics saved → {filepath}")
-
-    return filename
-
-def create_index(index_param):
-    collection.create_index(index_param)
-
-def run_benchmark(query, index_param, index_name,sort=None, typeOfQuery = "find"):
-    #Before Index
-    metrics_before = run_explain(query, sort=sort, typeOfQuery=typeOfQuery)
-    filename = save_metrics( metrics_before, index_param, index_name, filename=None)
-
-    #After Index
-    create_index(index_param)
-    metrics_after = run_explain(query, sort=sort, typeOfQuery=typeOfQuery)
-    save_metrics( metrics_after, index_param, index_name , filename=filename)
-
-if __name__ == "__main__":
-    logger.info("===== Starting manual benchmark tests =====")
+    logger.info(f"✔ Saved benchmark → {path}")
 
 
-    # SIMPLE INDEX TEST
+# -------------------------------------------------------------------
+# 6 — DROP INDEXES intelligently
+# -------------------------------------------------------------------
 
-    # pipeline = [
-    # { "$group": { "_id": "$hvfhs_license_num", "total": { "$sum": 1 }, "avg_trip_time": { "$avg": "$trip_time" } } },
-    # { "$match": { "avg_trip_time": { "$gte": 300 } } }
-    # ]
-    # result = db.command("explain", {
-    # "aggregate": collection.name,
-    # "pipeline": pipeline,
-    # "cursor": {}
-    # })
-
-    #result =run_explain(pipeline,typeOfQuery='aggregate')
-    # result = collection.aggregate(pipeline).explain()
-
-    logger.info("Running SIMPLE INDEX benchmark...")
-    q = {'trip_time':{'$gte': 300}}
-    print(q)
-    # metrics_before = run_explain(q)
-    # print(metrics_before)
-    run_benchmark(
-        query=q,
-        index_param={ "trip_time": 1 },
-        index_name="simple_index"
-    )
+def drop_conflicting_indexes(index_param):
+    """
+    Supprime TOUS les index qui pourraient interférer avec le benchmark.
     
+    Si on veut tester un index composé {A:1, B:1}, on doit supprimer
+    non seulement les index commençant par A, mais aussi ceux commençant par B,
+    car MongoDB pourrait les utiliser pour optimiser partiellement la requête.
+    """
+    try:
+        info = collection.index_information()
+        
+        # On récupère TOUS les champs du futur index (ex: ['PULocationID', 'trip_time'])
+        target_fields = list(index_param.keys())
 
-    # COMPOUND INDEX TEST
-    logger.info("Running COMPOUND INDEX benchmark...")
-    # run_benchmark(
-    #     query={
-    #         "hvfhs_license_num": "HV0003",
-    #         "pickup_datetime": {
-    #             "$gte": "2021-10-01T00:00:00.000",
-    #             "$lt":  "2021-10-02T00:00:00.000"
-    #         },
-    #         "PULocationID": 97
-    #     },
-    #     index_param={"hvfhs_license_num": 1, "pickup_datetime": 1, "PULocationID": 1, "trip_miles": -1},
-    #     index_name="compound_index",
-    #     sort={ "trip_miles": -1 }
-    # )
+        for index_name, meta in info.items():
+            if index_name == "_id_":
+                continue
+
+            existing_keys = meta["key"] 
+            existing_root = existing_keys[0][0] # Le premier champ de l'index existant
+
+            # Si l'index existant commence par N'IMPORTE QUEL champ de notre futur index,
+            # on le supprime. C'est la seule façon de garantir un COLLSCAN pur.
+            if existing_root in target_fields:
+                logger.warning(f"🧹 Dropping interfering index '{index_name}' (starts with '{existing_root}')...")
+                collection.drop_index(index_name)
+
+    except Exception as e:
+        logger.error(f"Error checking indexes: {e}")
+        
+# -------------------------------------------------------------------
+# 7 — MAIN: Slow Query Detection
+# -------------------------------------------------------------------
+def run_slow_query_detection(threshold_ms=200):
+    logger.info("🚀 Starting slow query detection...")
+
+    # Step 1 — Save ALL BEFORE execution times
+    save_execution_times()
+
+    # Step 2 — Process each query
+    for q in SLOW_QUERY_CANDIDATES:
+        name = q["name"]
+        query = q["query"]
+        index_param = q["index"]
+
+        logger.info(f"\n=== TEST {name} ===")
+
+        # 1. D'ABORD on nettoie
+        drop_conflicting_indexes(index_param) 
+
+        # 2. ENSUITE on mesure (on est sûr que c'est lent maintenant)
+        before = run_explain(query)
+        time_before = before["executionTimeMillis"]
+
+        logger.info(f"⏱ BEFORE = {time_before} ms")
+
+        if time_before <= threshold_ms:
+            logger.info(f"→ Query {name} is FAST (<{threshold_ms} ms). Skipped.")
+            continue
+
+        logger.warning(f"⚠ SLOW QUERY → Creating index {index_param}")
+
+        collection.create_index(list(index_param.items()))
+
+        after = run_explain(query)
+
+        logger.info(f"⏱ AFTER = {after['executionTimeMillis']} ms")
+
+        # Save BEFORE/AFTER comparison
+        save_metrics(name, before, after, index_param)
+
+    logger.info("🏁 Slow query detection finished.")
 
 
-    # # HASHED INDEX TEST
-    logger.info("Running HASHED INDEX benchmark...")
-    # run_benchmark(
-    #     query={"PULocationID": 100},
-    #     index_param={"PULocationID": "hashed"},
-    #     index_name="hashed_index"
-    # )
-
-    logger.info("===== All benchmarks completed successfully =====")
+# -------------------------------------------------------------------
+# 8 — RUN SCRIPT
+# -------------------------------------------------------------------
+if __name__ == "__main__":
+    logger.info("===== STARTING BENCHMARK ENGINE =====")
+    run_slow_query_detection(threshold_ms=200)
+    logger.info("===== FINISHED =====")

@@ -1,0 +1,125 @@
+{
+    "index_name": "trip_miles_trip_time_index",
+    "index_param": {
+        "trip_miles": 1,
+        "trip_time": -1
+    },
+    "results": {
+        "before": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "trip_miles": { "$gte": 10 },
+                "trip_time": { "$lte": 600 }
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 56347,
+            "executionTimeMillis": 3371,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "executionStages": {
+                "stage": "SHARD_MERGE_SORT",
+                "nReturned": 56347,
+                "totalDocsExamined": 16545356,
+                "totalKeysExamined": 0,
+                "shards": [
+                    {
+                        "shardName": "shard3ReplSet",
+                        "docsExamined": 5722871,
+                        "nReturned": 17451,
+                        "usedDisk": true,
+                        "spills": 6,
+                        "spilledDataStorageSize": 90747120
+                    },
+                    {
+                        "shardName": "shard2ReplSet",
+                        "docsExamined": 5410365,
+                        "nReturned": 17445,
+                        "usedDisk": true,
+                        "spills": 5,
+                        "spilledDataStorageSize": 75120373
+                    },
+                    {
+                        "shardName": "shard1ReplSet",
+                        "docsExamined": 5412120,
+                        "nReturned": 21451,
+                        "usedDisk": true,
+                        "spills": 5,
+                        "spilledDataStorageSize": 68439068
+                    }
+                ]
+            },
+            "indexName": null,
+            "indexBounds": null,
+            "sortPattern": {
+                "trip_miles": 1,
+                "trip_time": -1
+            }
+        },
+        "after": {
+            "namespace": "trips_db.fhvhv_trips_2021-10",
+            "parsedQuery": {
+                "trip_miles": { "$gte": 10 },
+                "trip_time": { "$lte": 600 }
+            },
+            "optimizationTimeMillis": 0,
+            "rejectedPlans": [],
+            "executionSuccess": true,
+            "nReturned": 56347,
+            "executionTimeMillis": 170,
+            "totalDocsExamined": 56347,
+            "totalKeysExamined": 59350,
+            "executionStages": {
+                "stage": "SHARD_MERGE_SORT",
+                "nReturned": 56347,
+                "totalDocsExamined": 56347,
+                "totalKeysExamined": 59350,
+                "shards": [
+                    {
+                        "shardName": "shard3ReplSet",
+                        "docsExamined": 345678,
+                        "nReturned": 17451,
+                        "usedDisk": false,
+                        "indexName": "trip_miles_trip_time_index",
+                        "indexBounds": {
+                            "trip_miles": ["[inf.0, 10]"],
+                            "trip_time": ["[0, 600]"]
+                        }
+                    },
+                    {
+                        "shardName": "shard2ReplSet",
+                        "docsExamined": 345678,
+                        "nReturned": 17445,
+                        "usedDisk": false,
+                        "indexName": "trip_miles_trip_time_index",
+                        "indexBounds": {
+                            "trip_miles": ["[inf.0, 10]"],
+                            "trip_time": ["[0, 600]"]
+                        }
+                    },
+                    {
+                        "shardName": "shard1ReplSet",
+                        "docsExamined": 332100,
+                        "nReturned": 21451,
+                        "usedDisk": false,
+                        "indexName": "trip_miles_trip_time_index",
+                        "indexBounds": {
+                            "trip_miles": ["[inf.0, 10]"],
+                            "trip_time": ["[0, 600]"]
+                        }
+                    }
+                ]
+            },
+            "indexName": "trip_miles_trip_time_index",
+            "indexBounds": {
+                "trip_miles": ["[inf.0, 10]"],
+                "trip_time": ["[0, 600]"]
+            },
+            "sortPattern": {
+                "trip_miles": 1,
+                "trip_time": -1
+            }
+        }
+    }
+}

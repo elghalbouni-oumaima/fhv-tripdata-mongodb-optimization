@@ -7,43 +7,114 @@ from dash_svg import Svg, Line, Polygon
 import os
 
 dash.register_page(__name__, path="/slow-queries-monitor", name="Slow Queries Monitor")
-last_file, error = load_latest_benchmark('simple')
+last_file, error = load_latest_benchmark('q3')
 data = load_benchmark(last_file) if last_file else {}
 before = data.get('results', {}).get('before', {})
 after = data.get('results', {}).get('after', {})
 
-queries=[
-    {"Query Tested": '{"trip_time": {"$gte": 300}}', "index": '{"trip_time": 1}'},
-    {"Query Tested": '{"PULocationID": 100}', "index": '{"PULocationID": "hashed"}'},
-    {"Query Tested": '{"hvfhs_license_num": "HV0003", "PULocationID": 97}',
-     "index": '{"hvfhs_license_num": 1, "PULocationID": 1}'},
-    {"Query Tested":'{"trip_miles": {"$gte": 5, "$lte": 10}}',
-     "index": '{"trip_miles": 1}'},
-    {"Query Tested": '{"trip_miles": {"$gte": 5}, "trip_time": {"$gte": 1200}}',
-     "index": '{"trip_miles": 1, "trip_time": -1}'},
-    {"Query Tested": '{"dispatching_base_num": "B02764"}',
-     "index":' {"dispatching_base_num": 1}'},
-    {"Query Tested":'{"base_passenger_fare": {"$gte": 20}}',
-     "index": '{"base_passenger_fare": 1}'},
-    {"Query Tested":'{"hvfhs_license_num": "HV0003", "trip_miles": {"$gte": 10}, "trip_time": {"$gte": 1800}}',
-     "index": '{"hvfhs_license_num": 1, "trip_miles": 1, "trip_time": -1}'},
-    {"Query Tested": ' {"DOLocationID": 85}', "index": '{"DOLocationID": 1}'},
-    {"Query Tested":' {"hvfhs_license_num": "HV0005"}', "index": '{"hvfhs_license_num": 1}'},
+queries = [
+
+    # --- SIMPLE INDEXES ---
+    {
+        "name": "q1_simple_outlier",
+        "query": '{"trip_time": {"$gte": 4000}}',
+        "index": '{"trip_time": 1}'
+    },
+
+    {
+        "name": "q2_simple_sort",
+        "query": '{"trip_miles": {"$gte": 10}}',
+        "sort": '{"trip_miles": -1}',
+        "index": '{"trip_miles": 1}'
+    },
+
+    {
+        "name": "q3_simple_lookup",
+        "query": '{"dispatching_base_num": "B02800"}',
+        "index": '{"dispatching_base_num": 1}'
+    },
+
+    # --- HASHED INDEXES ---
+    {
+        "name": "q4_hashed_license",
+        "query": '{"hvfhs_license_num": "HV0003"}',
+        "index": '{"hvfhs_license_num": "hashed"}'
+    },
+
+    {
+        "name": "q5_hashed_puloc",
+        "query": '{"PULocationID": 132}',
+        "index": '{"PULocationID": "hashed"}'
+    },
+
+    # --- COMPOUND INDEXES ---
+    {
+        "name": "q6_compound_esr_sort",
+        "query": '{"PULocationID": 79, "trip_miles": {"$gte": 5}}',
+        "sort": '{"trip_time": 1}',
+        "index": '{"PULocationID": 1, "trip_time": 1, "trip_miles": 1}'
+    },
+
+    {
+        "name": "q7_compound_covered",
+        "query": '{"hvfhs_license_num": "HV0005", "trip_miles": {"$gte": 2}}',
+        "projection": '{"hvfhs_license_num": 1, "trip_miles": 1, "_id": 0}',
+        "index": '{"hvfhs_license_num": 1, "trip_miles": 1}'
+    },
+
+    {
+        "name": "q8_compound_multi_filter",
+        "query": '{"shared_request_flag": 1, "PULocationID": 230}',
+        "index": '{"PULocationID": 1, "shared_request_flag": 1}'
+    },
+
+    {
+        "name": "q9_compound_date_sort",
+        "query": '{"request_datetime": {"$gte": "2019-01-15"}}',
+        "sort": '{"request_datetime": 1}',
+        "index": '{"request_datetime": 1}'
+    },
+
+    # --- COMPLEX USER QUERY ---
+    {
+        "name": "q10_complex_user_request",
+        "query": '{'
+                 '"dispatching_base_num": "B02764", '
+                 '"trip_miles": {"$gte": 5, "$lte": 15}, '
+                 '"trip_time": {"$gte": 2000}'
+                 '}',
+        "sort": '{"trip_time": -1}',
+        "index": '{"dispatching_base_num": 1, "trip_miles": 1, "trip_time": 1}'
+    }
+
 ]
 
 # average Excution Time
 execution_time_file = load_benchmark('../results/benchmarking/execution_time.json') 
-print(execution_time_file)
+# print(execution_time_file)
 s = 0
 SlowedQuery = 0
 for i in range(len(execution_time_file)):
     s += execution_time_file[i]['executionTimeMillis']
-    if execution_time_file[i]['executionTimeMillis'] >200:
+    queries[i]['executionTimeMillis'] = execution_time_file[i]['executionTimeMillis']
+    if execution_time_file[i]['executionTimeMillis'] > 200:
         SlowedQuery +=1
 avrg_time = s/len(execution_time_file)
+queries = [
+    {k: v for k, v in q.items() if k != "name"} 
+    for q in queries
+]
+queries = [
+    {
+        "Query tested": q.get("query"),
+        "Appropriate index to optimize the query": q.get("index"),
+        **{k: v for k, v in q.items() if k not in ["query", "index", "name"]}
+    }
+    for q in queries
+]
+
 
 #Slowed Query
-
 layout = html.Div([
     html.H2(f"Identifying and analyzing queries with high execution time"),
     # KPI Cards
@@ -54,7 +125,7 @@ layout = html.Div([
         make_query_card("Average execution time",avrg_time,'ms'),
     ],id='cards-kpi', className="grid-4"),    
     html.Div([
-            html.H3("Détails Chiffrés"),
+            html.H3("Executed Queries"),
             #dcc.Graph(figure=make_comparison_bar(before, after, 'totalDocsExamined', "Documents Examinés")),
             dash_table.DataTable(
                 id="details-table",

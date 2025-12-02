@@ -15,6 +15,7 @@ app.layout = html.Div([
             dcc.Link("Dataset", href="/", className="nav-link"),
             dcc.Link("Slow Queries Monitor", href="/slow-queries-monitor", className="nav-link"),
             dcc.Link("Performance", href="/performance", className="nav-link"),
+            dcc.Link("Sharding Optimization", href="/sharding-optimization", className="nav-link"),
         ])
     ], className="navbar"),
     

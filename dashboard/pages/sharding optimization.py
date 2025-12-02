@@ -5,13 +5,15 @@ from utils.charts import make_comparison_bar, make_kpi_card,build_double_donut_c
 import json
 from dash_svg import Svg, Line, Polygon
 
-dash.register_page(__name__, path="/performance", name="Performance")
+dash.register_page(__name__, path="/sharding-optimization", name="Sharding optimization.py")
 
 # Chargement
-last_file, error = load_latest_benchmark('q3')
+last_file = '../results/sharding/simple_index.json'
 data = load_benchmark(last_file) if last_file else {}
 before = data.get('results', {}).get('before', {})
 after = data.get('results', {}).get('after', {})
+
+print(before.get('executionTimeMillis'))
 # print(after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A'))
 
 def extract_execution_flow(stage, flow=None):
@@ -210,11 +212,10 @@ PRESET_QUERIES = {
         "name": "q5"
     }
 }
-
 BENCHMARK_QUERIES = {
-    "q3": "db.fhvhv_trips_2021-10.find({'dispatching_base_num': 'B02800'})",
-    "q10": "db.fhvhv_trips_2021-10.find({dispatching_base_num: 'B02764',trip_miles: { $gte: 5, $lte: 15 },trip_time: { $gte: 1200 }}).sort({ trip_time: -1 })",
-    "q4": "db.fhvhv_trips_2021-10.find({'hvfhs_license_num': 'HV0003')"
+    "1": "db.fhvhv_trips_2021-10.find({dispatching_base_num: 'B02800'})",
+    "2": "db.fhvhv_trips_2021-10.find({dispatching_base_num: 'B02764',trip_miles: { $gte: 5, $lte: 15 },trip_time: { $gte: 1200 }}).sort({ trip_time: -1 })",
+    "3": "db.fhvhv_trips_2021-10.find({hvfhs_license_num: 'HV0003'})"
 }
 
 # ============================================
@@ -245,7 +246,7 @@ query_controls = html.Div([
         # MIDDLE SIDE → Search bar
         html.Div([
             dcc.Input(
-                id="query-preview",
+                id="query-preview2",
                 type="text",
                 placeholder="Benchmark query will appear here...",
                 style={
@@ -269,13 +270,13 @@ query_controls = html.Div([
         html.Div([
             #html.Label("Choose a predefined benchmark:"),
             dcc.Dropdown(
-                id="benchmark-dropdown",
+                id="benchmark-dropdown2",
                 options=[
-                    {"label": "Simple Index", "value": "q3"},
-                    {"label": "Compound Index", "value": "q10"},
-                    {"label": "Hashed Index", "value": "q5"},
+                    {"label": "Simple Index", "value": "1"},
+                    {"label": "Compound Index", "value": "2"},
+                    {"label": "Hashed Index", "value": "3"},
                 ],
-                value="q3",
+                value="1",
                 style={"width": "250px"}
             )
         ], style={
@@ -353,12 +354,12 @@ query_controls = html.Div([
 
         # INDEX BUILDER
         html.Div(
-            id="index-builder",
+            id="index-builder2",
             className="card",
             style={"flex": "1","padding": "20px"}
         )
 
-        ], id="builder-container"
+        ], id="builder-container2"
         , style={
             "display": "flex",
             "gap": "20px",
@@ -375,16 +376,15 @@ query_controls = html.Div([
 # ============================================
 # 3. Layout principal
 # ============================================
-
 layout = html.Div([
-    html.H2(f"Benchmark Index : {data.get('index_name', 'N/A')}",id='Benchmark-Index'),
+    html.H2(f"Benchmark Index : {data.get('index_name', 'N/A')}",id='Benchmark-Index2'),
     
     # Badges
-    html.Div([
-        html.Span(f"Index: {after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A')}", className="badge-info"),
-        html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info")
-    ],
-    id='badge-info',className="card", style={"overflow": "hidden", "display": "block", "width": "100%"},),
+    # html.Div([
+    #     html.Span(f"Index: {after.get('executionStages', 'N/A').get('inputStage', 'N/A').get('indexName', 'N/A')}", className="badge-info"),
+    #     html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info")
+    # ],
+    # id='badge-info',className="card", style={"overflow": "hidden", "display": "block", "width": "100%"},),
     query_controls,  
     # KPI Cards
     html.Div([
@@ -392,30 +392,30 @@ layout = html.Div([
         make_kpi_card("Optimisation Time", before.get('optimizationTimeMillis'), after.get('optimizationTimeMillis'), "ms"),
         make_kpi_card("Docs Examined", before.get('totalDocsExamined'), after.get('totalDocsExamined')),
         make_kpi_card("Keys Examined", before.get('totalKeysExamined'), after.get('totalKeysExamined')),
-    ],id='cards-kpi', className="grid-4"),
+    ],id='cards-kpi2', className="grid-4"),
     
     # Comparaison Graphique & Table
-    html.Div([
-        html.Div([
-            html.H3("Performance Metrics Comparison (Before vs After Index)"),
-            dcc.Graph(id='bar_chart',figure=build_bar_chart(before,after),style={'width': '100%'}),
-        ], className="card"),
+    # html.Div([
+    #     html.Div([
+    #         html.H3("Performance Metrics Comparison (Before vs After Index)"),
+    #         dcc.Graph(id='bar_chart',figure=build_bar_chart(before,after),style={'width': '100%'}),
+    #     ], className="card"),
         
-        html.Div([
-            html.H3("Documents and Keys Examined"),
-            html.Div([
-                dcc.Graph(id='donut_chart',figure=build_double_donut_chart(before,after),style={'width': '100%'}),
-            ],className="donut-card")
+    #     html.Div([
+    #         html.H3("Documents and Keys Examined"),
+    #         html.Div([
+    #             dcc.Graph(id='donut_chart',figure=build_double_donut_chart(before,after),style={'width': '100%'}),
+    #         ],className="donut-card")
            
-        ],className="card"),
+    #     ],className="card"),
         
         
-    ], className="grid-2"),
+    # ], className="grid-2"),
     html.Div([
             html.H3("Détails Chiffrés"),
             #dcc.Graph(figure=make_comparison_bar(before, after, 'totalDocsExamined', "Documents Examinés")),
             dash_table.DataTable(
-                id="details-table",
+                id="details-table2",
                 data=[],
                 style_cell={'textAlign': 'left', 'padding': '10px'},
                 style_header={'backgroundColor': '#ecf0f1', 'fontWeight': 'bold'},
@@ -423,40 +423,6 @@ layout = html.Div([
             )
     ], className="card"),
     
-    # Explain Tree
-    # html.Div([
-    #     html.H3("Explain Plan (Structure des Stages)"),
-    #     html.Div([
-    #         html.Div([
-    #             html.H4("BEFORE (CollScan)"),
-    #             generate_tree_html(before.get('executionStages'))
-    #         ], style={'flex': 1}),
-    #          html.Div([
-    #             html.H4("AFTER (IndexScan)"),
-    #             generate_tree_html(after.get('executionStages'))
-    #         ], style={'flex': 1})
-    #     ], style={'display': 'flex', 'justifyContent': 'space-around'})
-    # ], className="card")
-    # html.H2("Performance & Index Benchmark Visualization"),
-
-    
-
-    dcc.Tabs(id="flow-tabs", value="graph", children=[
-        dcc.Tab(label="Graph Flow", value="graph", children=[
-            html.Div(id="execution-flow-container")
-        ]),
-        dcc.Tab(label="Raw JSON", value="json", children=[
-            html.Pre(id="raw-json-content",
-                    style={
-                        "background": "#1e1e1e",
-                        "color": "white",
-                        "padding": "20px",
-                        "borderRadius": "8px",
-                        "overflowX": "auto",
-                        "maxHeight": "600px"
-                    })
-        ])
-    ]),
 
 ])
 
@@ -466,50 +432,61 @@ layout = html.Div([
 # 4. Callbacks
 # ============================================
 @dash.callback(
-    Output("Benchmark-Index", "children"),
-    Input("benchmark-dropdown", "value")
+    Output("Benchmark-Index2", "children"),
+    Input("benchmark-dropdown2", "value"),
+    allow_duplicate=True,
 )
 def update_title(selected_value):
-    if selected_value == "q4":
+    print(selected_value)
+    if selected_value == "3":
         index_name = "Hashed Index"
-    elif selected_value == "q10":
+    elif selected_value == "2":
         index_name = "Compound Index"
-    elif selected_value == "q3":
+    elif selected_value == "1":
         index_name = "Simple Index"
     else:
         index_name = "Unknown"
 
     return f"Benchmark Index: {index_name}"
 
+# @dash.callback(
+#     Output("badge-info", "children"),
+#     Input("benchmark-dropdown", "value")
+# )
+# def update_badge_info(input_value):
+#     if input_value == '1':
+#         last_file='../results/sharding/simple_index.json'
+#     if input_value == '2':
+#         last_file='../results/sharding/compound_index.json'
+#     if input_value == '3':
+#         last_file='../results/sharding/hashed_index.json'
+#     data = load_benchmark(last_file) if last_file else {}
+#     before = data.get('results', {}).get('before', {})
+#     after = data.get('results', {}).get('after', {})
+#     print(before.get('executionTimeMillis'))
+#     idx_name = after.get('executionStages', 'N/A').get('inputStage', 'N/A')
+#     if idx_name.get('indexName', 'N/A') == 'N/A':
+#         idx_name = idx_name.get('inputStage', 'N/A')
+#     dv =[
+#         html.Span(f"Index: {idx_name.get('indexName', 'N/A')}", className="badge-info"),
+#         html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info"),
+#     ]
+#     return dv
 @dash.callback(
-    Output("badge-info", "children"),
-    Input("benchmark-dropdown", "value")
-)
-def update_badge_info(input_value):
-    last_file, error = load_latest_benchmark(input_value)
-    data = load_benchmark(last_file) if last_file else {}
-    before = data.get('results', {}).get('before', {})
-    after = data.get('results', {}).get('after', {})
-    # print(before.get('executionTimeMillis'))
-    idx_name = after.get('executionStages', 'N/A').get('inputStage', 'N/A')
-    if idx_name.get('indexName', 'N/A') == 'N/A':
-        idx_name = idx_name.get('inputStage', 'N/A')
-    dv =[
-        html.Span(f"Index: {idx_name.get('indexName', 'N/A')}", className="badge-info"),
-        html.Span(f"Time Optimization: {before.get('executionTimeMillis', 0) - after.get('executionTimeMillis', 0)} ms", className="badge-info"),
-    ]
-    return dv
-@dash.callback(
-    Output("cards-kpi", "children"),
-    Input("benchmark-dropdown", "value")
+    Output("cards-kpi2", "children"),
+    Input("benchmark-dropdown2", "value"),
+    allow_duplicate=True,
 )
 def update_cards(input_value):
-    last_file, error = load_latest_benchmark(input_value)
+    if input_value == '1':
+        last_file='../results/sharding/simple_index.json'
+    if input_value == '2':
+        last_file='../results/sharding/compound_index.json'
+    if input_value == '3':
+        last_file='../results/sharding/hashed_index.json'
     data = load_benchmark(last_file) if last_file else {}
     before = data.get('results', {}).get('before', {})
-    # print(before.get('executionTimeMillis'))
     after = data.get('results', {}).get('after', {})
-    # print(before.get('executionTimeMillis'))
     dv =[
         make_kpi_card("Execution Time", before.get('executionTimeMillis'), after.get('executionTimeMillis'), "ms"),
         make_kpi_card("Optimisation Time", before.get('optimizationTimeMillis'), after.get('optimizationTimeMillis'), "ms"),
@@ -519,11 +496,19 @@ def update_cards(input_value):
     return dv
 
 @dash.callback(
-    Output("details-table", "data"),
-    Input("benchmark-dropdown", "value")
+    Output("details-table2", "data"),
+    Input("benchmark-dropdown2", "value"),
+    allow_duplicate=True,
 )
 def update_details_table(input_value):
-    last_file, error = load_latest_benchmark(input_value)
+    print(input_value)
+    if input_value == '1':
+        last_file='../results/sharding/simple_index.json'
+    if input_value == '2':
+        last_file='../results/sharding/compound_index.json'
+    if input_value == '3':
+        last_file='../results/sharding/hashed_index.json'
+    print(last_file)
     data = load_benchmark(last_file) if last_file else {}
     before = data.get('results', {}).get('before', {})
     after = data.get('results', {}).get('after', {})
@@ -538,95 +523,104 @@ def update_details_table(input_value):
         ]
     return dt
 
+# @dash.callback(
+#     Output(component_id='bar_chart', component_property='figure'),
+#     Input(component_id='benchmark-dropdown', component_property='value')
+# )
+# def update_bar_chart(input_value):
+#     if input_value == '1':
+#         last_file='../results/sharding/simple_index.json'
+#     if input_value == '2':
+#         last_file='../results/sharding/compound_index.json'
+#     if input_value == '3':
+#         last_file='../results/sharding/hashed_index.json'
+#     data = load_benchmark(last_file) if last_file else {}
+#     before = data.get('results', {}).get('before', {})
+#     after = data.get('results', {}).get('after', {})
+#     return build_bar_chart(before,after)
+
+
+# @dash.callback(
+#     Output(component_id='donut_chart', component_property='figure'),
+#     Input(component_id='benchmark-dropdown', component_property='value')
+# )
+# def update_donut_chart(input_value):
+#     if input_value == '1':
+#         last_file='../results/sharding/simple_index.json'
+#     if input_value == '2':
+#         last_file='../results/sharding/compound_index.json'
+#     if input_value == '3':
+#         last_file='../results/sharding/hashed_index.json'
+#     data = load_benchmark(last_file) if last_file else {}
+#     before = data.get('results', {}).get('before', {})
+#     after = data.get('results', {}).get('after', {})
+#     return build_double_donut_chart(before,after)
+
+
+# @dash.callback(
+#     Output("raw-json-content", "children"),
+#     Input("benchmark-dropdown", "value")
+# )
+# def load_raw_json(selected):
+#     file_path, error = load_latest_benchmark(selected)
+#     if error:
+#         return error
+
+#     with open(file_path, "r", encoding="utf-8") as f:
+#         data = json.load(f)
+
+#     return json.dumps(data, indent=4)
+
+# # Afficher / cacher le FIND builder
 @dash.callback(
-    Output(component_id='bar_chart', component_property='figure'),
-    Input(component_id='benchmark-dropdown', component_property='value')
-)
-def update_bar_chart(input_value):
-    last_file, error = load_latest_benchmark(input_value)
-    data = load_benchmark(last_file) if last_file else {}
-    before = data.get('results', {}).get('before', {})
-    after = data.get('results', {}).get('after', {})
-    return build_bar_chart(before,after)
-
-
-@dash.callback(
-    Output(component_id='donut_chart', component_property='figure'),
-    Input(component_id='benchmark-dropdown', component_property='value')
-)
-def update_donut_chart(input_value):
-    last_file, error = load_latest_benchmark(input_value)
-    data = load_benchmark(last_file) if last_file else {}
-    before = data.get('results', {}).get('before', {})
-    after = data.get('results', {}).get('after', {})
-    return build_double_donut_chart(before,after)
-
-
-@dash.callback(
-    Output("raw-json-content", "children"),
-    Input("benchmark-dropdown", "value")
-)
-def load_raw_json(selected):
-    file_path, error = load_latest_benchmark(selected)
-    if error:
-        return error
-
-    with open(file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    return json.dumps(data, indent=4)
-
-# Afficher / cacher le FIND builder
-@dash.callback(
-    Output("query-preview", "value"),
-    Input("benchmark-dropdown", "value")
+    Output("query-preview2", "value"),
+    Input("benchmark-dropdown2", "value")
 )
 def update_preview(selected_benchmark):
-    print(f'jh : {selected_benchmark}')
     return BENCHMARK_QUERIES.get(selected_benchmark, "")
 
 
-# Afficher les options de tri
+# # Afficher les options de tri
+# @dash.callback(
+#     Output("sort-options", "children"),
+#     Input("sort-check", "value")
+# )
+# def toggle_sort(enabled):
+#     if enabled and "yes" in enabled:
+#         return html.Div([
+
+#             html.Div([
+
+#                 html.Div([
+#                     html.Label("Sort field:", className="form-label"),
+#                     dcc.Dropdown(
+#                         id="sort-field",
+#                         options=FIELDS,
+#                         placeholder="Select...",
+#                         className="form-input"
+#                     )
+#                 ], className="form-row-inline"),
+
+#                 html.Div([
+#                     html.Label("Order:", className="form-label"),
+#                     dcc.Dropdown(
+#                         id="sort-order",
+#                         options=[
+#                             {"label": "Ascending (1)", "value": 1},
+#                             {"label": "Descending (-1)", "value": -1}
+#                         ],
+#                         placeholder="Select...",
+#                         className="form-input"
+#                     )
+#                 ], className="form-row-inline"),
+
+#             ], className="form-inline-container")
+
+#         ])
+#     return []
+
 @dash.callback(
-    Output("sort-options", "children"),
-    Input("sort-check", "value")
-)
-def toggle_sort(enabled):
-    if enabled and "yes" in enabled:
-        return html.Div([
-
-            html.Div([
-
-                html.Div([
-                    html.Label("Sort field:", className="form-label"),
-                    dcc.Dropdown(
-                        id="sort-field",
-                        options=FIELDS,
-                        placeholder="Select...",
-                        className="form-input"
-                    )
-                ], className="form-row-inline"),
-
-                html.Div([
-                    html.Label("Order:", className="form-label"),
-                    dcc.Dropdown(
-                        id="sort-order",
-                        options=[
-                            {"label": "Ascending (1)", "value": 1},
-                            {"label": "Descending (-1)", "value": -1}
-                        ],
-                        placeholder="Select...",
-                        className="form-input"
-                    )
-                ], className="form-row-inline"),
-
-            ], className="form-inline-container")
-
-        ])
-    return []
-
-@dash.callback(
-    Output("builder-container", "style"),
+    Output("builder-container2", "style"),
     Input("mode-radio", "value")
 )
 def toggle_builder_container(mode):
@@ -645,8 +639,8 @@ ROW_STYLE = {
 COL_STYLE = {"display": "flex", "flexDirection": "column"}
 
 @dash.callback(
-    Output("index-builder", "children"),
-    Input("benchmark-dropdown", "value")
+    Output("index-builder2", "children"),
+    Input("benchmark-dropdown2", "value")
 )
 def show_index_builder(selected_index):
 
@@ -782,7 +776,7 @@ def update_benchmark_display(selection):
     if not selection:
         return html.Div("Select a benchmark to display results.", className="card")
 
-    file_path = f"data/sample_benchmark.json"  # tu remplaceras par ton vrai chemin
+    file_path = "../results/sharding/simple_index.json"  # tu remplaceras par ton vrai chemin
     data = load_benchmark(file_path)
 
     before = data["results"]["before"]
@@ -823,33 +817,37 @@ def update_benchmark_display(selection):
 
     ])
 
-@dash.callback(
-    Output("execution-flow-container", "children"),
-    Input("benchmark-dropdown", "value")
-)
-def update_flow_display(selected):
+# @dash.callback(
+#     Output("execution-flow-container", "children"),
+#     Input("benchmark-dropdown", "value")
+# )
+# def update_flow_display(input_value):
 
-    file_path, error = load_latest_benchmark(selected)
-    if error:
-        return html.Div(error)
+#     if input_value == '1':
+#         last_file='../results/sharding/simple_index.json'
+#     if input_value == '2':
+#         last_file='../results/sharding/compound_index.json'
+#     if input_value == '3':
+#         last_file='../results/sharding/hashed_index.json'
+    
 
-    data = load_benchmark(file_path)
+#     data = load_benchmark(last_file)
 
-    before = data["results"]["before"]
-    after = data["results"]["after"]
+#     before = data["results"]["before"]
+#     after = data["results"]["after"]
 
-    flow_before = extract_execution_flow(before["executionStages"])
-    flow_after = extract_execution_flow(after["executionStages"])
+#     flow_before = extract_execution_flow(before["executionStages"])
+#     flow_after = extract_execution_flow(after["executionStages"])
 
-    return html.Div([
-        html.Div([
-            render_flow(flow_before, "Execution Flow (Before Index)"),
-            render_flow(flow_after, "Execution Flow (After Index)"),
-        ],
-        style={
-            "display": "flex",
-            "gap": "10px",
-            # "justifyContent": "space-between",
-            "width": "100%"
-        })
-    ])
+#     return html.Div([
+#         html.Div([
+#             render_flow(flow_before, "Execution Flow (Before Index)"),
+#             render_flow(flow_after, "Execution Flow (After Index)"),
+#         ],
+#         style={
+#             "display": "flex",
+#             "gap": "10px",
+#             # "justifyContent": "space-between",
+#             "width": "100%"
+#         })
+#     ])
