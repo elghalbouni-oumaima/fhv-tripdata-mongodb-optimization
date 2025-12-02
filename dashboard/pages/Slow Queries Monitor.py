@@ -7,56 +7,87 @@ from dash_svg import Svg, Line, Polygon
 import os
 
 dash.register_page(__name__, path="/slow-queries-monitor", name="Slow Queries Monitor")
-last_file, error = load_latest_benchmark('q7')
+last_file, error = load_latest_benchmark('q3')
 data = load_benchmark(last_file) if last_file else {}
 before = data.get('results', {}).get('before', {})
 after = data.get('results', {}).get('after', {})
 
 queries = [
 
-    {"name": "q1_triptime_range",
-     "query": '{"trip_time": {"$gte": 60, "$lte": 1200}}',
-     "index": '{"trip_time": 1}'},
+    # --- SIMPLE INDEXES ---
+    {
+        "name": "q1_simple_outlier",
+        "query": '{"trip_time": {"$gte": 4000}}',
+        "index": '{"trip_time": 1}'
+    },
 
-    {"name": "q2_tripmiles_large",
-     "query": '{"trip_miles": {"$gte": 1, "$lte": 20}}',
-     "index": '{"trip_miles": 1}'},
+    {
+        "name": "q2_simple_sort",
+        "query": '{"trip_miles": {"$gte": 10}}',
+        "sort": '{"trip_miles": -1}',
+        "index": '{"trip_miles": 1}'
+    },
 
-    {"name": "q3_fare_range",
-     "query": '{"base_passenger_fare": {"$gte": 5, "$lte": 50}}',
-     "index": '{"base_passenger_fare": 1}'},
+    {
+        "name": "q3_simple_lookup",
+        "query": '{"dispatching_base_num": "B02800"}',
+        "index": '{"dispatching_base_num": 1}'
+    },
 
-    {"name": "q4_license_time_miles",
-     "query": '{"hvfhs_license_num": "HV0003","trip_time": {"$gte": 300},"trip_miles": {"$gte": 5}}',
-     "index": '{"hvfhs_license_num": 1, "trip_time": 1, "trip_miles": 1}'},
+    # --- HASHED INDEXES ---
+    {
+        "name": "q4_hashed_license",
+        "query": '{"hvfhs_license_num": "HV0003"}',
+        "index": '{"hvfhs_license_num": "hashed"}'
+    },
 
-    {"name": "q5_base_num",
-     "query": '{"dispatching_base_num": "B02764"}',
-     "index": '{"dispatching_base_num": 1}'},
+    {
+        "name": "q5_hashed_puloc",
+        "query": '{"PULocationID": 132}',
+        "index": '{"PULocationID": "hashed"}'
+    },
 
-    {"name": "q6_time_filtered_sorted",
-     "query": '{"trip_time": {"$gte": 300}}',
-     "sort": '{"trip_miles": -1}',
-     "index": '{"trip_time": 1, "trip_miles": -1}'},
+    # --- COMPOUND INDEXES ---
+    {
+        "name": "q6_compound_esr_sort",
+        "query": '{"PULocationID": 79, "trip_miles": {"$gte": 5}}',
+        "sort": '{"trip_time": 1}',
+        "index": '{"PULocationID": 1, "trip_time": 1, "trip_miles": 1}'
+    },
 
-    {"name": "q7_PULoc_time",
-     "query": '{"PULocationID": 132,"trip_miles": {"$gte": 2, "$lte": 15}}',
-     "index": '{"PULocationID": 1, "trip_miles": 1}'},
+    {
+        "name": "q7_compound_covered",
+        "query": '{"hvfhs_license_num": "HV0005", "trip_miles": {"$gte": 2}}',
+        "projection": '{"hvfhs_license_num": 1, "trip_miles": 1, "_id": 0}',
+        "index": '{"hvfhs_license_num": 1, "trip_miles": 1}'
+    },
 
-    {"name": "q8_DOLocation",
-     "query": '{"DOLocationID": 230}',
-     "index": '{"DOLocationID": 1}'},
+    {
+        "name": "q8_compound_multi_filter",
+        "query": '{"shared_request_flag": 1, "PULocationID": 230}',
+        "index": '{"PULocationID": 1, "shared_request_flag": 1}'
+    },
 
-    {"name": "q9_flags",
-     "query": '{"shared_request_flag": true,"wav_request_flag": false}',
-     "index": '{"shared_request_flag": 1, "wav_request_flag": 1}'},
+    {
+        "name": "q9_compound_date_sort",
+        "query": '{"request_datetime": {"$gte": "2019-01-15"}}',
+        "sort": '{"request_datetime": 1}',
+        "index": '{"request_datetime": 1}'
+    },
 
-    {"name": "q10_license_time",
-     "query": '{"hvfhs_license_num": "HV0005","trip_time": {"$gte": 600, "$lte": 2400},"trip_miles": {"$gte": 3}}',
-     "index": '{"hvfhs_license_num": 1, "trip_time": 1, "trip_miles": 1}'},
+    # --- COMPLEX USER QUERY ---
+    {
+        "name": "q10_complex_user_request",
+        "query": '{'
+                 '"dispatching_base_num": "B02764", '
+                 '"trip_miles": {"$gte": 5, "$lte": 15}, '
+                 '"trip_time": {"$gte": 2000}'
+                 '}',
+        "sort": '{"trip_time": -1}',
+        "index": '{"dispatching_base_num": 1, "trip_miles": 1, "trip_time": 1}'
+    }
 
 ]
-
 
 # average Excution Time
 execution_time_file = load_benchmark('../results/benchmarking/execution_time.json') 
