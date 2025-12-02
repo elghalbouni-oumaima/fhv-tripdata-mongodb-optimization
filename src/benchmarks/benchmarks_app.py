@@ -37,97 +37,89 @@ collection = db[COLLECTION_NAME]
 # 1 — LISTE DES REQUÊTES DE TEST
 # -------------------------------------------------------------------
 SLOW_QUERY_CANDIDATES = [
-    # ---------------------------------------------------------
-    # TYPE 1: INDEX SIMPLE (Single Field)
-    # Objectif: Passer d'un scan complet à un scan ciblé sur des valeurs rares.
-    # ---------------------------------------------------------
+    # --- INDEX SIMPLE (Single Field) ---
     {
-        "name": "q1_simple_outlier_range",
-        # AVANT: Scanne toute la base.
-        # APRÈS: Scanne seulement les quelques trajets > 5000s.
-        "query": {"trip_time": {"$gte": 5000}}, 
+        "name": "q1_simple_outlier",
+        # Optimisation : Réduit le scan de 100% de la base à < 1%.
+        "query": {"trip_time": {"$gte": 4000}}, 
         "index": {"trip_time": 1}
     },
     {
-        "name": "q2_simple_sort_blocking",
-        # AVANT: "Blocking Sort" (Erreur mémoire possible ou très lent).
-        # APRÈS: Résultat instantané car l'index est déjà trié.
-        "query": {"trip_miles": {"$gte": 5}},
-        "sort": {"trip_miles": -1}, 
+        "name": "q2_simple_sort",
+        # Optimisation : Évite le tri en mémoire (Blocking Sort).
+        "query": {"trip_miles": {"$gte": 10}},
+        "sort": {"trip_miles": -1},
         "index": {"trip_miles": 1}
     },
     {
-        "name": "q3_simple_distinct_lookup",
-        # Chercher une valeur précise rare.
+        "name": "q3_simple_lookup",
+        # Optimisation : Accès direct à une valeur rare.
         "query": {"dispatching_base_num": "B02800"}, 
         "index": {"dispatching_base_num": 1}
     },
 
-    # ---------------------------------------------------------
-    # TYPE 2: INDEX HASHED (Haché)
-    # Objectif: Égalité stricte uniquement. Très rapide pour le point lookup.
-    # ---------------------------------------------------------
+    # --- INDEX HASHED (Haché) ---
     {
-        "name": "q4_hashed_equality",
-        # Le hachage distribue les valeurs. Idéal pour des IDs.
+        "name": "q4_hashed_license",
+        # Optimisation : Distribution uniforme, parfait pour l'égalité exacte.
         "query": {"hvfhs_license_num": "HV0003"},
         "index": {"hvfhs_license_num": "hashed"}
     },
     {
-        "name": "q5_hashed_location",
-        # Recherche exacte sur un ID de lieu.
+        "name": "q5_hashed_puloc",
+        # Optimisation : Recherche pointue très rapide.
         "query": {"PULocationID": 132},
         "index": {"PULocationID": "hashed"}
     },
 
-    # ---------------------------------------------------------
-    # TYPE 3: INDEX COMPOUND (Composé)
-    # Règle d'or ESR : Equality (Égalité) -> Sort (Tri) -> Range (Plage)
-    # ---------------------------------------------------------
+    # --- INDEX COMPOUND (Composé) ---
     {
-        "name": "q6_compound_ESR_perfect",
-        # Respecte la règle ESR.
-        # Equality: PULocationID, Sort: trip_miles, Range: trip_time
-        "query": {"PULocationID": 79, "trip_time": {"$gt": 600}},
-        "sort": {"trip_miles": 1},
-        "index": {"PULocationID": 1, "trip_miles": 1, "trip_time": 1}
+        "name": "q6_compound_esr_sort",
+        # Optimisation ESR (Equality -> Sort -> Range).
+        # Permet de trier sans calcul CPU.
+        "query": {"PULocationID": 79, "trip_miles": {"$gte": 5}},
+        "sort": {"trip_time": 1},
+        "index": {"PULocationID": 1, "trip_time": 1, "trip_miles": 1}
     },
     {
-        "name": "q7_compound_covered_query",
-        # *** TRES IMPORTANT *** : REQUÊTE COUVERTE
-        # Si on ne demande QUE les champs de l'index (_id: 0), 
-        # DocsExamined tombera à 0. C'est l'optimisation ultime.
+        "name": "q7_compound_covered",
+        # *** COVERED QUERY *** : Le plus rapide possible.
+        # DocsExamined sera 0 car tout est dans l'index.
         "query": {"hvfhs_license_num": "HV0005", "trip_miles": {"$gte": 2}},
         "projection": {"hvfhs_license_num": 1, "trip_miles": 1, "_id": 0},
         "index": {"hvfhs_license_num": 1, "trip_miles": 1}
     },
     {
-        "name": "q8_compound_sort_optimization",
-        # Sans index: MongoDB doit trouver tous les B02510 puis les trier en RAM.
-        # Avec index: Il lit l'index dans l'ordre. Il s'arrête dès qu'il a les 10 premiers.
-        "query": {"dispatching_base_num": "B02510"},
-        "sort": {"request_datetime": -1},
-        "limit": 10,
-        "index": {"dispatching_base_num": 1, "request_datetime": -1}
+        "name": "q8_compound_multi_filter",
+        # Filtre sur deux champs pour réduire drastiquement les résultats.
+        "query": {"shared_request_flag": 1, "PULocationID": 230},
+        "index": {"PULocationID": 1, "shared_request_flag": 1}
     },
     {
-        "name": "q9_compound_multi_equality",
-        # Filtrage précis sur deux champs. Réduit drastiquement l'ensemble scanné.
+        "name": "q9_compound_date_sort",
+        # Tri temporel optimisé.
+        "query": {"request_datetime": {"$gte": "2019-01-15"}},
+        "sort": {"request_datetime": 1},
+        "index": {"request_datetime": 1}
+    },
+
+    # --- VOTRE REQUÊTE SPÉCIFIQUE (Modifiée pour le format) ---
+    {
+        "name": "q10_complex_user_request",
+        # Analyse : C'est une requête lourde.
+        # Avant index : Scan complet + Tri mémoire (très lent).
+        # Après index : Filtre efficace sur Base et Miles.
         "query": {
-            "PULocationID": 138, 
-            "DOLocationID": 230,
-            "shared_request_flag": 1
+            "dispatching_base_num": "B02764",
+            "trip_miles": { "$gte": 5, "$lte": 15 },
+            "trip_time": { "$gte": 2000 }
         },
-        "index": {"PULocationID": 1, "DOLocationID": 1}
-    },
-    {
-        "name": "q10_compound_range_sort_heavy",
-        # Un cas lourd : Plage de date + Tri sur miles.
-        # Avant : Lent car beaucoup de données dans la plage de dates.
-        # Après : L'index aide à filtrer, mais surtout à éviter le tri mémoire.
-        "query": {"request_datetime": {"$gte": "2019-01-01", "$lt": "2019-02-01"}},
-        "sort": {"trip_miles": -1},
-        "index": {"request_datetime": 1, "trip_miles": -1}
+        "sort": { "trip_time": -1 },
+        "index": {
+            "dispatching_base_num": 1,
+            "trip_miles": 1,
+            "trip_time": 1
+        }
     }
 ]
 
@@ -162,7 +154,7 @@ def run_explain(query, coll=collection):
     - limit(10000) pour éviter les scans complets
     - .explain() sans paramètre (compatibilité pyMongo)
     """
-    cursor = coll.find(query).limit(10000)
+    cursor = coll.find(query)
     explain_data = cursor.explain()
 
     stats = explain_data.get("executionStats", {})
@@ -256,29 +248,29 @@ def save_metrics(name, before, after, index_param):
 
 def drop_conflicting_indexes(index_param):
     """
-    Supprime TOUS les index qui commencent par le même champ 
-    que l'index proposé. Cela évite que MongoDB utilise un index 
-    composé existant (ex: 'trip_time_1_miles_1') pour optimiser 
-    une requête sur 'trip_time'.
+    Supprime TOUS les index qui pourraient interférer avec le benchmark.
+    
+    Si on veut tester un index composé {A:1, B:1}, on doit supprimer
+    non seulement les index commençant par A, mais aussi ceux commençant par B,
+    car MongoDB pourrait les utiliser pour optimiser partiellement la requête.
     """
     try:
         info = collection.index_information()
         
-        # On récupère le premier champ de l'index qu'on veut tester
-        # Ex: Si index_param est {"trip_time": 1}, target_root = "trip_time"
-        target_root = list(index_param.keys())[0]
+        # On récupère TOUS les champs du futur index (ex: ['PULocationID', 'trip_time'])
+        target_fields = list(index_param.keys())
 
         for index_name, meta in info.items():
             if index_name == "_id_":
                 continue
 
-            existing_keys = meta["key"] # Ex: [('trip_time', 1), ('trip_miles', -1)]
+            existing_keys = meta["key"] 
             existing_root = existing_keys[0][0] # Le premier champ de l'index existant
 
-            # Si l'index existant commence par le même champ, il faut le supprimer
-            # sinon le benchmark "Before" sera faussé (IXSCAN au lieu de COLLSCAN)
-            if existing_root == target_root:
-                logger.warning(f"🧹 Dropping interfering index '{index_name}'...")
+            # Si l'index existant commence par N'IMPORTE QUEL champ de notre futur index,
+            # on le supprime. C'est la seule façon de garantir un COLLSCAN pur.
+            if existing_root in target_fields:
+                logger.warning(f"🧹 Dropping interfering index '{index_name}' (starts with '{existing_root}')...")
                 collection.drop_index(index_name)
 
     except Exception as e:

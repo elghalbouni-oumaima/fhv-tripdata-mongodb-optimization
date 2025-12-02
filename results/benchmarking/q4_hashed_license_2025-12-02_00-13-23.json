@@ -1,0 +1,96 @@
+{
+    "query_name": "q4_hashed_license",
+    "index_param": {
+        "hvfhs_license_num": "hashed"
+    },
+    "index_type": "hashed index",
+    "results": {
+        "before": {
+            "executionTimeMillis": 66420,
+            "optimizationTimeMillis": 4,
+            "totalDocsExamined": 16545356,
+            "totalKeysExamined": 0,
+            "nReturned": 12086389,
+            "executionStages": {
+                "isCached": false,
+                "stage": "COLLSCAN",
+                "filter": {
+                    "hvfhs_license_num": {
+                        "$eq": "HV0003"
+                    }
+                },
+                "nReturned": 12086389,
+                "executionTimeMillisEstimate": 60982,
+                "works": 16545357,
+                "advanced": 12086389,
+                "needTime": 4458967,
+                "needYield": 0,
+                "saveState": 3715,
+                "restoreState": 3715,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 16545356
+            },
+            "indexName": null
+        },
+        "after": {
+            "executionTimeMillis": 108055,
+            "optimizationTimeMillis": 20,
+            "totalDocsExamined": 12086389,
+            "totalKeysExamined": 12086389,
+            "nReturned": 12086389,
+            "executionStages": {
+                "isCached": false,
+                "stage": "FETCH",
+                "filter": {
+                    "hvfhs_license_num": {
+                        "$eq": "HV0003"
+                    }
+                },
+                "nReturned": 12086389,
+                "executionTimeMillisEstimate": 102041,
+                "works": 12086390,
+                "advanced": 12086389,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 6156,
+                "restoreState": 6156,
+                "isEOF": 1,
+                "docsExamined": 12086389,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 12086389,
+                    "executionTimeMillisEstimate": 37897,
+                    "works": 12086390,
+                    "advanced": 12086389,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 6156,
+                    "restoreState": 6156,
+                    "isEOF": 1,
+                    "keyPattern": {
+                        "hvfhs_license_num": "hashed"
+                    },
+                    "indexName": "hvfhs_license_num_hashed",
+                    "isMultiKey": false,
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                        "hvfhs_license_num": [
+                            "[992774316382274071, 992774316382274071]"
+                        ]
+                    },
+                    "keysExamined": 12086389,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                }
+            },
+            "indexName": "hvfhs_license_num_hashed"
+        }
+    }
+}

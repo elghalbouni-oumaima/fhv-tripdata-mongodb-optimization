@@ -195,7 +195,7 @@ PRESET_QUERIES = {
     "simple": {
         "query": {"trip_time": {"$gte": 300}},
         "index": {"trip_time": 1},
-        "name": "q1"
+        "name": "q3"
     },
     "compound": {
         "query": {
@@ -203,12 +203,12 @@ PRESET_QUERIES = {
             "PULocationID": 97
         },
         "index": {"hvfhs_license_num": 1, "PULocationID": 1},
-        "name": "q9"
+        "name": "q6"
     },
     "hashed": {
         "query": {"PULocationID": 100},
         "index": {"PULocationID": "hashed"},
-        "name": "q2"
+        "name": "q5"
     }
 }
 
@@ -272,11 +272,11 @@ query_controls = html.Div([
             dcc.Dropdown(
                 id="benchmark-dropdown",
                 options=[
-                    {"label": "Simple Index", "value": "q1"},
-                    {"label": "Compound Index", "value": "q9"},
-                    {"label": "Hashed Index", "value": "q2"},
+                    {"label": "Simple Index", "value": "q3"},
+                    {"label": "Compound Index", "value": "q6"},
+                    {"label": "Hashed Index", "value": "q5"},
                 ],
-                value="q1",
+                value="q3",
                 style={"width": "250px"}
             )
         ], style={
@@ -471,11 +471,11 @@ layout = html.Div([
     Input("benchmark-dropdown", "value")
 )
 def update_title(selected_value):
-    if selected_value == "q2":
+    if selected_value == "q5":
         index_name = "Hashed Index"
-    elif selected_value == "q9":
+    elif selected_value == "q6":
         index_name = "Compound Index"
-    elif selected_value == "q4":
+    elif selected_value == "q3":
         index_name = "Simple Index"
     else:
         index_name = "Unknown"
