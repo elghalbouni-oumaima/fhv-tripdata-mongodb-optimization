@@ -232,4 +232,6 @@ python dashboard/app.py
 
 This project demonstrates practical data engineering and database optimization techniques using MongoDB.
 It shows how indexing, batching, preprocessing, and sharding significantly improve query performance on large-scale datasets.
-
+---
+## Contributing:
+Contributions are welcome! Please fork the repository and create a pull request with your changes.
