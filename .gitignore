@@ -216,7 +216,6 @@ __marimo__/
 /dataset
 /logs
 /test
-/notebooks/*.ipynb
 /data/processed/
 /data/raw/
 /data

@@ -195,6 +195,9 @@ Requirements include:
 
 MongoDB must be installed locally or accessible via connection string.
 
+Dataset source*: “Uber NYC For-Hire Vehicles Trip Data (2021)” — https://www.kaggle.com/datasets/shuhengmo/uber-nyc-forhire-vehicles-trip-data-2021
+File used: fhvhv_tripdata_2021-10.parquet
+
 ---
 
 ## 11. How to Run
