@@ -1,18 +1,13 @@
-Here is your **clean, GitHub-ready `README.md`** for the NYC Trips dataset project.
 
-I have completely restructured your `test.md` to match the professional style of `steps.md`. I also **fixed the JavaScript logic** in Phase 3 (Pre-Splitting) to correctly handle the `PULocationID` (which ranges from 1–263 in NYC) rather than the license number, ensuring better distribution.
+# Project Playbook: Distributed NYC Taxi Analytics
 
------
+## Project Context
 
-# 🚕 Project Playbook: Distributed NYC Taxi Analytics
-
-## 📋 Project Context
-
-### 🎯 Goal
+### Goal
 
 Deploy a **sharded MongoDB infrastructure** capable of ingesting and analyzing **16M+ NYC For-Hire Vehicle trip records** with high throughput and low latency.
 
-### ✅ Key Requirements Addressed
+### Key Requirements Addressed
 
   * **Availability:** Replica Sets for all data nodes.
   * **Scalability:** 3 distinct shards to handle write loads.
@@ -22,7 +17,7 @@ Deploy a **sharded MongoDB infrastructure** capable of ingesting and analyzing *
 
 -----
 
-# 🏗️ Phase 1: Infrastructure Initialization
+# Phase 1: Infrastructure Initialization
 
 Before creating the database, we must launch the physical nodes and link them together.
 
@@ -36,7 +31,7 @@ Run:
 docker-compose up -d
 ```
 
-### 🔍 What this does
+### What this does
 
 Starts the complete cluster stack:
 
@@ -63,7 +58,7 @@ rs.initiate({
 })
 ```
 
-### 🔍 Explanation
+### Explanation
 
 The **Config Server** acts as the "brain" of the cluster, storing metadata map of which chunk lives on which shard.
 
@@ -130,15 +125,15 @@ sh.addShard("shard2ReplSet/shard2:27017")
 sh.addShard("shard3ReplSet/shard3:27017")
 ```
 
-### 🔍 What this does
+### What this does
 
 The router (`mongos`) now formally recognizes the 3 storage shards.
 
 -----
 
-# 🧠 Phase 2: Schema Design & Sharding Strategy
+# Phase 2: Schema Design & Sharding Strategy
 
-⚠️ All commands from this point forward run inside the **mongos shell**.
+All commands from this point forward run inside the **mongos shell**.
 
 -----
 
@@ -148,7 +143,7 @@ The router (`mongos`) now formally recognizes the 3 storage shards.
 sh.stopBalancer()
 ```
 
-### 🔍 Why?
+### Why?
 
 We are about to import 16GB+ of data. We do not want MongoDB wasting resources trying to move data around *while* we are writing it.
 
@@ -177,14 +172,14 @@ db["fhvhv_trips_2021-10"].createIndex({ request_datetime: 1, pickup_datetime: 1 
 sh.shardCollection("trips_db.fhvhv_trips_2021-10", { PULocationID: 1, hvfhs_license_num: 1 })
 ```
 
-### 🔍 Why this sharding strategy?
+### Why this sharding strategy?
 
   * **PULocationID (Pickup Location):** Has \~263 unique zones (Manhattan, Queens, etc.). Excellent for distribution.
   * **hvfhs\_license\_num:** Adds uniqueness to the key.
 
 -----
 
-# ⚡ Phase 3: Pre-Splitting (Advanced Optimization)
+# Phase 3: Pre-Splitting (Advanced Optimization)
 
 If we import now, all data goes to Shard 1 (the default). We will manually define the chunk boundaries based on NYC Zones (1 to 263).
 
@@ -203,7 +198,7 @@ for (var i = 1; i <= 263; i++) {
 }
 ```
 
-### 🔍 What this does
+### What this does
 
 This pre-allocates empty "buckets" for every single neighborhood in New York City.
 
@@ -227,17 +222,17 @@ for (var i = 1; i <= 263; i++) {
 }
 ```
 
-### 🔍 Expected Distribution
+### Expected Distribution
 
   * **Shard 1:** Zones 1, 4, 7...
   * **Shard 2:** Zones 2, 5, 8...
   * **Shard 3:** Zones 3, 6, 9...
 
-➡️ This ensures that as we import, **all 3 shards write simultaneously**.
+This ensures that as we import, **all 3 shards write simultaneously**.
 
 -----
 
-# 📦 Phase 4: Data Injection
+# Phase 4: Data Injection
 
 ### PowerShell Import Loop
 
@@ -262,7 +257,7 @@ for ($i = 0; $i -le 7; $i++) {
 
 -----
 
-# ✅ Phase 5: Verification & Maintenance
+# Phase 5: Verification & Maintenance
 
 ## **Step 10: Verify Distribution**
 
@@ -285,7 +280,7 @@ sh.startBalancer()
 
 -----
 
-# 📊 Phase 6: Monitoring & Analytics
+# Phase 6: Monitoring & Analytics
 
 ## **1. Grafana Dashboard**
 
