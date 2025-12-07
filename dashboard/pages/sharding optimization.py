@@ -215,7 +215,7 @@ PRESET_QUERIES = {
 BENCHMARK_QUERIES = {
     "1": "db.fhvhv_trips_2021-10.find({dispatching_base_num: 'B02800'})",
     "2": "db.fhvhv_trips_2021-10.find({dispatching_base_num: 'B02764',trip_miles: { $gte: 5, $lte: 15 },trip_time: { $gte: 1200 }}).sort({ trip_time: -1 })",
-    "3": "db.fhvhv_trips_2021-10.find({hvfhs_license_num: 'HV0003'})"
+    "3": "db.fhvhv_trips_2021-10.find({'PULocationID': 132})"
 }
 
 # ============================================

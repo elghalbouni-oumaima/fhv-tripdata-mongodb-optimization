@@ -117,7 +117,7 @@ cards = [
     ], style=card_style),
 
     html.Div([
-        html.H4("Document size", style={'margin':'0', 'font-weight':'500', 'color':'#333'}),
+        html.H4("Collection size", style={'margin':'0', 'font-weight':'500', 'color':'#333'}),
         html.P(f"{cart_data["document_size"]:.3f} GB", style={'margin':'0', 'font-size':'24px', 'font-weight':'600', 'color':'#111'})
     ], style=card_style),
     
