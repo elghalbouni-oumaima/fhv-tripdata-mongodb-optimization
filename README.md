@@ -25,8 +25,11 @@ The dataset contains approximately 16 million rows and includes fields such as p
 ## 2. Dataset
 
 **Source:** NYC TLC For-Hire Vehicle Trip Records (2021)
+
 **Format:** Parquet
+
 **Size:** Approximately 16 million rows
+
 **Columns:**
 
 * Pickup and dropoff timestamps
